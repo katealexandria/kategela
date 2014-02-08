@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.malabon.pos"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="11"
+        android:targetSdkVersion="18" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/POS_Theme" >
+        <activity
+            android:name="com.malabon.pos.MainActivity"
+            android:label="@string/title_activity_main" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.malabon.pos.Login"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name="com.malabon.pos.AddCategory"
+            android:label="@string/title_activity_add_category"
+            android:parentActivityName="com.malabon.pos.MainActivity"
+            android:theme="@android:style/Theme.Dialog" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.malabon.pos.MainActivity" />
+        </activity>
+        <activity
+            android:name="com.malabon.pos.EditOrders"
+            android:label="@string/title_activity_edit_orders"
+            android:parentActivityName="com.malabon.pos.MainActivity"
+            android:theme="@android:style/Theme.Dialog" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.malabon.pos.MainActivity" />
+        </activity>
+        <activity
+            android:name="com.malabon.pos.Payment"
+            android:label="@string/title_activity_payment"
+            android:parentActivityName="com.malabon.pos.MainActivity"
+            android:theme="@android:style/Theme.Dialog" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.malabon.pos.MainActivity" />
+        </activity>
+        <activity
+            android:name="com.malabon.pos.AddPayment"
+            android:label="@string/title_activity_add_payment"
+            android:parentActivityName="com.malabon.pos.Payment"
+            android:theme="@android:style/Theme.Dialog" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.malabon.pos.Payment" />
+        </activity>
+        <activity
+            android:name="com.malabon.pos.SaleOptions"
+            android:label="@string/title_activity_sale_options"
+            android:theme="@android:style/Theme.Dialog" >
+        </activity>
+        <activity
+            android:name="com.malabon.pos.Functions"
+            android:label="@string/title_activity_functions"
+            android:parentActivityName="com.malabon.pos.MainActivity"
+            android:theme="@android:style/Theme.Dialog" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.malabon.pos.MainActivity" />
+        </activity>
+        <activity
+            android:name="com.malabon.pos.ReceiptDiscount"
+            android:label="@string/title_activity_receipt_discount"
+            android:parentActivityName="com.malabon.pos.SaleOptions"
+            android:theme="@android:style/Theme.Dialog" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.malabon.pos.SaleOptions" />
+        </activity>
+        <activity
+            android:name="com.malabon.pos.CloseDay"
+            android:label="@string/title_activity_close_day"
+            android:parentActivityName="com.malabon.pos.Functions"
+            android:theme="@android:style/Theme.Dialog" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.malabon.pos.Functions" />
+        </activity>
+        <activity
+            android:name="com.malabon.pos.SignIn"
+            android:label="@string/title_activity_sign_in"
+            android:windowSoftInputMode="adjustResize|stateVisible" >
+        </activity>
+        <activity
+            android:name="com.malabon.pos.ViewCustomer"
+            android:label=""
+            android:parentActivityName="com.malabon.pos.MainActivity"
+            android:theme="@android:style/Theme.Dialog" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.malabon.pos.MainActivity" />
+        </activity>
+        <activity
+            android:name="com.malabon.pos.AddCustomer"
+            android:label=""
+            android:parentActivityName="com.malabon.pos.AddCustomer"
+            android:theme="@android:style/Theme.Dialog" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.malabon.pos.ViewCustomer" />
+        </activity>
+    </application>
+
+</manifest>

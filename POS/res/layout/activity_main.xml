@@ -1,0 +1,319 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#111"
+    tools:context=".MainActivity" 
+    xmlns:app="http://schemas.android.com/apk/res/com.malabon.pos"
+    android:id="@+id/mainRelative">    
+        
+        <LinearLayout
+            android:id="@+id/mainLinear"
+	        style="@style/wrapper_vertical" >
+        
+            <RelativeLayout
+		        android:layout_width="wrap_content"
+		        android:layout_height="60dp" >
+		
+		        <LinearLayout
+		            android:layout_width="match_parent"
+		            android:layout_height="wrap_content"
+		            android:background="@drawable/main_background" >
+		
+		            <ImageButton
+		                style="@style/image_button_small"
+		                android:src="@android:drawable/ic_menu_search" />
+		
+		            <ImageButton
+		                style="@style/image_button_small"
+		                android:src="@android:drawable/ic_media_previous" />
+		
+		            <ImageButton
+		                style="@style/image_button_small"
+		                android:src="@android:drawable/btn_star_big_off" />
+		
+		            <Button
+		                style="@style/image_button_small"
+		                android:text="Lunch"
+		                android:textColor="#fff" />
+		
+		            <Button
+		                style="@style/image_button_small"
+		                android:text="Dinner"
+		                android:textColor="#fff" />
+		
+		            <ImageButton
+		                style="@style/image_button_small"
+		                android:src="@android:drawable/ic_menu_add"
+		                android:onClick="addCategory" />
+		
+		            <ImageButton
+		                style="@style/image_button_small"
+		                android:src="@android:drawable/ic_media_next" />
+
+		        </LinearLayout>
+
+		        <DigitalClock
+		            style="@style/H2"
+		            android:layout_width="wrap_content"
+		            android:textColor="#48FF00"
+		            android:layout_alignParentRight="true" />
+		
+		    </RelativeLayout>
+		    
+            <LinearLayout 
+                style="@style/wrapper_horizontal"
+                android:layout_height="520dp"
+                android:id="@+id/middleContainer">
+		        
+            <LinearLayout
+                android:orientation="vertical"
+                android:id="@+id/productsGrid"
+	            style="@style/wrapper_grid"
+	            android:layout_gravity="top">
+                
+                <LinearLayout
+                    style="@style/item_wrapper_odd"
+	                app:layout_row="0"
+	                app:layout_column="0"
+	                android:visibility="gone" >
+
+	                <TextView
+	                    style="@style/h3_product" />
+
+	                <TextView
+	                    style="@style/h3_price" />
+
+	            </LinearLayout>
+	            
+                <LinearLayout
+	                style="@style/item_wrapper_even"
+	                app:layout_row="0"
+	                app:layout_column="1"
+	                android:visibility="gone" >
+
+	                <TextView
+	                    style="@style/h3_product"
+	                    android:text="Cheeseburger" />
+
+	                <TextView
+	                    style="@style/h3_price"
+	                    android:text="75.50" />
+
+	            </LinearLayout>
+                
+            </LinearLayout>
+            
+            <LinearLayout
+                style="@style/wrapper_vertical"
+                android:background="@drawable/orange_button">
+                
+                <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="500dp" >
+	                 
+	            <TableLayout
+	                android:id="@+id/productCart"
+			        style="@style/wrapper_table"
+			        android:layout_height="wrap_content"		        
+			        android:stretchColumns="1">
+			        
+			        <TableRow
+			            style="@style/table_header">
+			            
+			            <TextView
+		                    style="@style/H2"
+		                    android:text="Customer Name" />
+		
+		                <ImageButton
+		                    style="@style/image_button_small"
+		                    android:layout_width="10dp"
+		                    android:layout_gravity="right"
+		                    android:src="@android:drawable/ic_input_add" 
+		                    android:onClick="addCustomer" />
+			            
+			        </TableRow>
+			        
+			        <TableRow
+			            style="@style/table_row" >
+		                
+			            <TextView 
+			                style="@style/h3_item"
+			                android:text="@string/Name" />
+			            
+			            <TextView 
+			                style="@style/h3_item"
+			                android:text="@string/Code" />
+			            
+			            <TextView 
+			                style="@style/h3_item"
+			                android:text="@string/Price" />
+			            
+			            <TextView 
+			                style="@style/h3_item"
+			                android:text="@string/Disc" />
+			            
+			            <TextView 
+			                style="@style/h3_item"
+			                android:text="@string/Quantity" />
+			            
+			        </TableRow>
+			        
+			        <TableRow
+			            style="@style/table_row_total">
+					            <TextView 
+					                style="@style/h3_item" />
+					            
+					            <TextView 
+					                style="@style/h3_item" />
+					            
+					            <TextView 
+					                style="@style/h3_item" />
+					            
+					            <TextView 
+					                style="@style/h3_item" />
+					            
+					            <TextView 
+					                style="@style/h3_item" />
+			        </TableRow>
+			        
+			        <TableRow
+			            style="@style/table_row_total">
+			        
+					    <ImageButton
+		                    style="@style/image_button_small"
+		                    android:src="@android:drawable/ic_menu_edit"
+		                    android:layout_weight="1"
+		                    android:onClick="editOrders"/>
+				    
+		        	</TableRow>
+					<TableRow
+			            style="@style/table_row">
+			        
+			            <TextView
+		                    style="@style/h3_subtotal"
+		                    android:text="@string/NetTotal" />
+		
+		                <TextView
+		                    android:id="@+id/txtNetTotal"
+		                    style="@style/h3_subtotal_amt" />
+			            
+			        </TableRow>
+			        
+			        <TableRow
+			            style="@style/table_row">
+			        
+			            <TextView
+		                    style="@style/h3_subtotal"
+		                    android:text="@string/TaxTotal" />
+		
+		                <TextView
+		                    android:id="@+id/txtTaxTotal"
+		                    style="@style/h3_subtotal_amt" />
+			            
+			        </TableRow>
+			        
+			        <TableRow
+			            style="@style/table_row_total">
+			        
+			            <TextView
+		                    style="@style/h2_total"
+		                    android:text="@string/Total" />
+		
+		                <TextView
+		                    android:id="@+id/txtTotal"
+		                    style="@style/h2_total_amt" />
+			            
+			        </TableRow>
+			        
+			   </TableLayout>     
+		   </ScrollView>
+                
+            </LinearLayout>           
+            
+            
+		    </LinearLayout>
+		    
+		    <RelativeLayout
+		        android:layout_width="match_parent"
+		        android:layout_height="170dp"
+		        android:background="@drawable/main_background" >
+		
+		        <Button
+		            android:text="@string/Pay"
+		            style="@style/btn_green_small"
+		            android:layout_height="100dp"
+		            android:layout_margin="20dp"
+		            android:onClick="pay"/>
+		        
+		        <android.support.v7.widget.GridLayout
+		            android:layout_centerInParent="true"
+		            android:layout_width="wrap_content"
+		            style="@style/wrapper_grid"
+		            android:background="@drawable/popup_bg"
+		            app:rowCount="2"
+		            app:columnCount="3" >
+                
+		            <ImageView
+		                style="@style/user_thumbnail"
+		                android:src="@drawable/ic_launcher"
+		                app:layout_row="0"
+		                app:layout_column="0"
+		                app:layout_rowSpan="2" />
+		            
+		            <LinearLayout
+		                style="@style/wrapper_vertical"
+		                app:layout_row="0"
+		                app:layout_column="1"
+		                app:layout_rowSpan="2" >
+	            
+		            	<TextView
+		                    style="@style/H3"
+		                    android:text="Angela Ignacio" />
+		
+		                <TextView
+		                    android:text="Default POS"
+		                    style="@style/H3" />
+		                
+		            </LinearLayout>
+		            		            
+	                
+	                <Button
+	                    android:id="@+id/btnSwitch"
+	                    android:text="@string/Switch"
+	                    android:onClick="login"
+	                    style="@style/btn_green_150"
+	                    app:layout_row="0"
+		                app:layout_column="2" />
+	
+	                <Button
+	                    android:id="@+id/btnLock"
+	                    android:text="@string/Lock"
+	                    style="@style/btn_red_150"
+	                    app:layout_row="1"
+		                app:layout_column="2" />
+		            
+                </android.support.v7.widget.GridLayout>
+		        
+		        <LinearLayout 
+		            android:layout_alignParentRight="true"
+		            style="@style/wrapper_vertical"
+		            android:layout_margin="10dp" >
+		
+		                <Button
+		                    android:text="@string/SaleOptions"
+		                    style="@style/btn_gray_150"
+		                    android:onClick="saleOptions" />
+		
+		                <Button
+		                    android:text="@string/Functions"
+		                    style="@style/btn_gray_150"
+		                    android:onClick="functions" />
+		            
+		        </LinearLayout>
+		
+		    </RelativeLayout>
+            
+        </LinearLayout>
+        
+</RelativeLayout>

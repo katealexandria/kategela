@@ -1,0 +1,201 @@
+	/* ---------------------------------------- Table Names ---------------------------------------- */
+	
+	private static final String TABLE_CUSTOMER = "customer";
+	private static final String TABLE_DISCOUNT = "discount";
+	private static final String TABLE_DISCOUNT_SALES = "discount_sales";
+	private static final String TABLE_INGREDIENT = "ingredient";
+	private static final String TABLE_LOG_CASH = "log_cash";
+	private static final String TABLE_LOG_TRANSACTION_DELETE = "log_transaction_delete";
+	private static final String TABLE_LOG_USER_TIME_SHEET = "log_user_time_sheet";
+	private static final String TABLE_ORDER_TYPE = "order_type";
+	private static final String TABLE_PAYMENT = "payment";
+	private static final String TABLE_POS_SETTINGS = "pos_settings";
+	private static final String TABLE_PRODUCT = "product";
+	private static final String TABLE_PRODUCT_CATEGORY = "product_category";
+	private static final String TABLE_RECEIPT_DETAIL = "receipt_detail";
+	private static final String TABLE_RECIPE = "recipe";
+	private static final String TABLE_SALES = "sales";
+	private static final String TABLE_SALES_CUSTOMER = "sales_customer";
+	private static final String TABLE_SALES_PRODUCT = "sales_product";
+	private static final String TABLE_SALES_SUMMARY_PER_USER = "sales_summary_per_user";
+	private static final String TABLE_STOCK = "stock";
+	private static final String TABLE_STOCK_TYPE = "stock_type";
+	private static final String TABLE_TRANSACTION_DELETE_PRODUCT = "transaction_delete_product";
+	private static final String TABLE_USER_QUESTION = "user_question";
+
+	/* ---------------------------------------- Table Columns ---------------------------------------- */
+	
+	// Common column names
+	private static final String KEY_ADDRESS = "address";
+	private static final String KEY_AMOUNT = "amount";
+	private static final String KEY_CATEGORY_ID = "category_id";
+	private static final String KEY_CUSTOMER_ID = "customer_id";
+	private static final String KEY_DATE = "date";
+	private static final String KEY_DISCOUNT_ID = "discount_id";
+	private static final String KEY_ID = "id";
+	private static final String KEY_NAME = "name";
+	private static final String KEY_ORDER_TYPE_ID = "order_type_id";
+	private static final String KEY_PRODUCT_ID = "product_id";
+	private static final String KEY_QUANTITY = "quantity";
+	private static final String KEY_RECEIPT_ID = "receipt_id";
+	private static final String KEY_RECIPE_ID = "recipe_id";
+	private static final String KEY_SALES_ID = "sales_id";
+	private static final String KEY_SALES_SUMMARY_ID = "sales_summary_id";
+	private static final String KEY_SORTORDER = "sortorder";
+	private static final String KEY_STOCK_TYPE_ID = "stock_type_id";
+	private static final String KEY_TRANSACTION_DELETE_ID = "transaction_delete_id";
+	private static final String KEY_UNIT = "unit";
+	private static final String KEY_USER_ID = "user_id";
+	
+	// TABLE_CUSTOMER Table - column names
+	private static final String KEY_FIRST_NAME = "first_name";
+	private static final String KEY_LAST_NAME = "last_name";	
+	private static final String KEY_ADDRESS_LANDMARK = "address_landmark";
+	private static final String KEY_TEL_NO = "tel_no";
+	private static final String KEY_MOBILE_NO = "mobile_no";
+
+	// TABLE_DISCOUNT Table - column names
+	private static final String KEY_PERCENTAGE = "percentage";
+	
+	// TABLE_DISCOUNT_SALES Table - column names
+	
+	// TABLE_INGREDIENT Table - column names
+	private static final String KEY_INGREDIENT_ID = "ingredient_id";
+
+	// TABLE_LOG_CASH Table - column names
+	private static final String KEY_IS_CASH_IN = "is_cash_in";
+
+	// TABLE_LOG_TRANSACTION_DELETE Table - column names
+
+	// TABLE_LOG_USER_TIME_SHEET Table - column names	
+	private static final String KEY_TIMEIN = "timein";
+	private static final String KEY_TIMEIN_BLOB = "timein_blob";
+	private static final String KEY_TIMEOUT = "timeout";
+	private static final String KEY_TIMEOUT_BLOB = "timeout_blob";
+	private static final String KEY_BREAKIN = "breakin";
+	private static final String KEY_BREAKOUT = "breakout";
+
+	// TABLE_ORDER_TYPE Table - column names
+
+	// TABLE_PAYMENT Table - column names
+	private static final String KEY_PAYMENT_ID = "payment_id";
+
+	// TABLE_POS_SETTINGS Table - column names
+	private static final String KEY_BRANCH_ID = "branch_id";
+	private static final String KEY_IS_AUTOMATIC = "is_automatic";
+	private static final String KEY_SYNC_FREQUENCY = "sync_frequency";
+	private static final String KEY_SYNC_TIME = "sync_time";
+
+	// TABLE_PRODUCT Table - column names
+	private static final String KEY_PRICE = "price";
+	private static final String KEY_CAN_BE_TAKEN_OUT = "can_be_taken_out";
+
+	// TABLE_PRODUCT_CATEGORY Table - column names
+
+	// TABLE_RECEIPT_DETAIL Table - column names
+	private static final String KEY_COMPANY_NAME = "company_name";
+	private static final String KEY_OPERATED_BY = "operated_by";
+	private static final String KEY_TIN = "tin";
+	private static final String KEY_SN = "sn";
+	private static final String KEY_ACC_NO = "acc_no";
+
+	// TABLE_RECIPE Table - column names
+	
+	// TABLE_SALES Table - column names
+
+	// TABLE_SALES_CUSTOMER Table - column names	
+
+	// TABLE_SALES_PRODUCT Table - column names
+
+	// TABLE_SALES_SUMMARY_PER_USER Table - column names
+	private static final String KEY_CASH_TOTAL = "cash_total";
+	private static final String KEY_CASH_EXPECTED = "cash_expected";
+
+	// TABLE_STOCK Table - column names
+	private static final String KEY_STOCK_ID = "stock_id";
+	private static final String KEY_LAST_UPDATED_DATE = "last_updated_date";
+	private static final String KEY_LAST_UPDATED_USER_ID = "last_updated_user_id";
+
+	// TABLE_STOCK_TYPE Table - column names
+
+	// TABLE_TRANSACTION_DELETE_PRODUCT Table - column names	
+	
+	// TABLE_USER Table - column names	
+	private static final String KEY_USER = "user";
+	private static final String KEY_USERNAME = "username";
+	private static final String KEY_PASSWORD = "password";
+
+	// TABLE_USER_QUESTION Table - column names
+	private static final String KEY_QUESTION = "question";
+	private static final String KEY_ANSWER = "answer";
+	
+	/* ---------------------------------------- Table Creation Statements ---------------------------------------- */
+	
+	// TABLE_CUSTOMER Table - create table
+	private static final String CREATE_TABLE_CUSTOMER = "CREATE TABLE customer(customer_id nvarchar(25) NOT NULL primary key, first_name nvarchar(50) NULL, last_name nvarchar(50) NULL, address nvarchar(200) NULL, address_landmark nvarchar(200) NULL, tel_no nvarchar(15) NULL, mobile_no nvarchar(15) NULL);";
+	
+	// TABLE_DISCOUNT Table - create table	
+	private static final String CREATE_TABLE_DISCOUNT = "CREATE TABLE discount(discount_id integer  NOT NULL primary key, name nvarchar(20) NOT NULL, percentage decimal NOT NULL);";
+			
+	// TABLE_DISCOUNT_SALES Table - create table	
+	private static final String CREATE_TABLE_DISCOUNT_SALES = "CREATE TABLE discount_sales(id integer NOT NULL PRIMARY KEY autoincrement, sales_id nvarchar(25) NOT NULL, discount_id integer NOT NULL, foreign key (sales_id) references sales(sales_id), foreign key (discount_id) references discount(discount_id));";
+	
+	// TABLE_INGREDIENT Table - create table
+	private static final String CREATE_TABLE_INGREDIENT = "CREATE TABLE ingredient(ingredient_id integer NOT NULL PRIMARY KEY, recipe_id integer NOT NULL, quantity double NOT NULL, unit nvarchar(10) NOT NULL, foreign key (recipe_id) references recipe(recipe_id));";
+	
+	// TABLE_LOG_CASH Table - create table
+	private static final String CREATE_TABLE_LOG_CASH = "CREATE TABLE log_cash(id integer  NOT NULL PRIMARY KEY autoincrement, is_cash_in boolean NOT NULL, amount double NOT NULL, user_id integer NOT NULL, date datetime NOT NULL, foreign key (user_id) references user(user_id));";
+	
+	// TABLE_LOG_TRANSACTION_DELETE Table - create table
+	private static final String CREATE_TABLE_LOG_TRANSACTION_DELETE = "CREATE TABLE log_transaction_delete(transaction_delete_id nvarchar(25) NOT NULL PRIMARY KEY, sales_id nvarchar(25) NOT NULL, user_id integer NOT NULL, customer_id nvarchar(25) NULL, date datetime NOT NULL, foreign key (sales_id) references sales(sales_id), foreign key (user_id) references user(user_id), foreign key (customer_id) references customer(customer_id));";
+	
+	// TABLE_LOG_USER_TIME_SHEET Table - create table	
+	private static final String CREATE_TABLE_LOG_USER_TIME_SHEET = "CREATE TABLE log_user_time_sheet(id integer  NOT NULL PRIMARY KEY autoincrement, user_id int NOT NULL, timein datetime NULL, timein_blob blob NULL, timeout datetime NULL, timeout_blob blob NULL, breakin datetime NULL, breakout datetime NULL, sales_summary_id nvarchar(25) NULL, foreign key (user_id) references user(user_id), foreign key (sales_summary_id) references sales_summary_per_user(sales_summary_id));";
+	
+	// TABLE_ORDER_TYPE Table - create table
+	private static final String CREATE_TABLE_ORDER_TYPE = "CREATE TABLE order_type(order_type_id integer  NOT NULL PRIMARY KEY, name nvarchar(15) NOT NULL);";
+	
+	// TABLE_PAYMENT Table - create table
+	private static final String CREATE_TABLE_PAYMENT = "CREATE TABLE payment(payment_id nvarchar(25) NOT NULL PRIMARY KEY, sales_id nvarchar(25) NOT NULL, amount double NOT NULL, receipt_id nvarchar(100) NOT NULL, date datetime NOT NULL, foreign key (sales_id) references sales(sales_id));";
+	
+	// TABLE_POS_SETTINGS Table - create table
+	private static final String CREATE_TABLE_POS_SETTINGS = "CREATE TABLE pos_settings(id integer  NOT NULL PRIMARY KEY, branch_id integer NOT NULL, is_automatic boolean NOT NULL, sync_frequency nvarchar(20) NULL, sync_time datetime NULL);";
+	
+	// TABLE_PRODUCT Table - create table
+	private static final String CREATE_TABLE_PRODUCT = "CREATE TABLE product(product_id integer  NOT NULL PRIMARY KEY, name nvarchar(100) NOT NULL, price double NOT NULL, unit nvarchar(10) NOT NULL, category_id integer  NOT NULL, sortorder integer  NOT NULL, can_be_taken_out boolean NOT NULL, foreign key (category_id) references product_category(category_id));";
+	
+	// TABLE_PRODUCT_CATEGORY Table - create table
+	private static final String CREATE_TABLE_PRODUCT_CATEGORY = "CREATE TABLE product_category(category_id integer  NOT NULL PRIMARY KEY, name nvarchar(100) NOT NULL, sortorder integer  NOT NULL);";
+	
+	// TABLE_RECEIPT_DETAIL Table - create table
+	private static final String CREATE_TABLE_RECEIPT_DETAIL = "CREATE TABLE receipt_detail(receipt_id integer primary key NOT NULL, company_name nvarchar(200) NOT NULL, operated_by nvarchar(200) NOT NULL, address nvarchar(200) NOT NULL, tin nvarchar(50) NOT NULL, sn nvarchar(50) NOT NULL, acc_no nvarchar(50) NOT NULL);";
+	
+	// TABLE_RECIPE Table - create table	
+	private static final String CREATE_TABLE_RECIPE = "CREATE TABLE recipe(recipe_id integer NOT NULL PRIMARY KEY, product_id integer NOT NULL, foreign key (product_id) references product(product_id));";
+	
+	// TABLE_SALES Table - create table
+	private static final String CREATE_TABLE_SALES = "CREATE TABLE sales(sales_id nvarchar(25) NOT NULL PRIMARY KEY, order_type_id integer NOT NULL, user_id integer NOT NULL, date datetime NOT NULL, foreign key (order_type_id) references order_type(order_type_id), foreign key (user_id ) references user(user_id));";
+	
+	// TABLE_SALES_CUSTOMER Table - create table	
+	private static final String CREATE_TABLE_SALES_CUSTOMER = "CREATE TABLE sales_customer(id integer NOT NULL PRIMARY KEY, sales_id nvarchar(25) NOT NULL, customer_id nvarchar(25) NULL, foreign key (sales_id) references sales(sales_id), foreign key (customer_id) references customer(customer_id));";
+	
+	// TABLE_SALES_PRODUCT Table - create table
+	private static final String CREATE_TABLE_SALES_PRODUCT = "CREATE TABLE sales_product(id integer NOT NULL PRIMARY KEY autoincrement, sales_id nvarchar(25) NOT NULL, product_id integer NOT NULL, quantity integer NOT NULL, foreign key (sales_id) references sales(sales_id), foreign key (product_id) references product(product_id));";
+	
+	// TABLE_SALES_SUMMARY_PER_USER Table - create table
+	private static final String CREATE_TABLE_SALES_SUMMARY_PER_USER = "CREATE TABLE sales_summary_per_user(sales_summary_id nvarchar(25) NOT NULL PRIMARY KEY, cash_total double NOT NULL, cash_expected double NOT NULL);";
+	
+	// TABLE_STOCK Table - create table
+	private static final String CREATE_TABLE_STOCK = "CREATE TABLE stock(stock_id integer primary key NOT NULL, stock_type_id integer NOT NULL, id integer NOT NULL, quantity integer NOT NULL, last_updated_date datetime NOT NULL, last_updated_user_id integer NOT NULL, foreign key (stock_type_id) references stock_type(stock_type_id), foreign key (last_updated_user_id) references user(user_id));";
+	
+	// TABLE_STOCK_TYPE Table - create table
+	private static final String CREATE_TABLE_STOCK_TYPE = "CREATE TABLE stock_type(stock_type_id integer  NOT NULL primary key, name nvarchar(100) NOT NULL);";
+	
+	// TABLE_TRANSACTION_DELETE_PRODUCT Table - create table	
+	private static final String CREATE_TABLE_TRANSACTION_DELETE_PRODUCT = "CREATE TABLE transaction_delete_product(id integer NOT NULL PRIMARY KEY autoincrement, transaction_delete_id nvarchar(25) NOT NULL, product_id integer NOT NULL, quantity integer NOT NULL, foreign key (transaction_delete_id) references transaction_delete_product(transaction_delete_id), foreign key (product_id) references product(product_id));";
+	
+	// TABLE_USER - create table
+	private static final String CREATE_TABLE_USER = "CREATE TABLE user(user_id integer  NOT NULL PRIMARY KEY, username nvarchar(20) NOT NULL, password nvarchar(20) NOT NULL);";
+	
+	// TABLE_USER_QUESTION Table - create table
+	private static final String CREATE_TABLE_USER_QUESTION = "CREATE TABLE user_question(id integer NOT NULL PRIMARY KEY, user_id integer NOT NULL, question nvarchar(200) NOT NULL, answer nvarchar(200) NOT NULL, foreign key (user_id) references user(user_id));";
