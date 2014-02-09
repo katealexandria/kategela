@@ -94,7 +94,8 @@
                         android:text="@string/Total" />
 
                     <TextView
-                        android:text="75.50"
+                        android:text="0.00"
+                        android:id="@+id/balTotal"
                         style="@style/h3_subtotal_amt" />
 
                 </TableRow>
@@ -114,7 +115,8 @@
 	
 	                    <TextView
 	                        style="@style/h3_item"
-	                        android:text="100.00" />
+	                        android:id="@+id/paymentCash"
+	                        android:text="0.00" />
 	
 	                </TableRow>
                     
@@ -129,7 +131,8 @@
 
                     <TextView
                         style="@style/h3_subtotal_amt"
-                        android:text="24.50" />
+                        android:id="@+id/paymentChange"
+	                    android:text="0.00" />
 
                 </TableRow>
             </TableLayout>

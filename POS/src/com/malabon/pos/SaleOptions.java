@@ -1,7 +1,10 @@
 package com.malabon.pos;
 
 import android.app.Activity;
+import android.app.Instrumentation.ActivityResult;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -31,6 +34,9 @@ public class SaleOptions extends Activity {
     }
 	
 	public void newSale(View view) {
+		SharedPreferences prefs = this.getSharedPreferences("com.malabon.pos", Context.MODE_PRIVATE);
+		prefs.edit().putBoolean("doNewSale", true).commit();
+		setResult(Activity.RESULT_OK);
         finish();
     }
 	

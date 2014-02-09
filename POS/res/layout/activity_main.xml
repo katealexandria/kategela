@@ -16,36 +16,34 @@
 		        android:layout_height="60dp" >
 		
 		        <LinearLayout
+		            android:id="@+id/catButtonsContainer"
 		            android:layout_width="match_parent"
 		            android:layout_height="wrap_content"
 		            android:background="@drawable/main_background" >
-		
-		            <ImageButton
+					
+		            <!-- 0 -->
+		            <ImageButton 
 		                style="@style/image_button_small"
 		                android:src="@android:drawable/ic_menu_search" />
-		
-		            <ImageButton
+					
+		            <!-- 1 -->
+		            <ImageButton 
 		                style="@style/image_button_small"
 		                android:src="@android:drawable/ic_media_previous" />
 		
+		            <!-- 2 -->
 		            <ImageButton
 		                style="@style/image_button_small"
-		                android:src="@android:drawable/btn_star_big_off" />
+		                android:src="@android:drawable/btn_star_big_off"
+		                android:onClick="showAllCats" />
 		
-		            <Button
-		                style="@style/image_button_small"
-		                android:text="Lunch"
-		                android:textColor="#fff" />
+		            <!-- 3 -->
+		            <!-- put cat buttons -->
 		
-		            <Button
-		                style="@style/image_button_small"
-		                android:text="Dinner"
-		                android:textColor="#fff" />
-		
-		            <ImageButton
+		            <!-- ImageButton
 		                style="@style/image_button_small"
 		                android:src="@android:drawable/ic_menu_add"
-		                android:onClick="addCategory" />
+		                android:onClick="addCategory" /-->
 		
 		            <ImageButton
 		                style="@style/image_button_small"
@@ -149,9 +147,9 @@
 			                style="@style/h3_item"
 			                android:text="@string/Price" />
 			            
-			            <TextView 
+			            <!-- TextView 
 			                style="@style/h3_item"
-			                android:text="@string/Disc" />
+			                android:text="@string/Disc" /-->
 			            
 			            <TextView 
 			                style="@style/h3_item"
@@ -170,8 +168,8 @@
 					            <TextView 
 					                style="@style/h3_item" />
 					            
-					            <TextView 
-					                style="@style/h3_item" />
+					            <!-- TextView 
+					                style="@style/h3_item" /-->
 					            
 					            <TextView 
 					                style="@style/h3_item" />
@@ -291,7 +289,8 @@
 	                    android:text="@string/Lock"
 	                    style="@style/btn_red_150"
 	                    app:layout_row="1"
-		                app:layout_column="2" />
+		                app:layout_column="2"
+		                android:onClick="login" />
 		            
                 </android.support.v7.widget.GridLayout>
 		        

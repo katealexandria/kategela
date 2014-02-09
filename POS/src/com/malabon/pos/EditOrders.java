@@ -7,11 +7,14 @@ import com.malabon.object.ClsItem;
 import com.malabon.object.ClsSale;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -50,14 +53,12 @@ public class EditOrders extends Activity {
 			LayoutInflater vi = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
 	    	TableRow newRow = (TableRow) vi.inflate(R.layout.product_edit_orders_row, null);
 	    	
-	    	TextView temp = (TextView)newRow.findViewById(R.id.cartItemName);
-	    	temp.setText(item.productName);
+	    	TextView temp = (TextView)newRow.findViewById(R.id.cartItemName);	    	
+	    	temp.setText(item.productName);	    	
 	    	temp = (TextView)newRow.findViewById(R.id.cartItemCode);
 	    	temp.setText(item.code); //"XXXX");
 	    	temp = (TextView)newRow.findViewById(R.id.cartItemPrice);
-	    	temp.setText(Double.toString(item.price));
-	    	temp = (TextView)newRow.findViewById(R.id.cartItemDiscount);
-	    	temp.setText(df.format(item.discount)); //"0");
+	    	temp.setText(df.format(item.price));
 	    	temp = (TextView)newRow.findViewById(R.id.cartItemQty);
 	    	temp.setText(String.valueOf(item.quantity)); //"1");
 	    	
@@ -73,13 +74,14 @@ public class EditOrders extends Activity {
 	    	table.addView(newRow, 0);
 		}
 		
+		sale.computeTotal();
 		
 		TextView temp = (TextView)findViewById(R.id.netTotal);
-		temp.setText(df.format(sale.getNetTotal()));
+		temp.setText(df.format(sale.total));
 		temp = (TextView)findViewById(R.id.taxTotal);
-		temp.setText(df.format(sale.getTaxTotal()));
+		temp.setText(df.format(sale.taxTotal));
 		temp = (TextView)findViewById(R.id.total);
-		temp.setText(df.format(sale.getTotal()));
+		temp.setText(df.format(sale.netTotal));
 		return;
 	}
 	
@@ -108,16 +110,25 @@ public class EditOrders extends Activity {
 			ClsItem item = sale.items.get(index);
 			item.quantity = Integer.parseInt(editText.getText().toString());
 			
-			TextView temp = (TextView)findViewById(R.id.netTotal);
-			temp.setText(df.format(sale.getNetTotal()));
+			sale.computeTotal();
+			
+			TextView temp = (TextView)findViewById(R.id.total);
+			temp.setText(df.format(sale.total));
+			temp = (TextView)findViewById(R.id.netTotal);
+			temp.setText(df.format(sale.netTotal));
 			temp = (TextView)findViewById(R.id.taxTotal);
-			temp.setText(df.format(sale.getTaxTotal()));
-			temp = (TextView)findViewById(R.id.total);
-			temp.setText(df.format(sale.getTotal()));
+			temp.setText(df.format(sale.taxTotal));
+			
 		}
 	};
 	
 	public void pay(View view) {
+		sale.computeTotal();
+		
+		SharedPreferences prefs = this.getSharedPreferences(
+				"com.malabon.pos", Context.MODE_PRIVATE);
+		prefs.edit().putString("balTotal", df.format(sale.total)).commit();
+		
 		Intent intent = new Intent(this, Payment.class);
         startActivity(intent);
     }

@@ -15,6 +15,15 @@ public class Functions extends Activity {
 		setContentView(R.layout.activity_functions);
 	}
 	
+	public void cashInOut(View view) {
+		Intent intent = new Intent(this, CashInOut.class);
+        startActivity(intent);
+    }
+	
+	public void noSale(View view) {
+        finish();
+    }
+	
 	public void cancel(View view) {
         finish();
     }

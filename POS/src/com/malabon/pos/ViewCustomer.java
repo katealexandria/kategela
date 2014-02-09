@@ -12,21 +12,18 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.malabon.database.CustomerDB;
-import com.malabon.database.DBAdapter;
 import com.malabon.object.Customer;
 
 public class ViewCustomer extends Activity {
 
 	ListView listviewCustomer;
 	ArrayList<Customer> arrayCustomer = new ArrayList<Customer>();
-	Customer_Adapter adapter;
-	DBAdapter db;
+	customerAdapter adapter;
 	CustomerDB customerDB;
 	String toastMsg;
 
@@ -40,19 +37,15 @@ public class ViewCustomer extends Activity {
 			listviewCustomer = (ListView) findViewById(R.id.listCustomer);
 			listviewCustomer.setItemsCanFocus(false);
 
-			db = new DBAdapter(this);
-			db.open();
-
-			Set_Referash_Data();
+			refreshData();
 
 		} catch (Exception e) {
-			Log.e("some error", "" + e);
+			Log.e("view_customer", "" + e);
 		}
 	}
 
 	public void addCustomer(View view) {
-		Intent add_customer = new Intent(ViewCustomer.this,
-				AddCustomer.class);
+		Intent add_customer = new Intent(ViewCustomer.this, AddCustomer.class);
 		add_customer.putExtra("called", "add");
 		add_customer.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
 				| Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -60,14 +53,14 @@ public class ViewCustomer extends Activity {
 		finish();
 	}
 
-	public void Set_Referash_Data() {
+	public void refreshData() {
 		arrayCustomer.clear();
 
 		customerDB = new CustomerDB(this);
 		customerDB.open();
 
 		ArrayList<Customer> customer_array_from_db = customerDB
-				.GetAllCustomers();
+				.getAllCustomers();
 
 		for (int i = 0; i < customer_array_from_db.size(); i++) {
 			String customer_id = customer_array_from_db.get(i).getCustomerId();
@@ -89,30 +82,26 @@ public class ViewCustomer extends Activity {
 
 			arrayCustomer.add(cust);
 		}
-		adapter = new Customer_Adapter(ViewCustomer.this,
+		adapter = new customerAdapter(ViewCustomer.this,
 				R.layout.customer_listview_row, arrayCustomer);
 		listviewCustomer.setAdapter(adapter);
 		adapter.notifyDataSetChanged();
-	}
-
-	public void Show_Toast(String msg) {
-		Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
 	}
 
 	@Override
 	public void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-		Set_Referash_Data();
+		refreshData();
 	}
 
-	public class Customer_Adapter extends ArrayAdapter<Customer> {
+	public class customerAdapter extends ArrayAdapter<Customer> {
 		Activity activity;
 		int layoutResourceId;
 		Customer customer;
 		ArrayList<Customer> data = new ArrayList<Customer>();
 
-		public Customer_Adapter(Activity act, int layoutResourceId,
+		public customerAdapter(Activity act, int layoutResourceId,
 				ArrayList<Customer> data) {
 			super(act, layoutResourceId, data);
 			this.layoutResourceId = layoutResourceId;
@@ -131,15 +120,11 @@ public class ViewCustomer extends Activity {
 
 				row = inflater.inflate(layoutResourceId, parent, false);
 				holder = new CustomerHolder();
-				holder.first_name = (TextView) row
-						.findViewById(R.id.tvFirstName);
-				holder.last_name = (TextView) row.findViewById(R.id.tvLastName);
-				holder.address = (TextView) row.findViewById(R.id.tvAddress);
-				holder.address_landmark = (TextView) row
-						.findViewById(R.id.tvAddressLandmark);
+				holder.full_name = (TextView) row.findViewById(R.id.tvFullName);
 				holder.tel_no = (TextView) row.findViewById(R.id.tvTelNo);
 				holder.mobile_no = (TextView) row.findViewById(R.id.tvMobileNo);
-				holder.edit = (Button) row.findViewById(R.id.btnUpdateCustomer);
+				holder.edit = (ImageButton) row
+						.findViewById(R.id.btnUpdateCustomer);
 
 				row.setTag(holder);
 			} else {
@@ -147,10 +132,8 @@ public class ViewCustomer extends Activity {
 			}
 			customer = data.get(position);
 			holder.edit.setTag(customer.getCustomerId());
-			holder.first_name.setText(customer.getFirstName());
-			holder.last_name.setText(customer.getLastName());
-			holder.address.setText(customer.getAddress());
-			holder.address_landmark.setText(customer.getAddressLandmark());
+			holder.full_name.setText(customer.getLastName() + ", "
+					+ customer.getFirstName());
 			holder.tel_no.setText(customer.getTelNo());
 			holder.mobile_no.setText(customer.getMobileNo());
 
@@ -158,8 +141,6 @@ public class ViewCustomer extends Activity {
 
 				@Override
 				public void onClick(View v) {
-					Log.i("Edit Button Clicked", "**********");
-
 					Intent update_customer = new Intent(activity,
 							AddCustomer.class);
 					update_customer.putExtra("called", "update");
@@ -172,13 +153,10 @@ public class ViewCustomer extends Activity {
 		}
 
 		class CustomerHolder {
-			TextView first_name;
-			TextView last_name;
-			TextView address;
-			TextView address_landmark;
+			TextView full_name;
 			TextView tel_no;
 			TextView mobile_no;
-			Button edit;
+			ImageButton edit;
 		}
 	}
 }

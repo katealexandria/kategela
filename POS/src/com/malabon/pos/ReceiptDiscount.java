@@ -38,6 +38,7 @@ public class ReceiptDiscount extends Activity {
 		SharedPreferences prefs = this.getSharedPreferences("com.malabon.pos", Context.MODE_PRIVATE);
 		prefs.edit().putFloat("discountPercent", floatPercent).commit();
 		prefs.edit().putFloat("discountPhp", floatPhp).commit();
+		prefs.edit().putBoolean("doNewSale", false).commit();
 		
 		setResult(Activity.RESULT_OK);
         finish();
