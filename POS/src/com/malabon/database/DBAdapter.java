@@ -29,7 +29,8 @@ public class DBAdapter {
 		@Override
 		public void onCreate(SQLiteDatabase db) {
 			try {
-				db.execSQL(table.getTABLE_CUSTOMER());
+				db.execSQL(table.get_TABLE_CUSTOMER());
+				db.execSQL(table.get_TABLE_USER());
 			} catch (Exception e) {
 				Log.e("create_table", "" + e);
 			}
@@ -38,6 +39,7 @@ public class DBAdapter {
 		@Override
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 			db.execSQL("DROP TABLE IF EXISTS " + CustomerDB.TABLE_CUSTOMER);
+			db.execSQL("DROP TABLE IF EXISTS " + UserDB.TABLE_USER);
 			onCreate(db);
 		}
 	}

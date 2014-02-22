@@ -2,6 +2,7 @@ package com.malabon.pos;
 
 import java.text.DecimalFormat;
 import java.util.List;
+import java.util.Map;
 
 import android.app.Activity;
 import android.content.Context;
@@ -17,11 +18,12 @@ import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.malabon.database.DBAdapter;
 import com.malabon.object.Category;
-import com.malabon.object.ClsItem;
-import com.malabon.object.ClsSale;
+import com.malabon.object.Item;
+import com.malabon.object.Sale;
+import com.malabon.object.Sync;
 
 public class MainActivity extends Activity {
 
@@ -29,9 +31,9 @@ public class MainActivity extends Activity {
 	static final int EDIT_ORDERS_REQUEST = 10;
 	static final int SALE_OPTIONS_REQUEST = 11;
 
-	ClsSale sale = new ClsSale();
-	public List<ClsItem> allItems = sale.GetAllItems();
-	List<Category> allCats = sale.GetAllCategories();
+	Sale sale;
+	List<Item> allItems;
+	List<Category> allCats;
 	DecimalFormat df = new DecimalFormat("0.00");
 	Category currentCat;
 
@@ -40,33 +42,50 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		DBAdapter db = new DBAdapter(this).open();
+		Initialize();
+	}
+	
+	private void Initialize(){
+		sale = new Sale();
+		allItems = Sync.GetItems();
+		allCats = Sync.GetCategories();
+		
+		// DBAdapter db = new DBAdapter(this).open();
 		InitializeCategories();
 		InitializeProducts(-1);
+		InitializeCustomer();
 	}
-	
-	private void InitializeCategories(){
-		LinearLayout ll = (LinearLayout)findViewById(R.id.catButtonsContainer);
-		
-		for(Category cat : allCats){
+
+	private void InitializeCustomer(){
+		String customername = getIntent().getStringExtra("CUSTOMER_NAME");
+		if (customername != null){
+			TextView tvCustomerName = (TextView) findViewById(R.id.tvCustomerName);
+			tvCustomerName.setText(customername);
+		}
+	}
+
+	private void InitializeCategories() {
+		LinearLayout ll = (LinearLayout) findViewById(R.id.catButtonsContainer);
+
+		for (Category cat : allCats) {
 			LayoutInflater vi = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-	    	
+
 			Button newButton = (Button) vi.inflate(R.layout.cat_button, null);
-	    	newButton.setId(cat.id);
-	    	newButton.setOnClickListener(catClicked);
-	    	newButton.setText(cat.name);
-	    	
-	    	ll.addView(newButton, 3);
-		}	
-		
+			newButton.setId(cat.id);
+			newButton.setOnClickListener(catClicked);
+			newButton.setText(cat.name);
+
+			ll.addView(newButton, 3);
+		}
+
 		return;
 	}
-	
+
 	private void InitializeProducts(int catId) {
 		TextView temp = (TextView) findViewById(R.id.cartItemName);
-		
+
 		sale.computeTotal();
-		
+
 		temp = (TextView) findViewById(R.id.txtTotal);
 		temp.setText(df.format(sale.total));
 
@@ -86,14 +105,12 @@ public class MainActivity extends Activity {
 				.getSystemService(LAYOUT_INFLATER_SERVICE);
 		LinearLayout rowHandle = null;
 
-		// for (Map.Entry<String,String> entry : testMap.entrySet()) {
+		for (Item item : allItems) {
 
-		for (ClsItem item : allItems) {
-			
 			// don't paint items from different category
-			if(catId != -1 && catId != item.category.id)
+			if (catId != -1 && catId != item.category_id)
 				continue;
-			
+
 			LinearLayout layout = null;
 
 			// check if odd or even style
@@ -120,7 +137,7 @@ public class MainActivity extends Activity {
 			TextView itemPrice = (TextView) layout
 					.findViewById(R.id.prodBtnItemPrice);
 
-			itemName.setText(item.productName); // entry.getKey());
+			itemName.setText(item.name); // entry.getKey());
 			itemPrice.setText(df.format(item.price)); // entry.getValue());
 
 			if (count == 0) {
@@ -151,7 +168,7 @@ public class MainActivity extends Activity {
 		Intent intent = new Intent(this, AddCategory.class);
 		startActivity(intent);
 	}
-	
+
 	public void showAllCats(View view) {
 		InitializeProducts(-1);
 	}
@@ -184,12 +201,12 @@ public class MainActivity extends Activity {
 
 	public void pay(View view) {
 		sale.computeTotal();
-		
-		SharedPreferences prefs = this.getSharedPreferences(
-				"com.malabon.pos", Context.MODE_PRIVATE);
+
+		SharedPreferences prefs = this.getSharedPreferences("com.malabon.pos",
+				Context.MODE_PRIVATE);
 		prefs.edit().putString("balTotal", df.format(sale.total)).commit();
-		
-		Intent intent = new Intent(this, Payment.class);
+
+		Intent intent = new Intent(this, PaymentActivity.class);
 		startActivity(intent);
 	}
 
@@ -200,40 +217,45 @@ public class MainActivity extends Activity {
 		public void onClick(View v) {
 
 			int id = v.getId();
-			ClsItem currentItem = new ClsItem();
+			Item currentItem = new Item();
 			int currentItemIndex = -1;
-			
-			//check if item was already added
-			for (ClsItem item : sale.items) {
+
+			// check if item was already added
+			for (Item item : sale.items) {
 				if (item.id == id) {
-					currentItem = item;
-					currentItemIndex = (sale.items.size() - sale.items
-							.indexOf(currentItem)) + 1;
-					sale.items.remove(currentItem);
-					currentItem.quantity += 1;					
+					currentItem = item;					
+					if(currentItem.availableQty > 0){
+						currentItemIndex = (sale.items.size() - sale.items
+								.indexOf(currentItem)) + 1;
+						sale.items.remove(currentItem);
+						currentItem.quantity += 1;
+					}
 					break;
 				}
-			}
+			}			
 			// if not, set item from allItems
-			if(currentItemIndex == -1){
-				for (ClsItem item : allItems) {
+			if (currentItemIndex == -1) {
+				for (Item item : allItems) {
 					if (item.id == id) {
-						currentItem = item;					
+						currentItem = item;
 						break;
 					}
 				}
+			}			
+			
+			if(currentItem.availableQty == 0){
+				showToast("Out of stock!");
+				return;
 			}
 			
+			allItems.remove(currentItem);
+			currentItem.availableQty -= 1;
+			allItems.add(currentItem);			
 			sale.items.add(currentItem);
 
-			//
-			String name = currentItem.productName;
-			// ((TextView)v.findViewById(R.id.prodBtnItemName)).getText().toString();
+			String name = currentItem.name;
 			String price = df.format(currentItem.price);
-			// ((TextView)v.findViewById(R.id.prodBtnItemPrice)).getText().toString();
-
-			// create your object here
-			// temporarily use strings to display
+			
 			LayoutInflater vi = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
 			TableRow newRow = (TableRow) vi.inflate(R.layout.product_info_row,
 					null);
@@ -241,8 +263,6 @@ public class MainActivity extends Activity {
 
 			TextView temp = (TextView) newRow.findViewById(R.id.cartItemName);
 			temp.setText(name);
-			temp = (TextView) newRow.findViewById(R.id.cartItemCode);
-			temp.setText(currentItem.code); // "XXXX");
 			temp = (TextView) newRow.findViewById(R.id.cartItemPrice);
 			temp.setText(price);
 			temp = (TextView) newRow.findViewById(R.id.cartItemQty);
@@ -266,27 +286,24 @@ public class MainActivity extends Activity {
 			temp.setText(df.format(sale.netTotal));
 		}
 	};
-	
+
 	public OnClickListener catClicked = new OnClickListener() {
 		@Override
 		public void onClick(View v) {
 			InitializeProducts(v.getId());
 		}
 	};
-	
 
 	private void bindOrderData() {
 		TableLayout tableLayout = (TableLayout) findViewById(R.id.productCart);
 		tableLayout.removeViews(2, tableLayout.getChildCount() - 7);
-		for (ClsItem item : sale.items) {
+		for (Item item : sale.items) {
 			LayoutInflater vi = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
 			TableRow newRow = (TableRow) vi.inflate(R.layout.product_info_row,
 					null);
 
 			TextView temp = (TextView) newRow.findViewById(R.id.cartItemName);
-			temp.setText(item.productName);
-			temp = (TextView) newRow.findViewById(R.id.cartItemCode);
-			temp.setText(item.code);
+			temp.setText(item.name);
 			temp = (TextView) newRow.findViewById(R.id.cartItemPrice);
 			temp.setText(df.format(item.price));
 			temp = (TextView) newRow.findViewById(R.id.cartItemQty);
@@ -294,7 +311,7 @@ public class MainActivity extends Activity {
 
 			tableLayout.addView(newRow, 2);
 		}
-		
+
 		sale.computeTotal();
 
 		TextView temp = (TextView) findViewById(R.id.txtTotal);
@@ -313,10 +330,19 @@ public class MainActivity extends Activity {
 		switch (requestCode) {
 		case (EDIT_ORDERS_REQUEST): {
 			if (resultCode == Activity.RESULT_OK) {
-				// TODO Extract the data returned from the child Activity.
 				Bundle data = intent.getExtras();
-				sale = (ClsSale) data.get("item");
+				sale = (Sale) data.get("item");
 				bindOrderData();
+				
+				// Reset qty. of deleted items
+				for(Item d : sale.deletedItems){
+					for(Item item : allItems){
+						if(item.id == d.id){
+							item.availableQty = Sync.GetItemAvailableQty(item.id);
+							item.quantity = 1;
+						}
+					}
+				}
 			}
 			break;
 		}
@@ -324,29 +350,34 @@ public class MainActivity extends Activity {
 			if (resultCode == Activity.RESULT_OK) {
 				SharedPreferences prefs = this.getSharedPreferences(
 						"com.malabon.pos", Context.MODE_PRIVATE);
-				
+
 				// Deduct discounts
 				sale.receiptDiscountPercent = prefs.getFloat("discountPercent",
 						0);
 				sale.receiptDiscountPhp = prefs.getFloat("discountPhp", 0);
 				sale.computeTotal();
-				
+
 				TextView temp = (TextView) findViewById(R.id.txtTotal);
 				temp.setText(df.format(sale.total));
 				temp = (TextView) findViewById(R.id.txtTaxTotal);
 				temp.setText(df.format(sale.taxTotal));
 				temp = (TextView) findViewById(R.id.txtNetTotal);
 				temp.setText(df.format(sale.netTotal));
-				
+
 				// If new sale...
 				boolean doNewSale = prefs.getBoolean("doNewSale", false);
-				if(doNewSale){
-					sale = new ClsSale();
+				if (doNewSale) {
+					sale = new Sale();
 					bindOrderData();
 				}
 			}
 			break;
 		}
 		}
+	}
+	
+	private void showToast(String message) {
+		Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT)
+				.show();
 	}
 }

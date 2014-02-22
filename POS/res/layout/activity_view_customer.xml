@@ -32,7 +32,9 @@
                 android:layout_width="0dip"
                 android:layout_weight="1"
                 android:text="@string/MobileNo" />
+            
         </TableRow>
+        
     </TableLayout>
 
     <LinearLayout
@@ -57,7 +59,7 @@
             style="@style/btn_green_150"
             android:focusable="false"
             android:onClick="addCustomer"
-            android:text="Add Customer" />
+            android:text="@string/NewCustomer" />
 
         <Button
             style="@style/btn_red_150"

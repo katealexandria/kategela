@@ -1,5 +1,6 @@
 package com.malabon.pos;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import android.app.Activity;
@@ -42,6 +43,10 @@ public class ViewCustomer extends Activity {
 		} catch (Exception e) {
 			Log.e("view_customer", "" + e);
 		}
+	}
+
+	public void cancel(View view) {
+		finish();
 	}
 
 	public void addCustomer(View view) {
@@ -120,6 +125,8 @@ public class ViewCustomer extends Activity {
 
 				row = inflater.inflate(layoutResourceId, parent, false);
 				holder = new CustomerHolder();
+				holder.select = (ImageButton) row
+						.findViewById(R.id.btnSelectCustomer);
 				holder.full_name = (TextView) row.findViewById(R.id.tvFullName);
 				holder.tel_no = (TextView) row.findViewById(R.id.tvTelNo);
 				holder.mobile_no = (TextView) row.findViewById(R.id.tvMobileNo);
@@ -131,14 +138,24 @@ public class ViewCustomer extends Activity {
 				holder = (CustomerHolder) row.getTag();
 			}
 			customer = data.get(position);
+			holder.select.setTag(customer.getFirstName() + " " + customer.getLastName());
 			holder.edit.setTag(customer.getCustomerId());
 			holder.full_name.setText(customer.getLastName() + ", "
 					+ customer.getFirstName());
 			holder.tel_no.setText(customer.getTelNo());
 			holder.mobile_no.setText(customer.getMobileNo());
 
+			holder.select.setOnClickListener(new OnClickListener(){
+				@Override
+				public void onClick(View v) {
+					Intent select_customer = new Intent(activity,
+							MainActivity.class);
+					select_customer.putExtra("CUSTOMER_NAME", v.getTag()
+							.toString());
+					activity.startActivity(select_customer);
+				}
+			});
 			holder.edit.setOnClickListener(new OnClickListener() {
-
 				@Override
 				public void onClick(View v) {
 					Intent update_customer = new Intent(activity,
@@ -153,6 +170,7 @@ public class ViewCustomer extends Activity {
 		}
 
 		class CustomerHolder {
+			ImageButton select;
 			TextView full_name;
 			TextView tel_no;
 			TextView mobile_no;

@@ -72,7 +72,7 @@ public class AddCustomer extends Activity {
 				showToast("Data inserted successfully");
 			else
 				showToast("Data insertion unsuccessful");
-			viewAllCustomer(null);
+			cancel(null);
 		}
 	}
 
@@ -89,11 +89,11 @@ public class AddCustomer extends Activity {
 				showToast("Data updated successfully");
 			else
 				showToast("Data update unsuccessful");
-			viewAllCustomer(null);
+			cancel(null);
 		}
 	}
 
-	public void viewAllCustomer(View view) {
+	public void cancel(View view) {
 		Intent view_user = new Intent(AddCustomer.this, ViewCustomer.class);
 		view_user.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
 				| Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -120,13 +120,13 @@ public class AddCustomer extends Activity {
 			throws NumberFormatException {
 		Boolean isValid = true;
 		if (edt.getText().toString().length() <= 0) {
-			edt.setError("Number Only");
+			edt.setError("Numbers Only");
 			isValid = false;
 		} else if (edt.getText().toString().length() < MinLen) {
-			edt.setError("Minimum length " + MinLen);
+			edt.setError("Minimum length: " + MinLen);
 			isValid = false;
 		} else if (edt.getText().toString().length() > MaxLen) {
-			edt.setError("Maximum length " + MaxLen);
+			edt.setError("Maximum length: " + MaxLen);
 			isValid = false;
 		} else {
 			isValid = true;
@@ -137,10 +137,10 @@ public class AddCustomer extends Activity {
 	public Boolean Is_Valid_Name(EditText edt) throws NumberFormatException {
 		Boolean isValid = true;
 		if (edt.getText().toString().length() <= 0) {
-			edt.setError("Accept Alphabets Only.");
+			edt.setError("Alphabets Only");
 			isValid = false;
 		} else if (!edt.getText().toString().matches("[a-zA-Z ]+")) {
-			edt.setError("Accept Alphabets Only.");
+			edt.setError("Alphabets Only");
 			isValid = false;
 		} else {
 			isValid = true;

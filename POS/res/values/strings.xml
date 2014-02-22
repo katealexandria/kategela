@@ -3,7 +3,7 @@
 
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ App Names ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 
-    <string name="app_name">PansitMalabon POS</string>
+    <string name="app_name">PM POS</string>
     <string name="action_settings"></string>
     <string name="title_activity_main"></string>
     <string name="title_activity_add_category"></string>
@@ -14,6 +14,8 @@
     <string name="title_activity_functions"></string>
     <string name="title_activity_receipt_discount"></string>
     <string name="title_activity_close_day"></string>
+    <string name="title_activity_cash_in_out"></string>
+    <string name="hello_world">Hello world!</string>
 
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Universal ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 
@@ -21,6 +23,7 @@
     <!-- Buttons -->
     <string name="Close">Close</string>
     <string name="Save">Save</string>
+    <string name="SaveUpdate">Save Update</string>
     <string name="Confirm">Confirm</string>
     <string name="Cancel">Cancel</string>
     <string name="Pay">Pay</string>
@@ -54,6 +57,7 @@
     <string name="p1">PHP 1</string>
 
     <!-- Keypad -->
+    <string name="defaultNum">0.00</string>
     <string name="zero">0</string>
     <string name="one">1</string>
     <string name="two">2</string>
@@ -74,6 +78,9 @@
         <item>20%</item>
         <item>50%</item>
     </string-array>
+    
+    <!-- Image -->
+    <string name="imagedesc">Image</string>
 
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Activity ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 
@@ -106,6 +113,7 @@
     <string name="AddressLandmark">Address Landmark</string>
     <string name="TelNo">Tel No.</string>
     <string name="MobileNo">Mobile No.</string>
+    <string name="CustomerName">Customer Name</string>
 
     <!-- Discount -->
     <string name="ReceiptDiscount">Receipt Discount</string>
@@ -145,8 +153,6 @@
     <!-- Sale Options -->
     <string name="PrintReceipt">Print Receipt</string>
     <string name="NewSale">New Sale</string>
-    <string name="title_activity_cash_in_out">Cash-in/out</string>
-    <string name="hello_world">Hello world!</string>
     
     <!-- Cash in/out -->
     <string name="CashIn">Cash In</string>

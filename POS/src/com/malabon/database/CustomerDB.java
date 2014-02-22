@@ -91,7 +91,7 @@ public class CustomerDB {
 					KEY_CUSTOMER_ID, KEY_FIRST_NAME, KEY_LAST_NAME,
 					KEY_ADDRESS, KEY_ADDRESS_LANDMARK, KEY_TEL_NO,
 					KEY_MOBILE_NO }, KEY_CUSTOMER_ID + "=?",
-					new String[] { String.valueOf(customerid) }, null, null,
+					new String[] { customerid }, null, null,
 					null, null);
 
 			if (cursor != null)
@@ -113,7 +113,8 @@ public class CustomerDB {
 	public ArrayList<Customer> getAllCustomers() {
 		try {
 			customer_list.clear();
-			String selectQuery = "SELECT  * FROM " + TABLE_CUSTOMER;
+			String selectQuery = "SELECT * FROM " + TABLE_CUSTOMER + " ORDER BY "
+					+ KEY_LAST_NAME + " LIMIT 10";
 
 			SQLiteDatabase db = this.DbHelper.getWritableDatabase();
 			Cursor cursor = db.rawQuery(selectQuery, null);
@@ -176,5 +177,90 @@ public class CustomerDB {
 			Log.e("get_customer_count", "" + e);
 		}
 		return num;
+	}
+	
+	public void tempAdd(){
+		Customer c;
+		
+		c = new Customer();
+		c.first_name = "Noble";
+		c.last_name = "Hodge";
+		c.address = "Ap #708-5317 Arcu. St.";
+		c.address_landmark = "Enim Mauris Quis LLC";
+		c.tel_no = "09751856044";
+		c.mobile_no = "9229519";
+		addCustomer(c);
+		
+		c = new Customer();
+		c.first_name = "Jeremy";
+		c.last_name = "Gibson";
+		c.address = "P.O. Box 402, 8731 Vitae, Street";
+		c.address_landmark = "Ornare Tortor Institute";
+		c.tel_no = "7469708";
+		c.mobile_no = "09786189950";
+		addCustomer(c);
+		
+		c = new Customer();
+		c.first_name = "Evan";
+		c.last_name = "Mcdowell";
+		c.address = "487-7041 Neque St.";
+		c.address_landmark = "In Faucibus Orci Industries";
+		c.tel_no = "5225500";
+		c.mobile_no = "09096149581";
+		addCustomer(c);
+		
+		c = new Customer();
+		c.first_name = "Magee";
+		c.last_name = "Merrill";
+		c.address = "2722 Diam Ave";
+		c.address_landmark = "Sagittis Placerat Cras Associates";
+		c.tel_no = "6484307";
+		c.mobile_no = "09456244540";
+		addCustomer(c);
+		
+		c = new Customer();
+		c.first_name = "Hilel";
+		c.last_name = "Christensen";
+		c.address = "P.O. Box 325, 160 Et Rd.";
+		c.address_landmark = "Adipiscing Elit Etiam Corp.";
+		c.tel_no = "3499793";
+		c.mobile_no = "09740522018";
+		addCustomer(c);
+		
+		c = new Customer();
+		c.first_name = "Kaye";
+		c.last_name = "Palmer";
+		c.address = "P.O. Box 365, 4958 Orci, Road";
+		c.address_landmark = "Erat Eget Company";
+		c.tel_no = "7812327";
+		c.mobile_no = "09274836213";
+		addCustomer(c);
+		
+		c = new Customer();
+		c.first_name = "Mark";
+		c.last_name = "Foster";
+		c.address = "Ante Maecenas Mi Corporation";
+		c.address_landmark = "P.O. Box 234, 6597 Mi Street";
+		c.tel_no = "6267504";
+		c.mobile_no = "09619654610";
+		addCustomer(c);
+		
+		c = new Customer();
+		c.first_name = "Germaine";
+		c.last_name = "Lynch";
+		c.address = "P.O. Box 559, 5084 Praesent Avenue";
+		c.address_landmark = "Phasellus Corporation";
+		c.tel_no = "4546833";
+		c.mobile_no = "09231631996";
+		addCustomer(c);
+		
+		c = new Customer();
+		c.first_name = "Clare";
+		c.last_name = "Mitchell";
+		c.address = "3890 Dui. Road";
+		c.address_landmark = "Aliquet Corp.";
+		c.tel_no = "7207638";
+		c.mobile_no = "09921536448";
+		addCustomer(c);
 	}
 }

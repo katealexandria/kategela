@@ -7,10 +7,11 @@
 				style="@style/h3_item"
 				android:text="Cheese burger" />
 			
+			<!--
 			<TextView 
 			    android:id="@+id/cartItemCode"
 				style="@style/h3_item"
-				android:text="XXX" />
+				android:text="XXX" /> -->
 			
 			<TextView 
 			    android:id="@+id/cartItemPrice"

@@ -39,7 +39,7 @@
                 android:value="com.malabon.pos.MainActivity" />
         </activity>
         <activity
-            android:name="com.malabon.pos.Payment"
+            android:name="com.malabon.pos.PaymentActivity"
             android:parentActivityName="com.malabon.pos.MainActivity"
             android:theme="@android:style/Theme.Dialog" >
             <meta-data
@@ -48,7 +48,7 @@
         </activity>
         <activity
             android:name="com.malabon.pos.AddPayment"
-            android:parentActivityName="com.malabon.pos.Payment"
+            android:parentActivityName="com.malabon.pos.PaymentActivity"
             android:theme="@android:style/Theme.Dialog" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

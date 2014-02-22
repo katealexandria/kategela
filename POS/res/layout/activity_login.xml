@@ -35,7 +35,8 @@
                 app:layout_column="0"
                 app:layout_row="2"
                 app:layout_rowSpan="2"
-                app:layout_gravity="right" />
+                app:layout_gravity="right" 
+                android:contentDescription="@string/imagedesc" />
 
             <EditText
                 android:id="@+id/txtUsername"

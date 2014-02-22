@@ -24,18 +24,21 @@
 		            <!-- 0 -->
 		            <ImageButton 
 		                style="@style/image_button_small"
-		                android:src="@android:drawable/ic_menu_search" />
+		                android:src="@drawable/ic_menu_search" 
+		                android:contentDescription="@string/imagedesc" />
 					
 		            <!-- 1 -->
 		            <ImageButton 
 		                style="@style/image_button_small"
-		                android:src="@android:drawable/ic_media_previous" />
+		                android:src="@drawable/ic_media_previous" 
+		                android:contentDescription="@string/imagedesc" />
 		
 		            <!-- 2 -->
 		            <ImageButton
 		                style="@style/image_button_small"
-		                android:src="@android:drawable/btn_star_big_off"
-		                android:onClick="showAllCats" />
+		                android:src="@drawable/btn_star_big_off"
+		                android:onClick="showAllCats" 
+		                android:contentDescription="@string/imagedesc" />
 		
 		            <!-- 3 -->
 		            <!-- put cat buttons -->
@@ -47,7 +50,8 @@
 		
 		            <ImageButton
 		                style="@style/image_button_small"
-		                android:src="@android:drawable/ic_media_next" />
+		                android:src="@drawable/ic_media_next" 
+		                android:contentDescription="@string/imagedesc" />
 
 		        </LinearLayout>
 
@@ -120,15 +124,17 @@
 			            style="@style/table_header">
 			            
 			            <TextView
+			                android:id="@+id/tvCustomerName"
 		                    style="@style/H2"
-		                    android:text="Customer Name" />
+		                    android:text="@string/CustomerName" />
 		
 		                <ImageButton
 		                    style="@style/image_button_small"
 		                    android:layout_width="10dp"
 		                    android:layout_gravity="right"
-		                    android:src="@android:drawable/ic_input_add" 
-		                    android:onClick="addCustomer" />
+		                    android:src="@drawable/ic_input_add" 
+		                    android:onClick="addCustomer" 
+		                    android:contentDescription="@string/imagedesc" />
 			            
 			        </TableRow>
 			        
@@ -139,9 +145,9 @@
 			                style="@style/h3_item"
 			                android:text="@string/Name" />
 			            
-			            <TextView 
+			            <!-- <TextView 
 			                style="@style/h3_item"
-			                android:text="@string/Code" />
+			                android:text="@string/Code" /> /-->
 			            
 			            <TextView 
 			                style="@style/h3_item"
@@ -162,8 +168,9 @@
 					            <TextView 
 					                style="@style/h3_item" />
 					            
+					            <!--
 					            <TextView 
-					                style="@style/h3_item" />
+					                style="@style/h3_item" /> /-->
 					            
 					            <TextView 
 					                style="@style/h3_item" />
@@ -180,9 +187,10 @@
 			        
 					    <ImageButton
 		                    style="@style/image_button_small"
-		                    android:src="@android:drawable/ic_menu_edit"
+		                    android:src="@drawable/ic_menu_edit"
 		                    android:layout_weight="1"
-		                    android:onClick="editOrders"/>
+		                    android:onClick="editOrders"
+		                    android:contentDescription="@string/imagedesc" />
 				    
 		        	</TableRow>
 					<TableRow
@@ -257,7 +265,8 @@
 		                android:src="@drawable/ic_launcher"
 		                app:layout_row="0"
 		                app:layout_column="0"
-		                app:layout_rowSpan="2" />
+		                app:layout_rowSpan="2" 
+		                android:contentDescription="@string/imagedesc" />
 		            
 		            <LinearLayout
 		                style="@style/wrapper_vertical"
