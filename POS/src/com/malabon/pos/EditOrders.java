@@ -19,12 +19,15 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.malabon.object.Customer;
 import com.malabon.object.Item;
 import com.malabon.object.Sale;
+import com.malabon.object.Sync;
 
 public class EditOrders extends Activity {
 	Sale sale = null;
 	DecimalFormat df = new DecimalFormat("0.00");
+	static final int PAYMENT_REQUEST = 14;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +40,7 @@ public class EditOrders extends Activity {
 			finish();
 		}
 		// Get data via the key
-		sale = (Sale) extras.get("items");
+		sale = (Sale) extras.get("Sale_EditOrders");
 		if (sale != null) {
 			// do something with the data
 			// display
@@ -46,6 +49,9 @@ public class EditOrders extends Activity {
 	}
 
 	public void loadDisplay() {
+		TextView customerName = (TextView) findViewById(R.id.editOrdersCustomerName);
+		customerName.setText(sale.customer.first_name + " " + sale.customer.last_name);
+		
 		int count = 0;
 		TableLayout table = (TableLayout) findViewById(R.id.tableLayout);
 		table.removeAllViews();
@@ -79,15 +85,19 @@ public class EditOrders extends Activity {
 			table.addView(newRow, 0);
 		}
 
-		sale.computeTotal();
-
-		TextView temp = (TextView) findViewById(R.id.netTotal);
-		temp.setText(df.format(sale.total));
-		temp = (TextView) findViewById(R.id.taxTotal);
-		temp.setText(df.format(sale.taxTotal));
-		temp = (TextView) findViewById(R.id.total);
-		temp.setText(df.format(sale.netTotal));
+		updateTotals();
 		return;
+	}
+	
+	private void updateTotals(){
+		sale.computeTotal();
+		
+		TextView temp = (TextView) findViewById(R.id.editOrdersTotal);
+		temp.setText(df.format(sale.total));
+		temp = (TextView) findViewById(R.id.editOrdersNetTotal);
+		temp.setText(df.format(sale.netTotal));
+		temp = (TextView) findViewById(R.id.editOrdersTaxTotal);
+		temp.setText(df.format(sale.taxTotal));
 	}
 
 	public OnClickListener deleteClick = new OnClickListener() {
@@ -140,39 +150,45 @@ public class EditOrders extends Activity {
 		item.quantity = Integer.parseInt(editText.getText().toString());
 		item.availableQty -= number;
 
-		sale.computeTotal();
-
-		TextView temp = (TextView) findViewById(R.id.total);
-		temp.setText(df.format(sale.total));
-		temp = (TextView) findViewById(R.id.netTotal);
-		temp.setText(df.format(sale.netTotal));
-		temp = (TextView) findViewById(R.id.taxTotal);
-		temp.setText(df.format(sale.taxTotal));
+		updateTotals();		
 	}
 
 	public void pay(View view) {
-		sale.computeTotal();
-
-		SharedPreferences prefs = this.getSharedPreferences("com.malabon.pos",
-				Context.MODE_PRIVATE);
-		prefs.edit().putString("balTotal", df.format(sale.total)).commit();
-
 		Intent intent = new Intent(this, PaymentActivity.class);
-		startActivity(intent);
+		intent.putExtra("Sale_Payment", sale);
+		startActivityForResult(intent, PAYMENT_REQUEST);
 	}
 
 	public void close(View view) {
+		BackToMain("Sale_EditOrders", Activity.RESULT_OK);
+	}
+	
+	private void BackToMain(String extraName, int result){
 		Intent resultIntent = new Intent();
 		Bundle b = new Bundle();
-		b.putSerializable("item", (Serializable) sale);
+		b.putSerializable(extraName, (Serializable) sale);
 		resultIntent.putExtras(b);
-		setResult(Activity.RESULT_OK, resultIntent);
+		setResult(result, resultIntent);
 		finish();
 	}
 	
 	private void showToast(String message) {
 		Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT)
 				.show();
+	}
+	
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+		super.onActivityResult(requestCode, resultCode, intent);
+		switch (requestCode) {
+		case(PAYMENT_REQUEST): {
+			if (resultCode == Activity.RESULT_FIRST_USER) {
+				Bundle data = intent.getExtras();
+				sale = (Sale) data.get("Sale_Payment");
+				BackToMain("Sale_Payment", Activity.RESULT_FIRST_USER);
+			}
+		}
+		}
 	}
 
 }

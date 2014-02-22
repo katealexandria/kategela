@@ -276,7 +276,7 @@
 	            
 		            	<TextView
 		                    style="@style/H3"
-		                    android:text="Angela Ignacio" />
+		                    android:id="@+id/currentUserName" />
 		
 		                <TextView
 		                    android:text="Default POS"
@@ -288,7 +288,7 @@
 	                <Button
 	                    android:id="@+id/btnSwitch"
 	                    android:text="@string/Switch"
-	                    android:onClick="login"
+	                    android:onClick="switchUser"
 	                    style="@style/btn_green_150"
 	                    app:layout_row="0"
 		                app:layout_column="2" />
@@ -299,7 +299,7 @@
 	                    style="@style/btn_red_150"
 	                    app:layout_row="1"
 		                app:layout_column="2"
-		                android:onClick="login" />
+		                android:onClick="lockRegister" />
 		            
                 </android.support.v7.widget.GridLayout>
 		        

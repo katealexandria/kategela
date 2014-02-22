@@ -9,6 +9,8 @@ public class Sync {
 	public static List<Recipe> Recipes;
 	public static List<Item> Items;
 	public static List<Category> Categories;
+	public static List<Customer> Customers;
+	public static List<User> Users;
 	
 	//---INGREDIENTS---//
 	
@@ -68,6 +70,28 @@ public class Sync {
 				return ing;
 		}
 		return null;
+	}
+	
+	public static void UpdateIngredientsQuantity(int productId, int soldQty){
+		if(Recipes == null)
+			return;
+		
+		for(Recipe rec : Recipes){
+			if(rec.product_id == productId)
+				UpdateIngredientQuantity(rec.ingredient_id, soldQty * rec.ingredient_qty);
+		}
+	}
+	
+	public static void UpdateIngredientQuantity(int ingredientId, int soldQty){
+		if(Ingredients == null)
+			return;
+		
+		for(Ingredient ing : Ingredients){
+			if(ing.id == ingredientId){
+				ing.availableQty -= soldQty;
+				return;
+			}
+		}
 	}
 	
 	//---RECIPES---//
@@ -216,6 +240,19 @@ public class Sync {
 		return availableQty;
 	}
 	
+	public static void UpdateProductQuantity(int productId, int newQty){
+		if(Items == null)
+			return;
+		
+		for(Item item : Items){
+			if(item.id == productId){
+				item.availableQty = newQty;
+				item.quantity = 1;
+				return;
+			}
+		}
+	}
+	
 	//---CATEGORIES---//
 	
 	public static List<Category> GetCategories(){		
@@ -238,4 +275,123 @@ public class Sync {
 		
 		return Categories;
 	}
+	
+	//---CUSTOMERS---//
+	
+	public static List<Customer> GetCustomers(){
+		if(Customers == null){
+			Customers = new ArrayList<Customer>();
+			Customer c;
+			
+			c = new Customer();
+			c.first_name = "Noble";
+			c.last_name = "Hodge";
+			c.address = "Ap #708-5317 Arcu. St.";
+			c.address_landmark = "Enim Mauris Quis LLC";
+			c.tel_no = "09751856044";
+			c.mobile_no = "9229519";
+			Customers.add(c);
+			
+			c = new Customer();
+			c.first_name = "Jeremy";
+			c.last_name = "Gibson";
+			c.address = "P.O. Box 402, 8731 Vitae, Street";
+			c.address_landmark = "Ornare Tortor Institute";
+			c.tel_no = "7469708";
+			c.mobile_no = "09786189950";
+			Customers.add(c);
+			
+			c = new Customer();
+			c.first_name = "Evan";
+			c.last_name = "Mcdowell";
+			c.address = "487-7041 Neque St.";
+			c.address_landmark = "In Faucibus Orci Industries";
+			c.tel_no = "5225500";
+			c.mobile_no = "09096149581";
+			Customers.add(c);
+			
+			c = new Customer();
+			c.first_name = "Magee";
+			c.last_name = "Merrill";
+			c.address = "2722 Diam Ave";
+			c.address_landmark = "Sagittis Placerat Cras Associates";
+			c.tel_no = "6484307";
+			c.mobile_no = "09456244540";
+			Customers.add(c);
+			
+			c = new Customer();
+			c.first_name = "Hilel";
+			c.last_name = "Christensen";
+			c.address = "P.O. Box 325, 160 Et Rd.";
+			c.address_landmark = "Adipiscing Elit Etiam Corp.";
+			c.tel_no = "3499793";
+			c.mobile_no = "09740522018";
+			Customers.add(c);
+			
+			c = new Customer();
+			c.first_name = "Kaye";
+			c.last_name = "Palmer";
+			c.address = "P.O. Box 365, 4958 Orci, Road";
+			c.address_landmark = "Erat Eget Company";
+			c.tel_no = "7812327";
+			c.mobile_no = "09274836213";
+			Customers.add(c);
+			
+			c = new Customer();
+			c.first_name = "Mark";
+			c.last_name = "Foster";
+			c.address = "Ante Maecenas Mi Corporation";
+			c.address_landmark = "P.O. Box 234, 6597 Mi Street";
+			c.tel_no = "6267504";
+			c.mobile_no = "09619654610";
+			Customers.add(c);
+			
+			c = new Customer();
+			c.first_name = "Germaine";
+			c.last_name = "Lynch";
+			c.address = "P.O. Box 559, 5084 Praesent Avenue";
+			c.address_landmark = "Phasellus Corporation";
+			c.tel_no = "4546833";
+			c.mobile_no = "09231631996";
+			Customers.add(c);
+			
+			c = new Customer();
+			c.first_name = "Clare";
+			c.last_name = "Mitchell";
+			c.address = "3890 Dui. Road";
+			c.address_landmark = "Aliquet Corp.";
+			c.tel_no = "7207638";
+			c.mobile_no = "09921536448";
+			Customers.add(c);
+		}
+		return Customers;
+	}
+
+	//---USERS---//
+	
+	public static List<User> GetUsers(){
+		if(Users == null){
+			Users = new ArrayList<User>();
+			
+			User u = new User();
+			u.user_id = 1;
+			u.username = "admin";
+			u.is_admin = 1;
+			Users.add(u);
+			
+			u = new User();
+			u.user_id = 2;
+			u.username = "kate";
+			u.is_admin = 0;
+			Users.add(u);
+			
+			u = new User();
+			u.user_id = 3;
+			u.username = "gela";
+			u.is_admin = 0;
+			Users.add(u);
+		}
+		return Users;
+	}
+
 }

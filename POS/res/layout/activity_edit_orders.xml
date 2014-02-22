@@ -8,6 +8,7 @@
 
     <TextView
         style="@style/H1"
+        android:id="@+id/editOrdersCustomerName"
         android:text="Customer Name" />
 
     <TableLayout
@@ -92,7 +93,7 @@
                     android:text="@string/NetTotal" />
 
                 <TextView
-                    android:id="@+id/netTotal"
+                    android:id="@+id/editOrdersNetTotal"
                     style="@style/h3_subtotal_amt" />
             </TableRow>
 
@@ -103,7 +104,7 @@
                     android:text="@string/TaxTotal" />
 
                 <TextView
-                    android:id="@+id/taxTotal"
+                    android:id="@+id/editOrdersTaxTotal"
                     style="@style/h3_subtotal_amt" />
             </TableRow>
 
@@ -114,7 +115,7 @@
                     android:text="@string/Total" />
 
                 <TextView
-                    android:id="@+id/total"
+                    android:id="@+id/editOrdersTotal"
                     style="@style/h2_total_amt" />
             </TableRow>
         </TableLayout>

@@ -1,5 +1,7 @@
 package com.malabon.pos;
 
+import java.io.Serializable;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,7 +23,7 @@ public class AddPayment extends Activity {
 	}
 
 	private void Initialize() {
-		txtAmount = (TextView) findViewById(R.id.txtAmount);
+		txtAmount = (TextView) findViewById(R.id.txtCashEnteredAmount);
 		txtAmount.setKeyListener(null);
 	}
 
@@ -67,15 +69,16 @@ public class AddPayment extends Activity {
 	}
 
 	public void confirm(View view) {
-		Intent payment = new Intent(AddPayment.this, PaymentActivity.class);
-		payment.putExtra("cash", txtAmount.getText().toString());
-		payment.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-				| Intent.FLAG_ACTIVITY_NEW_TASK);
-		startActivity(payment);
+		Intent resultIntent = new Intent();
+		String amt = txtAmount.getText().toString();
+		resultIntent.putExtra("cash", amt);
+		setResult(Activity.RESULT_OK, resultIntent);
 		finish();
 	}
 
 	public void cancel(View view) {
+		Intent resultIntent = new Intent();
+		setResult(Activity.RESULT_CANCELED, resultIntent);
 		finish();
 	}
 

@@ -14,6 +14,7 @@ public class Sale implements Serializable {
 	public double netTotal;
 	public double receiptDiscountPercent;
 	public double receiptDiscountPhp;
+	public Customer customer;
 	
 	public void computeTotal() {
 		total = 0;
@@ -26,5 +27,11 @@ public class Sale implements Serializable {
 		total = total - totalDiscount;
 		netTotal = total * 0.93;
 		taxTotal = total * 0.07;
+	}
+	
+	public void setDefaultCustomer(){
+		this.customer = new Customer();
+		customer.first_name = "Default";
+		customer.last_name = "Customer";
 	}
 }

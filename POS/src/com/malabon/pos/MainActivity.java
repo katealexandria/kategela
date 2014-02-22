@@ -2,7 +2,6 @@ package com.malabon.pos;
 
 import java.text.DecimalFormat;
 import java.util.List;
-import java.util.Map;
 
 import android.app.Activity;
 import android.content.Context;
@@ -21,28 +20,37 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.malabon.object.Category;
+import com.malabon.object.Customer;
 import com.malabon.object.Item;
 import com.malabon.object.Sale;
 import com.malabon.object.Sync;
+import com.malabon.object.User;
 
 public class MainActivity extends Activity {
 
 	// REQUEST CODES
 	static final int EDIT_ORDERS_REQUEST = 10;
 	static final int SALE_OPTIONS_REQUEST = 11;
+	static final int SELECT_CUSTOMER_REQUEST = 12;
+	static final int LOGIN_REQUEST = 13;
+	static final int PAYMENT_REQUEST = 14;
 
 	Sale sale;
 	List<Item> allItems;
 	List<Category> allCats;
 	DecimalFormat df = new DecimalFormat("0.00");
 	Category currentCat;
-
+	String currentUser;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
 		Initialize();
+		
+		if(currentUser == null || currentUser.isEmpty())
+			Login(false, null);
 	}
 	
 	private void Initialize(){
@@ -56,12 +64,17 @@ public class MainActivity extends Activity {
 		InitializeCustomer();
 	}
 
+	private void InitializeUser(){		
+		TextView username = (TextView) findViewById(R.id.currentUserName);
+		username.setText(currentUser);
+	}
+	
 	private void InitializeCustomer(){
-		String customername = getIntent().getStringExtra("CUSTOMER_NAME");
-		if (customername != null){
-			TextView tvCustomerName = (TextView) findViewById(R.id.tvCustomerName);
-			tvCustomerName.setText(customername);
-		}
+		if(sale.customer == null)
+			sale.setDefaultCustomer();
+		
+		TextView tvCustomerName = (TextView) findViewById(R.id.tvCustomerName);
+		tvCustomerName.setText(sale.customer.first_name + " " + sale.customer.last_name);
 	}
 
 	private void InitializeCategories() {
@@ -175,13 +188,13 @@ public class MainActivity extends Activity {
 
 	public void editOrders(View view) {
 		Intent intent = new Intent(this, EditOrders.class);
-		intent.putExtra("items", sale);
+		intent.putExtra("Sale_EditOrders", sale);
 		startActivityForResult(intent, EDIT_ORDERS_REQUEST);
 	}
 
 	public void addCustomer(View view) {
 		Intent intent = new Intent(this, ViewCustomer.class);
-		startActivity(intent);
+		startActivityForResult(intent, SELECT_CUSTOMER_REQUEST);
 	}
 
 	public void saleOptions(View view) {
@@ -194,20 +207,27 @@ public class MainActivity extends Activity {
 		startActivity(intent);
 	}
 
-	public void login(View view) {
+	public void switchUser(View view) {
+		Login(false, currentUser);
+	}
+	
+	public void lockRegister(View view) {
+		Login(true, currentUser);
+	}
+	
+	private void Login(Boolean lockRegister, String username){
+		SharedPreferences prefs = this.getSharedPreferences(
+				"com.malabon.pos", Context.MODE_PRIVATE);
+		prefs.edit().putString("CurrentUser", username).commit();
+		prefs.edit().putBoolean("lockRegister", lockRegister).commit();
 		Intent intent = new Intent(this, Login.class);
-		startActivity(intent);
+		startActivityForResult(intent, LOGIN_REQUEST);
 	}
 
 	public void pay(View view) {
-		sale.computeTotal();
-
-		SharedPreferences prefs = this.getSharedPreferences("com.malabon.pos",
-				Context.MODE_PRIVATE);
-		prefs.edit().putString("balTotal", df.format(sale.total)).commit();
-
 		Intent intent = new Intent(this, PaymentActivity.class);
-		startActivity(intent);
+		intent.putExtra("Sale_Payment", sale);
+		startActivityForResult(intent, PAYMENT_REQUEST);
 	}
 
 	// Listeners
@@ -327,11 +347,13 @@ public class MainActivity extends Activity {
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
 		super.onActivityResult(requestCode, resultCode, intent);
+		SharedPreferences prefs = this.getSharedPreferences(
+				"com.malabon.pos", Context.MODE_PRIVATE);
 		switch (requestCode) {
 		case (EDIT_ORDERS_REQUEST): {
 			if (resultCode == Activity.RESULT_OK) {
 				Bundle data = intent.getExtras();
-				sale = (Sale) data.get("item");
+				sale = (Sale) data.get("Sale_EditOrders");
 				bindOrderData();
 				
 				// Reset qty. of deleted items
@@ -344,13 +366,15 @@ public class MainActivity extends Activity {
 					}
 				}
 			}
+			if (resultCode == Activity.RESULT_FIRST_USER) {
+				Bundle data = intent.getExtras();
+				sale = (Sale) data.get("Sale_Payment");
+				bindOrderData();
+			}
 			break;
 		}
 		case (SALE_OPTIONS_REQUEST): {
 			if (resultCode == Activity.RESULT_OK) {
-				SharedPreferences prefs = this.getSharedPreferences(
-						"com.malabon.pos", Context.MODE_PRIVATE);
-
 				// Deduct discounts
 				sale.receiptDiscountPercent = prefs.getFloat("discountPercent",
 						0);
@@ -369,9 +393,38 @@ public class MainActivity extends Activity {
 				if (doNewSale) {
 					sale = new Sale();
 					bindOrderData();
+					InitializeCustomer();
 				}
 			}
 			break;
+		}
+		case (SELECT_CUSTOMER_REQUEST): {
+			if (resultCode == Activity.RESULT_OK) {
+				Bundle data = intent.getExtras();
+				Customer selectedCustomer = (Customer) data.get("SelectedCustomer");
+				if(selectedCustomer != null){
+					sale.customer = selectedCustomer;
+					InitializeCustomer();
+				}
+			}
+			break;
+		}
+		case (LOGIN_REQUEST): {
+			if (resultCode == Activity.RESULT_OK) {
+				String u = prefs.getString("CurrentUser", null);
+				if(u != null){
+					currentUser = u;
+					InitializeUser();
+				}
+			}
+			break;
+		}
+		case(PAYMENT_REQUEST): {
+			if (resultCode == Activity.RESULT_FIRST_USER) {
+				Bundle data = intent.getExtras();
+				sale = (Sale) data.get("Sale_Payment");
+				bindOrderData();
+			}
 		}
 		}
 	}

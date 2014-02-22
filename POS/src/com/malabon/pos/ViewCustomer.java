@@ -2,6 +2,7 @@ package com.malabon.pos;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -19,13 +20,14 @@ import android.widget.TextView;
 
 import com.malabon.database.CustomerDB;
 import com.malabon.object.Customer;
+import com.malabon.object.Sync;
 
 public class ViewCustomer extends Activity {
 
 	ListView listviewCustomer;
-	ArrayList<Customer> arrayCustomer = new ArrayList<Customer>();
+	List<Customer> arrayCustomer = new ArrayList<Customer>();
 	customerAdapter adapter;
-	CustomerDB customerDB;
+	//CustomerDB customerDB;
 	String toastMsg;
 
 	@Override
@@ -59,34 +61,9 @@ public class ViewCustomer extends Activity {
 	}
 
 	public void refreshData() {
-		arrayCustomer.clear();
-
-		customerDB = new CustomerDB(this);
-		customerDB.open();
-
-		ArrayList<Customer> customer_array_from_db = customerDB
-				.getAllCustomers();
-
-		for (int i = 0; i < customer_array_from_db.size(); i++) {
-			String customer_id = customer_array_from_db.get(i).getCustomerId();
-			String first_name = customer_array_from_db.get(i).getFirstName();
-			String last_name = customer_array_from_db.get(i).getLastName();
-			String address = customer_array_from_db.get(i).getAddress();
-			String address_landmark = customer_array_from_db.get(i)
-					.getAddressLandmark();
-			String tel_no = customer_array_from_db.get(i).getTelNo();
-			String mobile_no = customer_array_from_db.get(i).getMobileNo();
-			Customer cust = new Customer();
-			cust.setCustomerId(customer_id);
-			cust.setFirstName(first_name);
-			cust.setLastName(last_name);
-			cust.setAddress(address);
-			cust.setAddressLandmark(address_landmark);
-			cust.setTelNo(tel_no);
-			cust.setMobileNo(mobile_no);
-
-			arrayCustomer.add(cust);
-		}
+		
+		arrayCustomer = Sync.GetCustomers();
+		
 		adapter = new customerAdapter(ViewCustomer.this,
 				R.layout.customer_listview_row, arrayCustomer);
 		listviewCustomer.setAdapter(adapter);
@@ -104,14 +81,14 @@ public class ViewCustomer extends Activity {
 		Activity activity;
 		int layoutResourceId;
 		Customer customer;
-		ArrayList<Customer> data = new ArrayList<Customer>();
+		List<Customer> data = new ArrayList<Customer>();
 
 		public customerAdapter(Activity act, int layoutResourceId,
-				ArrayList<Customer> data) {
-			super(act, layoutResourceId, data);
+				List<Customer> arrayCustomer) {
+			super(act, layoutResourceId, arrayCustomer);
 			this.layoutResourceId = layoutResourceId;
 			this.activity = act;
-			this.data = data;
+			this.data = arrayCustomer;
 			notifyDataSetChanged();
 		}
 
@@ -148,11 +125,12 @@ public class ViewCustomer extends Activity {
 			holder.select.setOnClickListener(new OnClickListener(){
 				@Override
 				public void onClick(View v) {
-					Intent select_customer = new Intent(activity,
-							MainActivity.class);
-					select_customer.putExtra("CUSTOMER_NAME", v.getTag()
-							.toString());
-					activity.startActivity(select_customer);
+					Intent resultIntent = new Intent();
+					Bundle b = new Bundle();
+					b.putSerializable("SelectedCustomer", (Serializable) customer);
+					resultIntent.putExtras(b);
+					setResult(Activity.RESULT_OK, resultIntent);
+					finish();
 				}
 			});
 			holder.edit.setOnClickListener(new OnClickListener() {

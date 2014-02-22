@@ -1,11 +1,10 @@
 package com.malabon.pos;
 
+import java.io.Serializable;
 import java.text.DecimalFormat;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -14,15 +13,22 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.malabon.object.Customer;
+import com.malabon.object.Item;
 import com.malabon.object.Payment;
+import com.malabon.object.Sale;
+import com.malabon.object.Sync;
 
 public class PaymentActivity extends Activity {
 
+	static final int ENTER_CASH = 15;
+	
 	TextView tvPaymentTotal, tvPaymentCash, tvPaymentChange;
 	String orderType;
 	double cash = 0.00;
 	Payment objPayment;
 	DecimalFormat df = new DecimalFormat("0.00");
+	Sale sale;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -35,17 +41,23 @@ public class PaymentActivity extends Activity {
 	}
 
 	private void Initialize() {
-		try{
-			cash = Double.parseDouble(getIntent().getStringExtra("cash"));
-		}catch(Exception e){			
-		}
 		
-		SharedPreferences prefs = this.getSharedPreferences("com.malabon.pos",
-				Context.MODE_PRIVATE);
-		String balTotal = prefs.getString("balTotal", "0.00");
-
-		objPayment = new Payment();
-		objPayment.balance = Double.parseDouble(balTotal);
+		Bundle extras = getIntent().getExtras();
+		if (extras == null) {
+			setResult(Activity.RESULT_CANCELED);
+			finish();
+		}
+		// Get data via the key
+		sale = (Sale) extras.get("Sale_Payment");
+		if (sale != null) {
+			TextView txtCustomerName = (TextView) findViewById(R.id.paymentCustomerName);
+			txtCustomerName.setText(sale.customer.first_name + " " + sale.customer.last_name);
+			
+			sale.computeTotal();
+			objPayment = new Payment();
+			objPayment.balance = Double.parseDouble(df.format(sale.total));
+		}	
+		
 		//objPayment.cash = objPayment.getCash(cash);
 	}
 
@@ -91,20 +103,18 @@ public class PaymentActivity extends Activity {
 
 	public void enterCash(View view) {
 		Intent intent = new Intent(this, AddPayment.class);
-		startActivity(intent);
+		startActivityForResult(intent, ENTER_CASH);
 	}
 
 	public void exactCash(View view) {
-		if (IsOrderTypeSelected()){
-			Intent intent = new Intent(this, MainActivity.class);
-			startActivity(intent);
-		}
-		else{
-			showToast("Select order type");
-		}
+		objPayment.cash = 0;
+		cash = sale.total;
+		setAmounts(cash);
 	}
 
 	public void cancel(View view) {
+		Intent resultIntent = new Intent();
+		setResult(Activity.RESULT_CANCELED, resultIntent);
 		finish();
 	}
 
@@ -114,8 +124,18 @@ public class PaymentActivity extends Activity {
 
 	private void confirmPayment(){
 		if (objPayment.confirmPayment() && IsOrderTypeSelected()) {
-			Intent intent = new Intent(this, MainActivity.class);
-			startActivity(intent);
+			
+			commitSale();
+			Customer cust = sale.customer;
+			sale = new Sale();
+			sale.customer = cust;
+			
+			Intent resultIntent = new Intent();
+			Bundle b = new Bundle();
+			b.putSerializable("Sale_Payment", (Serializable) sale);
+			resultIntent.putExtras(b);
+			setResult(Activity.RESULT_FIRST_USER, resultIntent);
+			finish();
 		}
 		else if (!objPayment.confirmPayment() && IsOrderTypeSelected()){
 			showToast("Settle balance");
@@ -125,6 +145,13 @@ public class PaymentActivity extends Activity {
 		}
 		else{
 			showToast("Settle balance and select order type");
+		}
+	}
+	
+	private void commitSale(){
+		for(Item item : sale.items){
+			Sync.UpdateProductQuantity(item.id, item.availableQty);
+			Sync.UpdateIngredientsQuantity(item.id, item.quantity);
 		}
 	}
 	
@@ -143,5 +170,19 @@ public class PaymentActivity extends Activity {
 	private void showToast(String message) {
 		Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT)
 				.show();
+	}
+	
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+		super.onActivityResult(requestCode, resultCode, intent);
+		switch (requestCode) {
+		case(ENTER_CASH): {
+			if (resultCode == Activity.RESULT_OK) {
+				String amt = intent.getStringExtra("cash");
+				cash = Double.parseDouble(amt);
+				setAmounts(cash);
+			}
+		}
+		}
 	}
 }

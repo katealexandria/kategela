@@ -1,6 +1,9 @@
 package com.malabon.object;
 
-public class Customer {
+import java.io.Serializable;
+
+@SuppressWarnings("serial")
+public class Customer implements Serializable {
 	public String customer_id;
 	public String first_name;
 	public String last_name;
