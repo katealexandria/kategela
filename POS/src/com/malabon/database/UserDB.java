@@ -1,6 +1,5 @@
 package com.malabon.database;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -62,11 +61,11 @@ public class UserDB {
 
 			if (cursor != null) {
 				cursor.moveToFirst();
-				user = new User(Integer.parseInt(cursor.getString(0)),
-						cursor.getString(1), Short.parseShort(cursor
-								.getString(3)));
+				user = new User();
+				user.user_id = Integer.parseInt(cursor.getString(0));
+				user.username = cursor.getString(1);
+				user.is_admin = Short.parseShort(cursor.getString(3));
 			}
-
 			cursor.close();
 			db.close();
 		} catch (Exception e) {
@@ -75,42 +74,48 @@ public class UserDB {
 		return user;
 	}
 	
-	public void tempAdd() {
+	public boolean validateAdmin(String username, String password){
+		boolean isadmin = false;
 		try {
-			DBTable table = new DBTable();
-			db.execSQL(table.get_TABLE_USER());
-		} catch (Exception e) {
-			Log.e("create_table", "" + e);
-		}
+			SQLiteDatabase db = this.DbHelper.getReadableDatabase();
 
-		try {
-			SQLiteDatabase db = this.DbHelper.getWritableDatabase();
-			ContentValues values = null;
+			Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_USER
+					+ " WHERE " + KEY_USERNAME + " = '" + username + "'"
+					+ " AND " + KEY_PASSWORD + " = '" + password + "'" 
+					+ " AND " + KEY_IS_ADMIN + "= 1", null);
 
-			values = new ContentValues();
-			values.put(KEY_USER_ID, 1);
-			values.put(KEY_USERNAME, "admin");
-			values.put(KEY_PASSWORD, "pass");
-			values.put(KEY_IS_ADMIN, 1);
-			db.insert(TABLE_USER, null, values);
-
-			values = new ContentValues();
-			values.put(KEY_USER_ID, 2);
-			values.put(KEY_USERNAME, "gela");
-			values.put(KEY_PASSWORD, "pass");
-			values.put(KEY_IS_ADMIN, 0);
-			db.insert(TABLE_USER, null, values);
-
-			values = new ContentValues();
-			values.put(KEY_USER_ID, 3);
-			values.put(KEY_USERNAME, "kate");
-			values.put(KEY_PASSWORD, "pass");
-			values.put(KEY_IS_ADMIN, 0);
-			db.insert(TABLE_USER, null, values);
-
+			if (cursor != null) {
+				cursor.moveToFirst();
+				isadmin = true;
+			}
+			cursor.close();
 			db.close();
 		} catch (Exception e) {
-			Log.e("add_user", "" + e);
+			Log.e("get_isadmin", "" + e);
 		}
+		return isadmin;
 	}
+
+	/*
+	 * public void tempAdd() { try { DBTable table = new DBTable();
+	 * db.execSQL(table.get_TABLE_USER()); } catch (Exception e) {
+	 * Log.e("create_table", "" + e); }
+	 * 
+	 * try { SQLiteDatabase db = this.DbHelper.getWritableDatabase();
+	 * ContentValues values = null;
+	 * 
+	 * values = new ContentValues(); values.put(KEY_USER_ID, 1);
+	 * values.put(KEY_USERNAME, "admin"); values.put(KEY_PASSWORD, "pass");
+	 * values.put(KEY_IS_ADMIN, 1); db.insert(TABLE_USER, null, values);
+	 * 
+	 * values = new ContentValues(); values.put(KEY_USER_ID, 2);
+	 * values.put(KEY_USERNAME, "gela"); values.put(KEY_PASSWORD, "pass");
+	 * values.put(KEY_IS_ADMIN, 0); db.insert(TABLE_USER, null, values);
+	 * 
+	 * values = new ContentValues(); values.put(KEY_USER_ID, 3);
+	 * values.put(KEY_USERNAME, "kate"); values.put(KEY_PASSWORD, "pass");
+	 * values.put(KEY_IS_ADMIN, 0); db.insert(TABLE_USER, null, values);
+	 * 
+	 * db.close(); } catch (Exception e) { Log.e("add_user", "" + e); } }
+	 */
 }

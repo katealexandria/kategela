@@ -1,6 +1,5 @@
 package com.malabon.pos;
 
-import java.io.Serializable;
 import java.text.DecimalFormat;
 
 import android.app.Activity;
@@ -13,7 +12,6 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.malabon.object.Customer;
 import com.malabon.object.Item;
 import com.malabon.object.Payment;
 import com.malabon.object.Sale;
@@ -126,14 +124,8 @@ public class PaymentActivity extends Activity {
 		if (objPayment.confirmPayment() && IsOrderTypeSelected()) {
 			
 			commitSale();
-			Customer cust = sale.customer;
-			sale = new Sale();
-			sale.customer = cust;
 			
 			Intent resultIntent = new Intent();
-			Bundle b = new Bundle();
-			b.putSerializable("Sale_Payment", (Serializable) sale);
-			resultIntent.putExtras(b);
 			setResult(Activity.RESULT_FIRST_USER, resultIntent);
 			finish();
 		}
@@ -153,6 +145,7 @@ public class PaymentActivity extends Activity {
 			Sync.UpdateProductQuantity(item.id, item.availableQty);
 			Sync.UpdateIngredientsQuantity(item.id, item.quantity);
 		}
+		Sync.AddSale(sale);
 	}
 	
 	private boolean IsOrderTypeSelected() {

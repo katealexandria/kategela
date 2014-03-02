@@ -1,6 +1,7 @@
 package com.malabon.pos;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -19,11 +20,16 @@ public class CashInOut extends Activity {
     }
 	
 	public void cashOut(View view) {
-        finish();
+		cashInOutAuthorization();
     }
 	
 	public void cashIn(View view) {
-        finish();
+		cashInOutAuthorization();
     }
 
+	private void cashInOutAuthorization(){
+		Intent intent = new Intent(this, Login.class);
+		intent.putExtra("called", "cashauth");
+		this.startActivity(intent);
+	}
 }

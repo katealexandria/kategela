@@ -35,7 +35,8 @@
           android:id="@+id/cartItemQty"
           style="@style/textbox_numeric"
           android:layout_width="10dp"
-          android:layout_marginTop="0dp" />
+          android:layout_marginTop="0dp"
+          android:enabled="false" />
     
      <LinearLayout
         style="@style/wrapper_horizontal" >	                

@@ -24,7 +24,6 @@ import com.malabon.object.Customer;
 import com.malabon.object.Item;
 import com.malabon.object.Sale;
 import com.malabon.object.Sync;
-import com.malabon.object.User;
 
 public class MainActivity extends Activity {
 
@@ -41,6 +40,7 @@ public class MainActivity extends Activity {
 	DecimalFormat df = new DecimalFormat("0.00");
 	Category currentCat;
 	String currentUser;
+	int firstCatIndex, lastCatIndex;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -54,9 +54,20 @@ public class MainActivity extends Activity {
 	}
 	
 	private void Initialize(){
+		Customer c = null;
+		if(sale != null)
+			c = sale.customer;
+		
 		sale = new Sale();
+		sale.customer = c;
+		sale.user = currentUser; 
 		allItems = Sync.GetItems();
 		allCats = Sync.GetCategories();
+		
+		firstCatIndex = 0;		
+		lastCatIndex = 4;
+		if(allCats.size() < 5)
+			lastCatIndex = allCats.size() - 1;
 		
 		// DBAdapter db = new DBAdapter(this).open();
 		InitializeCategories();
@@ -78,9 +89,19 @@ public class MainActivity extends Activity {
 	}
 
 	private void InitializeCategories() {
+		findViewById(R.id.btnPrevCat).setEnabled(true);
+		findViewById(R.id.btnNextCat).setEnabled(true);
+		
+		if(firstCatIndex == 0 || allCats.size() < 5)
+			findViewById(R.id.btnPrevCat).setEnabled(false);
+		if(lastCatIndex == allCats.size() - 1  || allCats.size() < 5)
+			findViewById(R.id.btnNextCat).setEnabled(false);
+		
 		LinearLayout ll = (LinearLayout) findViewById(R.id.catButtonsContainer);
+		ll.removeAllViews();
 
-		for (Category cat : allCats) {
+		for (int i = firstCatIndex; i <= lastCatIndex; i++) {
+			Category cat = allCats.get(i);
 			LayoutInflater vi = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
 
 			Button newButton = (Button) vi.inflate(R.layout.cat_button, null);
@@ -88,7 +109,7 @@ public class MainActivity extends Activity {
 			newButton.setOnClickListener(catClicked);
 			newButton.setText(cat.name);
 
-			ll.addView(newButton, 3);
+			ll.addView(newButton);
 		}
 
 		return;
@@ -181,6 +202,22 @@ public class MainActivity extends Activity {
 		Intent intent = new Intent(this, AddCategory.class);
 		startActivity(intent);
 	}
+	
+	public void prevCat(View view) {
+		if(firstCatIndex == 0 || allCats.size() < 5)
+			return;
+		firstCatIndex--;
+		lastCatIndex--;
+		InitializeCategories();
+	}
+	
+	public void nextCat(View view) {
+		if(lastCatIndex == allCats.size() - 1 || allCats.size() < 5)
+			return;
+		firstCatIndex++;
+		lastCatIndex++;
+		InitializeCategories();
+	}
 
 	public void showAllCats(View view) {
 		InitializeProducts(-1);
@@ -193,12 +230,15 @@ public class MainActivity extends Activity {
 	}
 
 	public void addCustomer(View view) {
+		SharedPreferences prefs = this.getSharedPreferences(
+				"com.malabon.pos", Context.MODE_PRIVATE);
+		prefs.edit().putInt("CurrentCustomer", sale.customer.customer_id).commit();
 		Intent intent = new Intent(this, ViewCustomer.class);
 		startActivityForResult(intent, SELECT_CUSTOMER_REQUEST);
 	}
 
 	public void saleOptions(View view) {
-		Intent intent = new Intent(this, SaleOptions.class);
+		Intent intent = new Intent(this, SaleOptions.class);		
 		startActivityForResult(intent, SALE_OPTIONS_REQUEST);
 	}
 
@@ -421,8 +461,7 @@ public class MainActivity extends Activity {
 		}
 		case(PAYMENT_REQUEST): {
 			if (resultCode == Activity.RESULT_FIRST_USER) {
-				Bundle data = intent.getExtras();
-				sale = (Sale) data.get("Sale_Payment");
+				Initialize();
 				bindOrderData();
 			}
 		}

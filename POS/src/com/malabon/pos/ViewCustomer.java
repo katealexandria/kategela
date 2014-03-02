@@ -5,30 +5,33 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
-import android.widget.ListView;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
-import com.malabon.database.CustomerDB;
 import com.malabon.object.Customer;
 import com.malabon.object.Sync;
 
 public class ViewCustomer extends Activity {
 
-	ListView listviewCustomer;
+	static final int ADD_CUSTOMER_REQUEST = 20;
+	static final int EDIT_CUSTOMER_REQUEST = 21;
+	
+	TableLayout tableCustomer;
 	List<Customer> arrayCustomer = new ArrayList<Customer>();
-	customerAdapter adapter;
 	//CustomerDB customerDB;
 	String toastMsg;
+	int currentCustomerId;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -37,9 +40,11 @@ public class ViewCustomer extends Activity {
 		setContentView(R.layout.activity_view_customer);
 
 		try {
-			listviewCustomer = (ListView) findViewById(R.id.listCustomer);
-			listviewCustomer.setItemsCanFocus(false);
-
+			SharedPreferences prefs = this.getSharedPreferences(
+					"com.malabon.pos", Context.MODE_PRIVATE);
+			currentCustomerId = prefs.getInt("CurrentCustomer", -1);
+			
+			tableCustomer = (TableLayout) findViewById(R.id.listCustomer);
 			refreshData();
 
 		} catch (Exception e) {
@@ -48,7 +53,10 @@ public class ViewCustomer extends Activity {
 	}
 
 	public void cancel(View view) {
-		finish();
+		if(currentCustomerId != -1)
+			SelectCustomer(currentCustomerId);
+		else
+			finish();
 	}
 
 	public void addCustomer(View view) {
@@ -56,20 +64,82 @@ public class ViewCustomer extends Activity {
 		add_customer.putExtra("called", "add");
 		add_customer.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
 				| Intent.FLAG_ACTIVITY_NEW_TASK);
-		startActivity(add_customer);
-		finish();
+		startActivityForResult(add_customer, ADD_CUSTOMER_REQUEST);
 	}
 
 	public void refreshData() {
-		
+		tableCustomer.removeAllViews();
 		arrayCustomer = Sync.GetCustomers();
 		
-		adapter = new customerAdapter(ViewCustomer.this,
-				R.layout.customer_listview_row, arrayCustomer);
-		listviewCustomer.setAdapter(adapter);
-		adapter.notifyDataSetChanged();
-	}
+		for(Customer c : arrayCustomer){
+			LayoutInflater vi = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+			TableRow row = (TableRow) vi.inflate(R.layout.customer_row, null);
+			
+			ImageButton select = (ImageButton) row
+					.findViewById(R.id.btnSelectCustomer);
+			TextView full_name = (TextView) row.findViewById(R.id.tvFullName);
+			TextView tel_no = (TextView) row.findViewById(R.id.tvTelNo);
+			TextView mobile_no = (TextView) row.findViewById(R.id.tvMobileNo);
+			ImageButton edit = (ImageButton) row
+					.findViewById(R.id.btnUpdateCustomer);
+			
+			select.setId(c.customer_id);
+			edit.setId(c.customer_id);
+			
+			select.setOnClickListener(new OnClickListener(){
+				@Override
+				public void onClick(View v) {
+					int id = v.getId();
+					SelectCustomer(id);
+				}
+			});
+			
+			edit.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					int id = v.getId();
+					UpdateCustomer(id);
+				}
+			});
+			
+			full_name.setText(c.last_name + ", "
+					+ c.first_name);
+			tel_no.setText(c.tel_no);
+			mobile_no.setText(c.mobile_no);
 
+			tableCustomer.addView(row);
+		}
+	}
+	private void UpdateCustomer(int customerId){
+		Customer c = GetCustomerById(customerId);	
+		Intent update_customer = new Intent(this,
+				AddCustomer.class);
+		update_customer.putExtra("called", "update");
+		update_customer.putExtra("CUSTOMER_ID", c.customer_id);
+		startActivityForResult(update_customer, EDIT_CUSTOMER_REQUEST);
+	}
+	
+	private void SelectCustomer(int customerId){
+		Customer c = GetCustomerById(customerId);					
+		Intent resultIntent = new Intent();
+		Bundle b = new Bundle();
+		b.putSerializable("SelectedCustomer", (Serializable) c);
+		resultIntent.putExtras(b);
+		setResult(Activity.RESULT_OK, resultIntent);
+		finish();
+	}
+	
+	private Customer GetCustomerById(int id){
+		Customer cust = new Customer();
+		for(Customer c : arrayCustomer){
+			if(c.customer_id == id){
+				cust = c;
+				break;
+			}
+		}
+		return cust;
+	}
+	
 	@Override
 	public void onResume() {
 		// TODO Auto-generated method stub
@@ -77,82 +147,9 @@ public class ViewCustomer extends Activity {
 		refreshData();
 	}
 
-	public class customerAdapter extends ArrayAdapter<Customer> {
-		Activity activity;
-		int layoutResourceId;
-		Customer customer;
-		List<Customer> data = new ArrayList<Customer>();
-
-		public customerAdapter(Activity act, int layoutResourceId,
-				List<Customer> arrayCustomer) {
-			super(act, layoutResourceId, arrayCustomer);
-			this.layoutResourceId = layoutResourceId;
-			this.activity = act;
-			this.data = arrayCustomer;
-			notifyDataSetChanged();
-		}
-
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			View row = convertView;
-			CustomerHolder holder = null;
-
-			if (row == null) {
-				LayoutInflater inflater = LayoutInflater.from(activity);
-
-				row = inflater.inflate(layoutResourceId, parent, false);
-				holder = new CustomerHolder();
-				holder.select = (ImageButton) row
-						.findViewById(R.id.btnSelectCustomer);
-				holder.full_name = (TextView) row.findViewById(R.id.tvFullName);
-				holder.tel_no = (TextView) row.findViewById(R.id.tvTelNo);
-				holder.mobile_no = (TextView) row.findViewById(R.id.tvMobileNo);
-				holder.edit = (ImageButton) row
-						.findViewById(R.id.btnUpdateCustomer);
-
-				row.setTag(holder);
-			} else {
-				holder = (CustomerHolder) row.getTag();
-			}
-			customer = data.get(position);
-			holder.select.setTag(customer.getFirstName() + " " + customer.getLastName());
-			holder.edit.setTag(customer.getCustomerId());
-			holder.full_name.setText(customer.getLastName() + ", "
-					+ customer.getFirstName());
-			holder.tel_no.setText(customer.getTelNo());
-			holder.mobile_no.setText(customer.getMobileNo());
-
-			holder.select.setOnClickListener(new OnClickListener(){
-				@Override
-				public void onClick(View v) {
-					Intent resultIntent = new Intent();
-					Bundle b = new Bundle();
-					b.putSerializable("SelectedCustomer", (Serializable) customer);
-					resultIntent.putExtras(b);
-					setResult(Activity.RESULT_OK, resultIntent);
-					finish();
-				}
-			});
-			holder.edit.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					Intent update_customer = new Intent(activity,
-							AddCustomer.class);
-					update_customer.putExtra("called", "update");
-					update_customer.putExtra("CUSTOMER_ID", v.getTag()
-							.toString());
-					activity.startActivity(update_customer);
-				}
-			});
-			return row;
-		}
-
-		class CustomerHolder {
-			ImageButton select;
-			TextView full_name;
-			TextView tel_no;
-			TextView mobile_no;
-			ImageButton edit;
-		}
+	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+		super.onActivityResult(requestCode, resultCode, intent);
+		if (resultCode == Activity.RESULT_OK)
+			refreshData();
 	}
 }

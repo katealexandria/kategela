@@ -2,6 +2,7 @@
 <Button xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/image_button_small"
 	android:text="Product Cat"
-	android:textColor="#fff" >
+	android:textColor="#fff"
+	android:textSize="30sp">
 
 </Button>

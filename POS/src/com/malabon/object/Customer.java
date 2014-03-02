@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 @SuppressWarnings("serial")
 public class Customer implements Serializable {
-	public String customer_id;
+	public int customer_id;
 	public String first_name;
 	public String last_name;
 	public String address;
@@ -12,7 +12,7 @@ public class Customer implements Serializable {
 	public String tel_no;
 	public String mobile_no;
 
-	public Customer() {
+	/*public Customer() {
 	}
 
 	public Customer(String customer_id, String first_name, String last_name,
@@ -91,5 +91,5 @@ public class Customer implements Serializable {
 
 	public void setMobileNo(String mobile_no) {
 		this.mobile_no = mobile_no;
-	}
+	}*/
 }

@@ -3,8 +3,6 @@ package com.malabon.database;
 import java.util.ArrayList;
 import java.util.UUID;
 
-import com.malabon.object.*;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -12,6 +10,8 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+
+import com.malabon.object.Customer;
 
 public class CustomerDB {
 	public static final String TABLE_CUSTOMER = "customer";
@@ -67,12 +67,12 @@ public class CustomerDB {
 			// TODO: naming convention
 			// values.put(KEY_CUSTOMER_ID, customer.getCustomerId());
 			values.put(KEY_CUSTOMER_ID, UUID.randomUUID().toString());
-			values.put(KEY_FIRST_NAME, customer.getFirstName());
-			values.put(KEY_LAST_NAME, customer.getLastName());
-			values.put(KEY_ADDRESS, customer.getAddress());
-			values.put(KEY_ADDRESS_LANDMARK, customer.getAddressLandmark());
-			values.put(KEY_TEL_NO, customer.getTelNo());
-			values.put(KEY_MOBILE_NO, customer.getMobileNo());
+			values.put(KEY_FIRST_NAME, customer.first_name);
+			values.put(KEY_LAST_NAME, customer.last_name);
+			values.put(KEY_ADDRESS, customer.address);
+			values.put(KEY_ADDRESS_LANDMARK, customer.address_landmark);
+			values.put(KEY_TEL_NO, customer.tel_no);
+			values.put(KEY_MOBILE_NO, customer.mobile_no);
 
 			db.insert(TABLE_CUSTOMER, null, values);
 			db.close();
@@ -94,14 +94,19 @@ public class CustomerDB {
 					new String[] { customerid }, null, null,
 					null, null);
 
-			if (cursor != null)
+			if (cursor != null){
 				cursor.moveToFirst();
 
-			customer = new Customer(cursor.getString(0), cursor.getString(1),
-					cursor.getString(2), cursor.getString(3),
-					cursor.getString(4), cursor.getString(5),
-					cursor.getString(6));
-
+				customer = new Customer();
+				customer.customer_id = cursor.getInt(0);
+				customer.first_name = cursor.getString(1);
+				customer.last_name = cursor.getString(2);
+				customer.address = cursor.getString(3);
+				customer.address_landmark = cursor.getString(4);
+				customer.tel_no = cursor.getString(5);
+				customer.mobile_no = cursor.getString(6);
+			}
+			
 			cursor.close();
 			db.close();
 		} catch (Exception e) {
@@ -122,22 +127,21 @@ public class CustomerDB {
 			if (cursor.moveToFirst()) {
 				do {
 					Customer customer = new Customer();
-					customer.setCustomerId(cursor.getString(0));
-					customer.setFirstName(cursor.getString(1));
-					customer.setLastName(cursor.getString(2));
-					customer.setAddress(cursor.getString(3));
-					customer.setAddressLandmark(cursor.getString(4));
-					customer.setTelNo(cursor.getString(5));
-					customer.setMobileNo(cursor.getString(6));
+					customer.customer_id = cursor.getInt(0);
+					customer.first_name = cursor.getString(1);
+					customer.last_name = cursor.getString(2);
+					customer.address = cursor.getString(3);
+					customer.address_landmark = cursor.getString(4);
+					customer.tel_no = cursor.getString(5);
+					customer.mobile_no = cursor.getString(6);
 
 					customer_list.add(customer);
 				} while (cursor.moveToNext());
 			}
 			cursor.close();
 			db.close();
-			return customer_list;
 		} catch (Exception e) {
-			Log.e("all_customer", "" + e);
+			Log.e("get_allcustomer", "" + e);
 		}
 		return customer_list;
 	}
@@ -148,22 +152,22 @@ public class CustomerDB {
 			SQLiteDatabase db = this.DbHelper.getWritableDatabase();
 
 			ContentValues values = new ContentValues();
-			values.put(KEY_FIRST_NAME, customer.getFirstName());
-			values.put(KEY_LAST_NAME, customer.getLastName());
-			values.put(KEY_ADDRESS, customer.getAddress());
-			values.put(KEY_ADDRESS_LANDMARK, customer.getAddressLandmark());
-			values.put(KEY_TEL_NO, customer.getTelNo());
-			values.put(KEY_MOBILE_NO, customer.getMobileNo());
+			values.put(KEY_FIRST_NAME, customer.first_name);
+			values.put(KEY_LAST_NAME, customer.last_name);
+			values.put(KEY_ADDRESS, customer.address);
+			values.put(KEY_ADDRESS_LANDMARK, customer.address_landmark);
+			values.put(KEY_TEL_NO, customer.tel_no);
+			values.put(KEY_MOBILE_NO, customer.mobile_no);
 
 			num = db.update(TABLE_CUSTOMER, values, KEY_CUSTOMER_ID + " = ?",
-					new String[] { String.valueOf(customer.getCustomerId()) });
+					new String[] { String.valueOf(customer.customer_id) });
 		} catch (Exception e) {
 			Log.e("update_customer", "" + e);
 		}
 		return num;
 	}
 
-	public int getCustomerCount() {
+	/*public int getCustomerCount() {
 		int num = 0;
 		try {
 			String countQuery = "SELECT " + KEY_CUSTOMER_ID + " FROM "
@@ -177,6 +181,5 @@ public class CustomerDB {
 			Log.e("get_customer_count", "" + e);
 		}
 		return num;
-	}
-	
+	}*/
 }

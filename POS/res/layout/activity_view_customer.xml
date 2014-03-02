@@ -32,23 +32,21 @@
                 android:layout_width="0dip"
                 android:layout_weight="1"
                 android:text="@string/MobileNo" />
-            
         </TableRow>
-        
     </TableLayout>
 
-    <LinearLayout
+    <ScrollView
+        android:id="@+id/CustomersScrollView"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:layout_height="450dp" >
 
-        <ListView
+        <TableLayout
             android:id="@+id/listCustomer"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="450dp"
             android:focusable="false"
             android:focusableInTouchMode="false" />
-    </LinearLayout>
+    </ScrollView>
 
     <LinearLayout
         style="@style/wrapper_horizontal"

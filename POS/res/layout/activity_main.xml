@@ -1,327 +1,326 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res/com.malabon.pos"
+    android:id="@+id/mainRelative"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#111"
-    tools:context=".MainActivity" 
-    xmlns:app="http://schemas.android.com/apk/res/com.malabon.pos"
-    android:id="@+id/mainRelative">    
-        
+    android:gravity="right"
+    tools:context=".MainActivity" >
+
+    <LinearLayout
+        android:id="@+id/mainLinear"
+        style="@style/wrapper_vertical"
+        android:layout_width="match_parent" >
+
         <LinearLayout
-            android:id="@+id/mainLinear"
-	        style="@style/wrapper_vertical" >
-        
-            <RelativeLayout
-		        android:layout_width="wrap_content"
-		        android:layout_height="60dp" >
-		
-		        <LinearLayout
-		            android:id="@+id/catButtonsContainer"
-		            android:layout_width="match_parent"
-		            android:layout_height="wrap_content"
-		            android:background="@drawable/main_background" >
-					
-		            <!-- 0 -->
-		            <ImageButton 
-		                style="@style/image_button_small"
-		                android:src="@drawable/ic_menu_search" 
-		                android:contentDescription="@string/imagedesc" />
-					
-		            <!-- 1 -->
-		            <ImageButton 
-		                style="@style/image_button_small"
-		                android:src="@drawable/ic_media_previous" 
-		                android:contentDescription="@string/imagedesc" />
-		
-		            <!-- 2 -->
-		            <ImageButton
-		                style="@style/image_button_small"
-		                android:src="@drawable/btn_star_big_off"
-		                android:onClick="showAllCats" 
-		                android:contentDescription="@string/imagedesc" />
-		
-		            <!-- 3 -->
-		            <!-- put cat buttons -->
-		
-		            <!-- ImageButton
-		                style="@style/image_button_small"
-		                android:src="@android:drawable/ic_menu_add"
-		                android:onClick="addCategory" /-->
-		
-		            <ImageButton
-		                style="@style/image_button_small"
-		                android:src="@drawable/ic_media_next" 
-		                android:contentDescription="@string/imagedesc" />
+            style="@style/wrapper_horizontal"
+            android:layout_width="match_parent"
+            android:layout_gravity="left"
+            android:layout_row="0"
+            android:background="@drawable/main_background" >
 
-		        </LinearLayout>
+            <!-- 0 -->
+            <!--
+                    <ImageButton 
+     		                style="@style/image_button_small"
+     		                android:src="@drawable/ic_menu_search" 
+     		                android:contentDescription="@string/imagedesc" />
+            -->
 
-		        <DigitalClock
-		            style="@style/H2"
-		            android:layout_width="wrap_content"
-		            android:textColor="#48FF00"
-		            android:layout_alignParentRight="true" />
-		
-		    </RelativeLayout>
-		    
-            <LinearLayout 
-                style="@style/wrapper_horizontal"
-                android:layout_height="520dp"
-                android:id="@+id/middleContainer">
-		        
+
+            <!-- 1 -->
+
+            <ImageButton
+                android:id="@+id/btnPrevCat"
+                style="@style/image_button_small"
+                android:contentDescription="@string/imagedesc"
+                android:onClick="prevCat"
+                android:src="@drawable/ic_media_previous" />
+
+            <!-- 2 -->
+
+            <ImageButton
+                style="@style/image_button_small"
+                android:contentDescription="@string/imagedesc"
+                android:onClick="showAllCats"
+                android:src="@drawable/btn_star_big_off" />
+
+            <!-- 3 -->
+            <!-- put cat buttons -->
+
             <LinearLayout
-                android:orientation="vertical"
-                android:id="@+id/productsGrid"
-	            style="@style/wrapper_grid"
-	            android:layout_gravity="top">
-                
+                android:id="@+id/catButtonsContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" />
+
+            <!--
+                    <ImageButton
+        		                style="@style/image_button_small"
+        		                android:src="@android:drawable/ic_menu_add"
+        		                android:onClick="addCategory" />
+            -->
+
+            <ImageButton
+                android:id="@+id/btnNextCat"
+                style="@style/image_button_small"
+                android:contentDescription="@string/imagedesc"
+                android:onClick="nextCat"
+                android:src="@drawable/ic_media_next" />
+
+            <DigitalClock
+                style="@style/H2"
+                android:layout_width="match_parent"
+                android:textAlignment="gravity"
+                android:gravity="right"
+                android:textColor="#48FF00" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/middleContainer"
+            style="@style/wrapper_horizontal"
+            android:layout_height="520dp" >
+
+            <ScrollView
+                android:id="@+id/productsScrollView"
+                android:layout_width="wrap_content"
+                android:layout_height="520dp" >
+
                 <LinearLayout
-                    style="@style/item_wrapper_odd"
-	                app:layout_row="0"
-	                app:layout_column="0"
-	                android:visibility="gone" >
+                    android:id="@+id/productsGrid"
+                    style="@style/wrapper_grid"
+                    android:layout_gravity="top"
+                    android:orientation="vertical" >
 
-	                <TextView
-	                    style="@style/h3_product" />
+                    <LinearLayout
+                        style="@style/item_wrapper_odd"
+                        app:layout_column="0"
+                        app:layout_row="0"
+                        android:visibility="gone" >
 
-	                <TextView
-	                    style="@style/h3_price" />
+                        <TextView style="@style/h3_product" />
 
-	            </LinearLayout>
-	            
-                <LinearLayout
-	                style="@style/item_wrapper_even"
-	                app:layout_row="0"
-	                app:layout_column="1"
-	                android:visibility="gone" >
+                        <TextView style="@style/h3_price" />
+                    </LinearLayout>
 
-	                <TextView
-	                    style="@style/h3_product"
-	                    android:text="Cheeseburger" />
+                    <LinearLayout
+                        style="@style/item_wrapper_even"
+                        app:layout_column="1"
+                        app:layout_row="0"
+                        android:visibility="gone" >
 
-	                <TextView
-	                    style="@style/h3_price"
-	                    android:text="75.50" />
+                        <TextView
+                            style="@style/h3_product"
+                            android:text="Cheeseburger" />
 
-	            </LinearLayout>
-                
-            </LinearLayout>
-            
+                        <TextView
+                            style="@style/h3_price"
+                            android:text="75.50" />
+                    </LinearLayout>
+                </LinearLayout>
+            </ScrollView>
+
             <LinearLayout
                 style="@style/wrapper_vertical"
-                android:background="@drawable/orange_button">
-                
+                android:background="@drawable/orange_button" >
+
                 <ScrollView
                     android:layout_width="match_parent"
                     android:layout_height="500dp" >
-	                 
-	            <TableLayout
-	                android:id="@+id/productCart"
-			        style="@style/wrapper_table"
-			        android:layout_height="wrap_content"		        
-			        android:stretchColumns="1">
-			        
-			        <TableRow
-			            style="@style/table_header">
-			            
-			            <TextView
-			                android:id="@+id/tvCustomerName"
-		                    style="@style/H2"
-		                    android:text="@string/CustomerName" />
-		
-		                <ImageButton
-		                    style="@style/image_button_small"
-		                    android:layout_width="10dp"
-		                    android:layout_gravity="right"
-		                    android:src="@drawable/ic_input_add" 
-		                    android:onClick="addCustomer" 
-		                    android:contentDescription="@string/imagedesc" />
-			            
-			        </TableRow>
-			        
-			        <TableRow
-			            style="@style/table_row" >
-		                
-			            <TextView 
+
+                    <TableLayout
+                        android:id="@+id/productCart"
+                        style="@style/wrapper_table"
+                        android:layout_height="wrap_content"
+                        android:stretchColumns="1" >
+
+                        <TableRow style="@style/table_header" >
+
+                            <TextView
+                                android:id="@+id/tvCustomerName"
+                                style="@style/H2"
+                                android:text="@string/CustomerName" />
+
+                            <ImageButton
+                                style="@style/image_button_small"
+                                android:layout_width="10dp"
+                                android:layout_gravity="right"
+                                android:contentDescription="@string/imagedesc"
+                                android:onClick="addCustomer"
+                                android:src="@drawable/ic_input_add" />
+                        </TableRow>
+
+                        <TableRow style="@style/table_row" >
+
+                            <TextView
+                                style="@style/h3_item"
+                                android:text="@string/Name" />
+
+                            <!--
+                             <TextView 
 			                style="@style/h3_item"
-			                android:text="@string/Name" />
-			            
-			            <!-- <TextView 
+			                android:text="@string/Code" />
+                            -->
+
+                            <TextView
+                                style="@style/h3_item"
+                                android:text="@string/Price" />
+
+                            <!--
+                             TextView 
 			                style="@style/h3_item"
-			                android:text="@string/Code" /> /-->
-			            
-			            <TextView 
-			                style="@style/h3_item"
-			                android:text="@string/Price" />
-			            
-			            <!-- TextView 
-			                style="@style/h3_item"
-			                android:text="@string/Disc" /-->
-			            
-			            <TextView 
-			                style="@style/h3_item"
-			                android:text="@string/Quantity" />
-			            
-			        </TableRow>
-			        
-			        <TableRow
-			            style="@style/table_row_total">
+			                android:text="@string/Disc" />
+                            -->
+
+                            <TextView
+                                style="@style/h3_item"
+                                android:text="@string/Quantity" />
+                        </TableRow>
+
+                        <TableRow style="@style/table_row_total" >
+
+                            <TextView style="@style/h3_item" />
+
+                            <!--
 					            <TextView 
+					                style="@style/h3_item" /> />
+                            -->
+
+                            <TextView style="@style/h3_item" />
+
+                            <!--
+                                     TextView 
 					                style="@style/h3_item" />
-					            
-					            <!--
-					            <TextView 
-					                style="@style/h3_item" /> /-->
-					            
-					            <TextView 
-					                style="@style/h3_item" />
-					            
-					            <!-- TextView 
-					                style="@style/h3_item" /-->
-					            
-					            <TextView 
-					                style="@style/h3_item" />
-			        </TableRow>
-			        
-			        <TableRow
-			            style="@style/table_row_total">
-			        
-					    <ImageButton
-		                    style="@style/image_button_small"
-		                    android:src="@drawable/ic_menu_edit"
-		                    android:layout_weight="1"
-		                    android:onClick="editOrders"
-		                    android:contentDescription="@string/imagedesc" />
-				    
-		        	</TableRow>
-					<TableRow
-			            style="@style/table_row">
-			        
-			            <TextView
-		                    style="@style/h3_subtotal"
-		                    android:text="@string/NetTotal" />
-		
-		                <TextView
-		                    android:id="@+id/txtNetTotal"
-		                    style="@style/h3_subtotal_amt" />
-			            
-			        </TableRow>
-			        
-			        <TableRow
-			            style="@style/table_row">
-			        
-			            <TextView
-		                    style="@style/h3_subtotal"
-		                    android:text="@string/TaxTotal" />
-		
-		                <TextView
-		                    android:id="@+id/txtTaxTotal"
-		                    style="@style/h3_subtotal_amt" />
-			            
-			        </TableRow>
-			        
-			        <TableRow
-			            style="@style/table_row_total">
-			        
-			            <TextView
-		                    style="@style/h2_total"
-		                    android:text="@string/Total" />
-		
-		                <TextView
-		                    android:id="@+id/txtTotal"
-		                    style="@style/h2_total_amt" />
-			            
-			        </TableRow>
-			        
-			   </TableLayout>     
-		   </ScrollView>
-                
-            </LinearLayout>           
-            
-            
-		    </LinearLayout>
-		    
-		    <RelativeLayout
-		        android:layout_width="match_parent"
-		        android:layout_height="170dp"
-		        android:background="@drawable/main_background" >
-		
-		        <Button
-		            android:text="@string/Pay"
-		            style="@style/btn_green_small"
-		            android:layout_height="100dp"
-		            android:layout_margin="20dp"
-		            android:onClick="pay"/>
-		        
-		        <android.support.v7.widget.GridLayout
-		            android:layout_centerInParent="true"
-		            android:layout_width="wrap_content"
-		            style="@style/wrapper_grid"
-		            android:background="@drawable/popup_bg"
-		            app:rowCount="2"
-		            app:columnCount="3" >
-                
-		            <ImageView
-		                style="@style/user_thumbnail"
-		                android:src="@drawable/ic_launcher"
-		                app:layout_row="0"
-		                app:layout_column="0"
-		                app:layout_rowSpan="2" 
-		                android:contentDescription="@string/imagedesc" />
-		            
-		            <LinearLayout
-		                style="@style/wrapper_vertical"
-		                app:layout_row="0"
-		                app:layout_column="1"
-		                app:layout_rowSpan="2" >
-	            
-		            	<TextView
-		                    style="@style/H3"
-		                    android:id="@+id/currentUserName" />
-		
-		                <TextView
-		                    android:text="Default POS"
-		                    style="@style/H3" />
-		                
-		            </LinearLayout>
-		            		            
-	                
-	                <Button
-	                    android:id="@+id/btnSwitch"
-	                    android:text="@string/Switch"
-	                    android:onClick="switchUser"
-	                    style="@style/btn_green_150"
-	                    app:layout_row="0"
-		                app:layout_column="2" />
-	
-	                <Button
-	                    android:id="@+id/btnLock"
-	                    android:text="@string/Lock"
-	                    style="@style/btn_red_150"
-	                    app:layout_row="1"
-		                app:layout_column="2"
-		                android:onClick="lockRegister" />
-		            
-                </android.support.v7.widget.GridLayout>
-		        
-		        <LinearLayout 
-		            android:layout_alignParentRight="true"
-		            style="@style/wrapper_vertical"
-		            android:layout_margin="10dp" >
-		
-		                <Button
-		                    android:text="@string/SaleOptions"
-		                    style="@style/btn_gray_150"
-		                    android:onClick="saleOptions" />
-		
-		                <Button
-		                    android:text="@string/Functions"
-		                    style="@style/btn_gray_150"
-		                    android:onClick="functions" />
-		            
-		        </LinearLayout>
-		
-		    </RelativeLayout>
-            
+                            -->
+
+                            <TextView style="@style/h3_item" />
+                        </TableRow>
+
+                        <TableRow style="@style/table_row_total" >
+
+                            <ImageButton
+                                style="@style/image_button_small"
+                                android:layout_weight="1"
+                                android:contentDescription="@string/imagedesc"
+                                android:onClick="editOrders"
+                                android:src="@drawable/ic_menu_edit" />
+                        </TableRow>
+
+                        <TableRow style="@style/table_row" >
+
+                            <TextView
+                                style="@style/h3_subtotal"
+                                android:text="@string/NetTotal" />
+
+                            <TextView
+                                android:id="@+id/txtNetTotal"
+                                style="@style/h3_subtotal_amt" />
+                        </TableRow>
+
+                        <TableRow style="@style/table_row" >
+
+                            <TextView
+                                style="@style/h3_subtotal"
+                                android:text="@string/TaxTotal" />
+
+                            <TextView
+                                android:id="@+id/txtTaxTotal"
+                                style="@style/h3_subtotal_amt" />
+                        </TableRow>
+
+                        <TableRow style="@style/table_row_total" >
+
+                            <TextView
+                                style="@style/h2_total"
+                                android:text="@string/Total" />
+
+                            <TextView
+                                android:id="@+id/txtTotal"
+                                style="@style/h2_total_amt" />
+                        </TableRow>
+                    </TableLayout>
+                </ScrollView>
+            </LinearLayout>
         </LinearLayout>
-        
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="170dp"
+            android:background="@drawable/main_background" >
+
+            <Button
+                style="@style/btn_green_small"
+                android:layout_height="100dp"
+                android:layout_margin="20dp"
+                android:onClick="pay"
+                android:text="@string/Pay" />
+
+            <android.support.v7.widget.GridLayout
+                style="@style/wrapper_grid"
+                android:layout_width="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@drawable/popup_bg"
+                app:columnCount="3"
+                app:rowCount="2" >
+
+                <ImageView
+                    style="@style/user_thumbnail"
+                    app:layout_column="0"
+                    app:layout_row="0"
+                    app:layout_rowSpan="2"
+                    android:contentDescription="@string/imagedesc"
+                    android:src="@drawable/ic_launcher" />
+
+                <LinearLayout
+                    style="@style/wrapper_vertical"
+                    app:layout_column="1"
+                    app:layout_row="0"
+                    app:layout_rowSpan="2" >
+
+                    <TextView
+                        android:id="@+id/currentUserName"
+                        style="@style/H3" />
+
+                    <TextView
+                        style="@style/H3"
+                        android:text="Default POS" />
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/btnSwitch"
+                    style="@style/btn_green_150"
+                    app:layout_column="2"
+                    app:layout_row="0"
+                    android:onClick="switchUser"
+                    android:text="@string/Switch" />
+
+                <Button
+                    android:id="@+id/btnLock"
+                    style="@style/btn_red_150"
+                    app:layout_column="2"
+                    app:layout_row="1"
+                    android:onClick="lockRegister"
+                    android:text="@string/Lock" />
+            </android.support.v7.widget.GridLayout>
+
+            <LinearLayout
+                style="@style/wrapper_vertical"
+                android:layout_alignParentRight="true"
+                android:layout_margin="10dp" >
+
+                <Button
+                    style="@style/btn_gray_150"
+                    android:onClick="saleOptions"
+                    android:text="@string/SaleOptions" />
+
+                <Button
+                    style="@style/btn_gray_150"
+                    android:onClick="functions"
+                    android:text="@string/Functions" />
+            </LinearLayout>
+        </RelativeLayout>
+    </LinearLayout>
+
 </RelativeLayout>

@@ -30,7 +30,18 @@ public class DBAdapter {
 		public void onCreate(SQLiteDatabase db) {
 			try {
 				db.execSQL(table.get_TABLE_CUSTOMER());
+				db.execSQL(table.get_TABLE_DISCOUNT());
+				db.execSQL(table.get_TABLE_INGREDIENT());
+				db.execSQL(table.get_TABLE_LOG_CASH());
+				db.execSQL(table.get_TABLE_ORDER_TYPE());
+				db.execSQL(table.get_TABLE_POS_SETTINGS());
+				db.execSQL(table.get_TABLE_PRODUCT());
+				db.execSQL(table.get_TABLE_PRODUCT_CATEGORY());
+				db.execSQL(table.get_TABLE_RECIPE());
+				db.execSQL(table.get_TABLE_STOCK_TYPE());
 				db.execSQL(table.get_TABLE_USER());
+				db.execSQL(table.get_TABLE_USER_QUESTION());
+				
 			} catch (Exception e) {
 				Log.e("create_table", "" + e);
 			}
@@ -38,8 +49,7 @@ public class DBAdapter {
 
 		@Override
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-			db.execSQL("DROP TABLE IF EXISTS " + CustomerDB.TABLE_CUSTOMER);
-			db.execSQL("DROP TABLE IF EXISTS " + UserDB.TABLE_USER);
+			//db.execSQL("DROP TABLE IF EXISTS " + UserDB.TABLE_USER);
 			onCreate(db);
 		}
 	}

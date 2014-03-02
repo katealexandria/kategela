@@ -15,6 +15,7 @@ public class Sale implements Serializable {
 	public double receiptDiscountPercent;
 	public double receiptDiscountPhp;
 	public Customer customer;
+	public String user;
 	
 	public void computeTotal() {
 		total = 0;
