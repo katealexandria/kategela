@@ -24,6 +24,7 @@ import com.malabon.object.Customer;
 import com.malabon.object.Item;
 import com.malabon.object.Sale;
 import com.malabon.object.Sync;
+import com.malabon.object.User;
 
 public class MainActivity extends Activity {
 
@@ -39,18 +40,18 @@ public class MainActivity extends Activity {
 	List<Category> allCats;
 	DecimalFormat df = new DecimalFormat("0.00");
 	Category currentCat;
-	String currentUser;
+	User currentUser;
 	int firstCatIndex, lastCatIndex;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
-
-		Initialize();
+		setContentView(R.layout.activity_main);	
 		
-		if(currentUser == null || currentUser.isEmpty())
+		if(currentUser == null)
 			Login(false, null);
+		else
+			Initialize();
 	}
 	
 	private void Initialize(){
@@ -60,7 +61,7 @@ public class MainActivity extends Activity {
 		
 		sale = new Sale();
 		sale.customer = c;
-		sale.user = currentUser; 
+		sale.user = currentUser.user_id; 
 		allItems = Sync.GetItems();
 		allCats = Sync.GetCategories();
 		
@@ -70,6 +71,8 @@ public class MainActivity extends Activity {
 			lastCatIndex = allCats.size() - 1;
 		
 		// DBAdapter db = new DBAdapter(this).open();
+		
+		InitializeUser();
 		InitializeCategories();
 		InitializeProducts(-1);
 		InitializeCustomer();
@@ -77,7 +80,7 @@ public class MainActivity extends Activity {
 
 	private void InitializeUser(){		
 		TextView username = (TextView) findViewById(R.id.currentUserName);
-		username.setText(currentUser);
+		username.setText(currentUser.username);
 	}
 	
 	private void InitializeCustomer(){
@@ -243,16 +246,19 @@ public class MainActivity extends Activity {
 	}
 
 	public void functions(View view) {
+		SharedPreferences prefs = this.getSharedPreferences(
+				"com.malabon.pos", Context.MODE_PRIVATE);
+		prefs.edit().putInt("user_id", currentUser.user_id).commit();
 		Intent intent = new Intent(this, Functions.class);
 		startActivity(intent);
 	}
 
 	public void switchUser(View view) {
-		Login(false, currentUser);
+		Login(false, currentUser.username);
 	}
 	
 	public void lockRegister(View view) {
-		Login(true, currentUser);
+		Login(true, currentUser.username);
 	}
 	
 	private void Login(Boolean lockRegister, String username){
@@ -407,8 +413,7 @@ public class MainActivity extends Activity {
 				}
 			}
 			if (resultCode == Activity.RESULT_FIRST_USER) {
-				Bundle data = intent.getExtras();
-				sale = (Sale) data.get("Sale_Payment");
+				Initialize();
 				bindOrderData();
 			}
 			break;
@@ -453,8 +458,8 @@ public class MainActivity extends Activity {
 			if (resultCode == Activity.RESULT_OK) {
 				String u = prefs.getString("CurrentUser", null);
 				if(u != null){
-					currentUser = u;
-					InitializeUser();
+					currentUser = Sync.GetUserByUsername(u);
+					Initialize();
 				}
 			}
 			break;

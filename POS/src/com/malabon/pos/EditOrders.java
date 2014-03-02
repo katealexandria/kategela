@@ -4,9 +4,7 @@ import java.io.Serializable;
 import java.text.DecimalFormat;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,10 +17,8 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.malabon.object.Customer;
 import com.malabon.object.Item;
 import com.malabon.object.Sale;
-import com.malabon.object.Sync;
 
 public class EditOrders extends Activity {
 	Sale sale = null;
@@ -160,18 +156,14 @@ public class EditOrders extends Activity {
 	}
 
 	public void close(View view) {
-		BackToMain("Sale_EditOrders", Activity.RESULT_OK);
-	}
-	
-	private void BackToMain(String extraName, int result){
 		Intent resultIntent = new Intent();
 		Bundle b = new Bundle();
-		b.putSerializable(extraName, (Serializable) sale);
+		b.putSerializable("Sale_EditOrders", (Serializable) sale);
 		resultIntent.putExtras(b);
-		setResult(result, resultIntent);
+		setResult(Activity.RESULT_OK, resultIntent);
 		finish();
 	}
-	
+		
 	private void showToast(String message) {
 		Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT)
 				.show();
@@ -182,12 +174,11 @@ public class EditOrders extends Activity {
 		super.onActivityResult(requestCode, resultCode, intent);
 		switch (requestCode) {
 		case(PAYMENT_REQUEST): {
-			if (resultCode == Activity.RESULT_FIRST_USER) {
-				Bundle data = intent.getExtras();
-				sale = (Sale) data.get("Sale_Payment");
-				BackToMain("Sale_Payment", Activity.RESULT_FIRST_USER);
-			}
-		}
+			if (resultCode == Activity.RESULT_FIRST_USER){
+				Intent resultIntent = new Intent();
+				setResult(Activity.RESULT_FIRST_USER, resultIntent);
+				finish();
+			} }
 		}
 	}
 

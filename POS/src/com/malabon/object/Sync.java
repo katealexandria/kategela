@@ -9,6 +9,7 @@ public class Sync {
 	
 	public static List<Sale> Sales;
 	public static List<Item> OutOfStockItems;
+	public static List<UserSalesSummary> UserSalesSummaries;
 	
 	public static List<Ingredient> Ingredients;
 	public static List<Recipe> Recipes;
@@ -27,11 +28,62 @@ public class Sync {
 	public static List<Recipe_> Recipes_;
 	public static List<StockType> StockTypes;
 	
+	// --- INVENTORY --- //
+	
+	// Use this method to get latest stock quantity from DB, then subtract sold items.
+	public static void RefreshInventory(){
+		
+		// reset items to null to force get from DB
+		Items = null;
+		GetItems();
+		
+		// update available quantity
+		for(Sale sale : Sales){
+			for(Item item : sale.items){
+				Sync.UpdateProductQuantity(item.id, item.availableQty);
+				Sync.UpdateIngredientsQuantity(item.id, item.quantity);
+		} }
+	}
+	
 	// ---SALES--- //
 	public static void AddSale(Sale sale){
-		if(Sync.Sales == null)
-			Sync.Sales = new ArrayList<Sale>();
-		Sync.Sales.add(sale);
+		if(Sales == null)
+			Sales = new ArrayList<Sale>();
+		Sales.add(sale);
+	}
+	
+	public static void AddUserSalesSummary(UserSalesSummary summary){
+		if(UserSalesSummaries == null)
+			UserSalesSummaries = new ArrayList<UserSalesSummary>();		
+		UserSalesSummaries.add(summary);	
+		ResetSalesForUser(summary.user);
+	}
+	
+	public static double GetUserExpectedCash(int user_id){
+		double expectedCash = 0;
+		
+		if(Sales != null){
+		for(Sale s : Sales){
+			if(s.user == user_id)
+				expectedCash += s.total;
+		} }
+		
+		return expectedCash;
+	}
+	
+	// Use this method when all sales for the user has been committed to the database.
+	public static void ResetSalesForUser(int user_id){
+		
+		// Get current sales for user
+		List<Sale> userSales = new ArrayList<Sale>();
+		for(Sale s : Sales){
+			if(s.user == user_id)
+				userSales.add(s);
+		}
+		
+		// Assuming the sales are already in DB, delete them from memory.
+		for(Sale s : userSales)
+			Sales.remove(s);
 	}
 	
 	// ---INGREDIENTS---//
@@ -468,6 +520,22 @@ public class Sync {
 			Users.add(u);
 		}
 		return Users;
+	}
+	
+	public static User GetUserById(int id){
+		for(User u : GetUsers()){
+			if(u.user_id == id)
+				return u;
+		}
+		return null;
+	}
+	
+	public static User GetUserByUsername(String username){
+		for(User u : GetUsers()){
+			if(u.username.equalsIgnoreCase(username))
+				return u;
+		}
+		return null;
 	}
 
 	// ---DISCOUNTS---//

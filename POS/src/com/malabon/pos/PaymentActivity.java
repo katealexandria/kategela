@@ -12,7 +12,6 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.malabon.object.Item;
 import com.malabon.object.Payment;
 import com.malabon.object.Sale;
 import com.malabon.object.Sync;
@@ -141,11 +140,8 @@ public class PaymentActivity extends Activity {
 	}
 	
 	private void commitSale(){
-		for(Item item : sale.items){
-			Sync.UpdateProductQuantity(item.id, item.availableQty);
-			Sync.UpdateIngredientsQuantity(item.id, item.quantity);
-		}
 		Sync.AddSale(sale);
+		Sync.RefreshInventory();
 	}
 	
 	private boolean IsOrderTypeSelected() {

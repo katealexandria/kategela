@@ -54,7 +54,8 @@
     <string name="p20">PHP 20</string>
     <string name="p10">PHP 10</string>
     <string name="p5">PHP 5</string>
-    <string name="p1">PHP 1</string>
+    <string name="p1">PHP 1</string>    
+    <string name="p25c">25c</string>
 
     <!-- Keypad -->
     <string name="defaultNum">0.00</string>
@@ -70,6 +71,7 @@
     <string name="nine">9</string>
     <string name="C">C</string>
     <string name="Neg">-</string>
+    <string name="Dot">.</string>
 
     <string-array name="discounts_array">
         <item>0%</item>
