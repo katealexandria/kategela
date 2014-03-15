@@ -64,7 +64,7 @@ public class StockTypeDB {
 			if (cursor.moveToFirst()) {
 				do {
 					StockType stockType = new StockType();
-					stockType.stock_type_id = Integer.parseInt(cursor.getString(0));
+					stockType.stock_type_id = cursor.getInt(0);
 					stockType.name = cursor.getString(1);
 					stockType.description = cursor.getString(2);
 					

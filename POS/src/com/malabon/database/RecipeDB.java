@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.malabon.object.Recipe_;
+import com.malabon.object.Recipe;
 
 public class RecipeDB {
 	public static final String TABLE_RECIPE = "recipe";
@@ -19,7 +19,7 @@ public class RecipeDB {
 	public static final String KEY_INGREDIENT_ID = "ingredient_id";
 	public static final String KEY_INGREDIENT_QUANTITY = "ingredient_quantity";
 
-	private final ArrayList<Recipe_> recipe_list = new ArrayList<Recipe_>();
+	private final ArrayList<Recipe> recipe_list = new ArrayList<Recipe>();
 
 	private DatabaseHelper DbHelper;
 	private SQLiteDatabase db;
@@ -54,7 +54,7 @@ public class RecipeDB {
 		this.DbHelper.close();
 	}
 
-	public ArrayList<Recipe_> getAllRecipes() {
+	public ArrayList<Recipe> getAllRecipes() {
 		try {
 			recipe_list.clear();
 			String selectQuery = "SELECT * FROM " + TABLE_RECIPE;
@@ -64,13 +64,11 @@ public class RecipeDB {
 
 			if (cursor.moveToFirst()) {
 				do {
-					Recipe_ recipe = new Recipe_();
-					recipe.recipe_id = Integer.parseInt(cursor.getString(0));
-					recipe.product_id = Integer.parseInt(cursor.getString(1));
-					recipe.ingredient_id = Integer
-							.parseInt(cursor.getString(2));
-					recipe.ingredient_quantity = Double.parseDouble(cursor
-							.getString(3));
+					Recipe recipe = new Recipe();
+					recipe.recipe_id = cursor.getInt(0);
+					recipe.product_id = cursor.getInt(1);
+					recipe.ingredient_id = cursor.getInt(2);
+					//recipe.ingredient_qty = cursor.getDouble(3);
 
 					recipe_list.add(recipe);
 				} while (cursor.moveToNext());

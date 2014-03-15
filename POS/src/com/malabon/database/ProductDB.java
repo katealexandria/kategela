@@ -68,12 +68,12 @@ public class ProductDB {
 			if (cursor.moveToFirst()) {
 				do {
 					Product product = new Product();
-					product.product_id = Integer.parseInt(cursor.getString(0));
+					product.product_id = cursor.getInt(0);
 					product.name = cursor.getString(1);
-					product.price = Double.parseDouble(cursor.getString(2));
+					product.price = cursor.getDouble(2);
 					product.unit = cursor.getString(3);
-					product.category_id = Integer.parseInt(cursor.getString(4));
-					product.sortorder = Integer.parseInt(cursor.getString(5));
+					product.category_id = cursor.getInt(4);
+					product.sortorder = cursor.getInt(5);
 					product.can_be_taken_out = Boolean.parseBoolean(cursor
 							.getString(6));
 

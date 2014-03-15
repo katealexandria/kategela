@@ -64,11 +64,9 @@ public class DiscountDB {
 			if (cursor.moveToFirst()) {
 				do {
 					Discount discount = new Discount();
-					discount.discount_id = Integer
-							.parseInt(cursor.getString(0));
+					discount.discount_id = cursor.getInt(0);
 					discount.name = cursor.getString(1);
-					discount.percentage = Double.parseDouble(cursor
-							.getString(2));
+					discount.percentage = cursor.getDouble(2);
 
 					discount_list.add(discount);
 				} while (cursor.moveToNext());

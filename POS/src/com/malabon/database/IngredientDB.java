@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.malabon.object.Ingredient_;
+import com.malabon.object.Ingredient;
 
 public class IngredientDB {
 	public static final String TABLE_INGREDIENT = "ingredient";
@@ -18,7 +18,7 @@ public class IngredientDB {
 	public static final String KEY_NAME = "name";
 	public static final String KEY_UNIT = "unit";
 
-	private final ArrayList<Ingredient_> ingredient_list = new ArrayList<Ingredient_>();
+	private final ArrayList<Ingredient> ingredient_list = new ArrayList<Ingredient>();
 
 	private DatabaseHelper DbHelper;
 	private SQLiteDatabase db;
@@ -53,7 +53,7 @@ public class IngredientDB {
 		this.DbHelper.close();
 	}
 
-	public ArrayList<Ingredient_> getAllIngredients() {
+	public ArrayList<Ingredient> getAllIngredients() {
 		try {
 			ingredient_list.clear();
 			String selectQuery = "SELECT * FROM " + TABLE_INGREDIENT;
@@ -63,9 +63,8 @@ public class IngredientDB {
 
 			if (cursor.moveToFirst()) {
 				do {
-					Ingredient_ ingredient = new Ingredient_();
-					ingredient.ingredient_id = Integer.parseInt(cursor
-							.getString(0));
+					Ingredient ingredient = new Ingredient();
+					ingredient.id = cursor.getInt(0);
 					ingredient.name = cursor.getString(1);
 					ingredient.unit = cursor.getString(2);
 

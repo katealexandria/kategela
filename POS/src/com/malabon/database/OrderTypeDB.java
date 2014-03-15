@@ -63,8 +63,7 @@ public class OrderTypeDB {
 			if (cursor.moveToFirst()) {
 				do {
 					OrderType ordertype = new OrderType();
-					ordertype.order_type_id = Integer
-							.parseInt(cursor.getString(0));
+					ordertype.order_type_id = cursor.getInt(0);
 					ordertype.name = cursor.getString(1);
 					
 					ordertype_list.add(ordertype);

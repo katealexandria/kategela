@@ -266,6 +266,7 @@
                 app:rowCount="2" >
 
                 <ImageView
+                    android:id="@+id/userThumb"
                     style="@style/user_thumbnail"
                     app:layout_column="0"
                     app:layout_row="0"

@@ -1,28 +1,32 @@
 package com.malabon.pos;
 
-import java.io.Serializable;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.malabon.database.CustomerDB;
-import com.malabon.database.DBAdapter;
 import com.malabon.database.UserDB;
 import com.malabon.object.Sync;
-import com.malabon.object.User;
 
 public class Login extends Activity {
 
 	UserDB userDB;
 	EditText txtUsername, txtPassword;
 	String called_from = null;
+	String currentUsername;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +63,7 @@ public class Login extends Activity {
 
 		SharedPreferences prefs = this.getSharedPreferences("com.malabon.pos",
 				Context.MODE_PRIVATE);
-		String currentUsername = prefs.getString("CurrentUser", null);
+		currentUsername = prefs.getString("CurrentUser", null);
 		Boolean lockRegister = prefs.getBoolean("lockRegister", false);
 
 		txtUsername.setText(currentUsername);
@@ -82,12 +86,7 @@ public class Login extends Activity {
 				// User u = userDB.validateLogin(user_name, user_password);
 
 				// if (u != null) {
-				Intent resultIntent = new Intent();
-				SharedPreferences prefs = this.getSharedPreferences(
-						"com.malabon.pos", Context.MODE_PRIVATE);
-				prefs.edit().putString("CurrentUser", user_name).commit();
-				setResult(Activity.RESULT_OK, resultIntent);
-				finish();
+				dispatchTakePictureIntent();				
 				// } else
 				// showToast("Incorrect username and/or password");
 			} else
@@ -109,5 +108,52 @@ public class Login extends Activity {
 	private void showToast(String message) {
 		Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT)
 				.show();
+	}
+	
+	//-----FACE CAPTURE-----//
+	
+	static final int REQUEST_TAKE_PHOTO = 1;
+	String mCurrentPhotoPath;
+	
+	@SuppressLint("SimpleDateFormat")
+	private void saveImageFile(Bitmap bmp) throws IOException {
+	    // Create an image file name
+	    String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+	    String imageFileName = "JPEG_" + timeStamp + "_.jpg";
+	    
+	    FileOutputStream out = openFileOutput(imageFileName, Context.MODE_PRIVATE);
+	    bmp.compress(Bitmap.CompressFormat.JPEG, 90, out);
+	    out.flush();
+	    out.close();
+
+	    mCurrentPhotoPath = getFileStreamPath(imageFileName).getAbsolutePath();
+	    //TODO: Save image path to DB.
+	}
+	
+	private void dispatchTakePictureIntent() {
+	    Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+	    startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+	}
+	
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
+	        Bundle extras = data.getExtras();
+	        Sync.CurrentUserBitmap = (Bitmap) extras.get("data");
+	        try {
+				saveImageFile(Sync.CurrentUserBitmap);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	        
+	        String user_name = txtUsername.getText().toString();
+	        Intent resultIntent = new Intent();
+			SharedPreferences prefs = this.getSharedPreferences(
+					"com.malabon.pos", Context.MODE_PRIVATE);
+			prefs.edit().putString("CurrentUser", user_name).commit();
+			setResult(Activity.RESULT_OK, resultIntent);
+			finish();
+	    }
 	}
 }

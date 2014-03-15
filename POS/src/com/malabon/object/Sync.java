@@ -3,14 +3,18 @@ package com.malabon.object;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.graphics.Bitmap;
+
 import com.malabon.pos.OrderType;
 
 public class Sync {
 	
+	public static Bitmap CurrentUserBitmap;
+	
 	public static List<Sale> Sales;
 	public static List<Item> OutOfStockItems;
 	public static List<UserSalesSummary> UserSalesSummaries;
-	
+
 	public static List<Ingredient> Ingredients;
 	public static List<Recipe> Recipes;
 	public static List<Item> Items;
@@ -22,70 +26,70 @@ public class Sync {
 	public static List<OrderType> OrderTypes;
 	public static PosSettings posSettings;
 	public static List<UserQuestion> UserQuestions;
-	public static List<Product> Products;
-	public static List<ProductCategory> ProductCategories;
-	public static List<Ingredient_> Ingredients_;
-	public static List<Recipe_> Recipes_;
 	public static List<StockType> StockTypes;
-	
+
 	// --- INVENTORY --- //
-	
-	// Use this method to get latest stock quantity from DB, then subtract sold items.
-	public static void RefreshInventory(){
-		
+
+	// Use this method to get latest stock quantity from DB, then subtract sold
+	// items.
+	public static void RefreshInventory() {
+
 		// reset items to null to force get from DB
 		Items = null;
 		GetItems();
-		
+
 		// update available quantity
-		for(Sale sale : Sales){
-			for(Item item : sale.items){
+		for (Sale sale : Sales) {
+			for (Item item : sale.items) {
 				Sync.UpdateProductQuantity(item.id, item.availableQty);
 				Sync.UpdateIngredientsQuantity(item.id, item.quantity);
-		} }
+			}
+		}
 	}
-	
+
 	// ---SALES--- //
-	public static void AddSale(Sale sale){
-		if(Sales == null)
+	public static void AddSale(Sale sale) {
+		if (Sales == null)
 			Sales = new ArrayList<Sale>();
 		Sales.add(sale);
 	}
-	
-	public static void AddUserSalesSummary(UserSalesSummary summary){
-		if(UserSalesSummaries == null)
-			UserSalesSummaries = new ArrayList<UserSalesSummary>();		
-		UserSalesSummaries.add(summary);	
+
+	public static void AddUserSalesSummary(UserSalesSummary summary) {
+		if (UserSalesSummaries == null)
+			UserSalesSummaries = new ArrayList<UserSalesSummary>();
+		UserSalesSummaries.add(summary);
 		ResetSalesForUser(summary.user);
 	}
-	
-	public static double GetUserExpectedCash(int user_id){
+
+	public static double GetUserExpectedCash(int user_id) {
 		double expectedCash = 0;
-		
-		if(Sales != null){
-		for(Sale s : Sales){
-			if(s.user == user_id)
-				expectedCash += s.total;
-		} }
-		
+
+		if (Sales != null) {
+			for (Sale s : Sales) {
+				if (s.user == user_id)
+					expectedCash += s.total;
+			}
+		}
+
 		return expectedCash;
 	}
-	
-	// Use this method when all sales for the user has been committed to the database.
-	public static void ResetSalesForUser(int user_id){
-		
+
+	// Use this method when all sales for the user has been committed to the
+	// database.
+	public static void ResetSalesForUser(int user_id) {
+
 		// Get current sales for user
 		List<Sale> userSales = new ArrayList<Sale>();
-		for(Sale s : Sales){
-			if(s.user == user_id)
+		for (Sale s : Sales) {
+			if (s.user == user_id)
 				userSales.add(s);
 		}
-		
+
 		// Assuming the sales are already in DB, delete them from memory.
-		for(Sale s : userSales)
+		for (Sale s : userSales)
 			Sales.remove(s);
 	}
-	
+
 	// ---INGREDIENTS---//
 
 	public static List<Ingredient> GetIngredients() {
@@ -294,7 +298,7 @@ public class Sync {
 			item.availableQty = GetItemAvailableQty(6);
 			item.id = 6;
 			Items.add(item);
-			
+
 		}
 
 		return Items;
@@ -320,24 +324,24 @@ public class Sync {
 	public static void UpdateProductQuantity(int productId, int newQty) {
 		if (Items == null)
 			GetItems();
-		
+
 		Item outOfStockItem = null;
 		for (Item item : Items) {
 			if (item.id == productId) {
-				if(newQty == 0)
+				if (newQty == 0)
 					outOfStockItem = item;
 				item.availableQty = newQty;
 				item.quantity = 1;
 				break;
 			}
 		}
-		
-		if(outOfStockItem != null)
+
+		if (outOfStockItem != null)
 			ItemOutOfStock(outOfStockItem);
 	}
-	
-	public static void ItemOutOfStock(Item item){
-		if(OutOfStockItems == null)
+
+	public static void ItemOutOfStock(Item item) {
+		if (OutOfStockItems == null)
 			OutOfStockItems = new ArrayList<Item>();
 		OutOfStockItems.add(item);
 		Items.remove(item);
@@ -353,41 +357,32 @@ public class Sync {
 			catSolid.name = "Solid";
 			catSolid.description = "Solid";
 			catSolid.id = 1;
+			// catSolid.sortorder = 1;
 
 			Category catLiquid = new Category();
 			catLiquid.name = "Liquid";
 			catLiquid.description = "Liquid";
 			catLiquid.id = 2;
-			
+			// catLiquid.sortorder = 2;
+
 			/*
-			Category catSolid3 = new Category();
-			catSolid3.name = "Solid3";
-			catSolid3.description = "Solid3";
-			catSolid3.id = 3;
+			 * Category catSolid3 = new Category(); catSolid3.name = "Solid3";
+			 * catSolid3.description = "Solid3"; catSolid3.id = 3;
+			 * 
+			 * Category catLiquid4 = new Category(); catLiquid4.name =
+			 * "Liquid4"; catLiquid4.description = "Liquid4"; catLiquid4.id = 4;
+			 * 
+			 * Category catSolid5 = new Category(); catSolid5.name = "Solid5";
+			 * catSolid5.description = "Solid5"; catSolid5.id = 5;
+			 * 
+			 * Category catLiquid6 = new Category(); catLiquid6.name =
+			 * "Liquid6"; catLiquid6.description = "Liquid6"; catLiquid6.id = 6;
+			 * 
+			 * Categories.add(catSolid); Categories.add(catLiquid);
+			 * Categories.add(catSolid3); Categories.add(catLiquid4);
+			 * Categories.add(catSolid5); Categories.add(catLiquid6);
+			 */
 
-			Category catLiquid4 = new Category();
-			catLiquid4.name = "Liquid4";
-			catLiquid4.description = "Liquid4";
-			catLiquid4.id = 4;
-			
-			Category catSolid5 = new Category();
-			catSolid5.name = "Solid5";
-			catSolid5.description = "Solid5";
-			catSolid5.id = 5;
-
-			Category catLiquid6 = new Category();
-			catLiquid6.name = "Liquid6";
-			catLiquid6.description = "Liquid6";
-			catLiquid6.id = 6;
-
-			Categories.add(catSolid);
-			Categories.add(catLiquid);
-			Categories.add(catSolid3);
-			Categories.add(catLiquid4);
-			Categories.add(catSolid5);
-			Categories.add(catLiquid6);
-			*/
-			
 			Categories.add(catSolid);
 			Categories.add(catLiquid);
 		}
@@ -496,6 +491,7 @@ public class Sync {
 	}
 
 	// ---USERS---//
+	// TODO: get only one user in DB, not all
 
 	public static List<User> GetUsers() {
 		if (Users == null) {
@@ -504,35 +500,32 @@ public class Sync {
 			User u = new User();
 			u.user_id = 1;
 			u.username = "admin";
-			u.is_admin = 1;
 			Users.add(u);
 
 			u = new User();
 			u.user_id = 2;
 			u.username = "kate";
-			u.is_admin = 0;
 			Users.add(u);
 
 			u = new User();
 			u.user_id = 3;
 			u.username = "gela";
-			u.is_admin = 0;
 			Users.add(u);
 		}
 		return Users;
 	}
-	
-	public static User GetUserById(int id){
-		for(User u : GetUsers()){
-			if(u.user_id == id)
+
+	public static User GetUserById(int id) {
+		for (User u : GetUsers()) {
+			if (u.user_id == id)
 				return u;
 		}
 		return null;
 	}
-	
-	public static User GetUserByUsername(String username){
-		for(User u : GetUsers()){
-			if(u.username.equalsIgnoreCase(username))
+
+	public static User GetUserByUsername(String username) {
+		for (User u : GetUsers()) {
+			if (u.username.equalsIgnoreCase(username))
 				return u;
 		}
 		return null;
@@ -605,6 +598,7 @@ public class Sync {
 	}
 
 	// ---USER QUESTIONS---//
+	//TODO: get only questions for one userid
 
 	public static List<UserQuestion> GetUserQuestions() {
 		if (UserQuestions == null) {
@@ -612,42 +606,36 @@ public class Sync {
 
 			UserQuestion u = new UserQuestion();
 			u.id = 1;
-			u.user_id = 1;
 			u.question = "What was your childhood nickname";
 			u.answer = "secret";
 			UserQuestions.add(u);
 
 			u = new UserQuestion();
 			u.id = 2;
-			u.user_id = 1;
 			u.question = "In what city did you meet your spouse/significant other?";
 			u.answer = "secret";
 			UserQuestions.add(u);
 
 			u = new UserQuestion();
 			u.id = 3;
-			u.user_id = 2;
 			u.question = "What is the name of your favorite childhood friend?";
 			u.answer = "secret";
 			UserQuestions.add(u);
 
 			u = new UserQuestion();
 			u.id = 4;
-			u.user_id = 2;
 			u.question = "What street did you live on in third grade?";
 			u.answer = "secret";
 			UserQuestions.add(u);
 
 			u = new UserQuestion();
 			u.id = 5;
-			u.user_id = 3;
 			u.question = "What is the middle name of your oldest child?";
 			u.answer = "secret";
 			UserQuestions.add(u);
 
 			u = new UserQuestion();
 			u.id = 6;
-			u.user_id = 3;
 			u.question = "What is your oldest sibling's middle name?";
 			u.answer = "secret";
 			UserQuestions.add(u);
@@ -655,81 +643,30 @@ public class Sync {
 		return UserQuestions;
 	}
 
-	// ---PRODUCT---//
-
-	public static List<Product> GetProducts() {
-		if (Products == null) {
-		}
-		return Products;
-	}
-
-	// ---PRODUCT CATEGORY---//
-
-	public static List<ProductCategory> GetProductCategories() {
-		if (ProductCategories == null) {
-			ProductCategories = new ArrayList<ProductCategory>();
-
-			ProductCategory p = new ProductCategory();
-			p.category_id = 1;
-			p.name = "Breakfast";
-			p.sortorder = 1;
-			ProductCategories.add(p);
-			
-			p = new ProductCategory();
-			p.category_id = 2;
-			p.name = "Dinner";
-			p.sortorder = 3;
-			ProductCategories.add(p);
-			
-			p = new ProductCategory();
-			p.category_id = 3;
-			p.name = "Lunch";
-			p.sortorder = 2;
-			ProductCategories.add(p);
-		}
-		return ProductCategories;
-	}
-	
-	// ---INGREDIENT---//
-	
-	public static List<Ingredient_> GetIngredients_() {
-		if (Ingredients_ == null) {
-		}
-		return Ingredients_;
-	}
-	
-	// ---RECIPE---//
-	
-	public static List<Recipe_> GetRecipes_() {
-		if (Recipes_ == null) {
-		}
-		return Recipes_;
-	}
-	
 	// ---STOCK TYPE---//
-	
+
 	public static List<StockType> GetStockTypes() {
 		if (StockTypes == null) {
 			StockTypes = new ArrayList<StockType>();
-			
+
 			StockType s = new StockType();
 			s.stock_type_id = 1;
 			s.name = "product";
 			s.description = null;
 			StockTypes.add(s);
-			
+
 			s = new StockType();
 			s.stock_type_id = 2;
 			s.name = "ingredient";
 			s.description = null;
 			StockTypes.add(s);
-			
+
 			s = new StockType();
 			s.stock_type_id = 3;
 			s.name = "clean";
 			s.description = "xonrox";
 			StockTypes.add(s);
-			
+
 			s = new StockType();
 			s.stock_type_id = 4;
 			s.name = "takeout";

@@ -64,11 +64,9 @@ public class ProductCategoryDB {
 			if (cursor.moveToFirst()) {
 				do {
 					ProductCategory productCategory = new ProductCategory();
-					productCategory.category_id = Integer.parseInt(cursor
-							.getString(0));
+					productCategory.category_id = cursor.getInt(0);
 					productCategory.name = cursor.getString(1);
-					productCategory.sortorder = Integer.parseInt(cursor
-							.getString(2));
+					productCategory.sortorder = cursor.getInt(2); 
 
 					productcategory_list.add(productCategory);
 				} while (cursor.moveToNext());

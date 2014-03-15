@@ -10,6 +10,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.text.format.Time;
 import android.util.Log;
 
 import com.malabon.object.LogCash;
@@ -75,7 +76,7 @@ public class LogCashDB {
 
 			if (cursor != null) {
 				cursor.moveToFirst();
-				amount = Double.parseDouble(cursor.getString(0));
+				amount = cursor.getDouble(0);
 			}
 			cursor.close();
 			db.close();
@@ -93,7 +94,7 @@ public class LogCashDB {
 			values.put(KEY_IS_CASH_IN, logCash.is_cash_in);
 			values.put(KEY_AMOUNT, logCash.amount);
 			values.put(KEY_USER_ID, logCash.user_id);
-			values.put(KEY_DATE, formatter.format(logCash.date));
+			values.put(KEY_DATE, formatter.format(new Time()));
 
 			db.insert(TABLE_LOG_CASH, null, values);
 			db.close();

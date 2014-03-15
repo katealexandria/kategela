@@ -64,8 +64,7 @@ public class CustomerDB {
 		try {
 			SQLiteDatabase db = this.DbHelper.getWritableDatabase();
 			ContentValues values = new ContentValues();
-			// TODO: naming convention
-			// values.put(KEY_CUSTOMER_ID, customer.getCustomerId());
+			// TODO: CUSTOMER_ID naming convention
 			values.put(KEY_CUSTOMER_ID, UUID.randomUUID().toString());
 			values.put(KEY_FIRST_NAME, customer.first_name);
 			values.put(KEY_LAST_NAME, customer.last_name);
@@ -161,6 +160,7 @@ public class CustomerDB {
 
 			num = db.update(TABLE_CUSTOMER, values, KEY_CUSTOMER_ID + " = ?",
 					new String[] { String.valueOf(customer.customer_id) });
+			db.close();
 		} catch (Exception e) {
 			Log.e("update_customer", "" + e);
 		}

@@ -67,10 +67,9 @@ public class PosSettingsDB {
 				cursor.moveToFirst();
 				
 				posSettings = new PosSettings();
-				posSettings.branch_id = Integer.parseInt(cursor.getString(1));
+				posSettings.branch_id = cursor.getInt(1);
 				posSettings.branch_name = cursor.getString(2);
-				posSettings.is_automatic = Short
-						.parseShort(cursor.getString(3));
+				posSettings.is_automatic = cursor.getShort(3); 
 				posSettings.sync_frequency = cursor.getString(4);
 				posSettings.sync_time = (java.sql.Date) new SimpleDateFormat(
 						"yyyy-MM-dd HH:mm:ss", Locale.ENGLISH).parse(cursor

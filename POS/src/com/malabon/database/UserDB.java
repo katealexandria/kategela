@@ -62,9 +62,8 @@ public class UserDB {
 			if (cursor != null) {
 				cursor.moveToFirst();
 				user = new User();
-				user.user_id = Integer.parseInt(cursor.getString(0));
+				user.user_id = cursor.getInt(0);
 				user.username = cursor.getString(1);
-				user.is_admin = Short.parseShort(cursor.getString(3));
 			}
 			cursor.close();
 			db.close();
@@ -73,15 +72,15 @@ public class UserDB {
 		}
 		return user;
 	}
-	
-	public boolean validateAdmin(String username, String password){
+
+	public boolean validateAdmin(String username, String password) {
 		boolean isadmin = false;
 		try {
 			SQLiteDatabase db = this.DbHelper.getReadableDatabase();
 
 			Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_USER
 					+ " WHERE " + KEY_USERNAME + " = '" + username + "'"
-					+ " AND " + KEY_PASSWORD + " = '" + password + "'" 
+					+ " AND " + KEY_PASSWORD + " = '" + password + "'"
 					+ " AND " + KEY_IS_ADMIN + "= 1", null);
 
 			if (cursor != null) {

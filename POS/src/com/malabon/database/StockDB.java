@@ -70,15 +70,14 @@ public class StockDB {
 			if (cursor.moveToFirst()) {
 				do {
 					Stock stock = new Stock();
-					stock.stock_id = Integer.parseInt(cursor.getString(0));
-					//stock.stock_type_id = Integer.parseInt(cursor.getString(1));
-					stock.id = Integer.parseInt(cursor.getString(2));
-					stock.quantity = Double.parseDouble(cursor.getString(3));
+					stock.stock_id = cursor.getInt(0);
+					//stock.stock_type_id = cursor.getInt(1);
+					stock.id = cursor.getInt(2);
+					stock.quantity = cursor.getDouble(3);
 					stock.last_updated_date = (java.sql.Date) new SimpleDateFormat(
 							"yyyy-MM-dd HH:mm:ss", Locale.ENGLISH).parse(cursor
 							.getString(4));
-					stock.last_updated_user_id = Integer.parseInt(cursor
-							.getString(5));
+					stock.last_updated_user_id = cursor.getInt(5);
 
 					product_stock_list.add(stock);
 				} while (cursor.moveToNext());

@@ -33,8 +33,21 @@ public class DBTable {
 				+ LogCashDB.KEY_IS_CASH_IN + " boolean NOT NULL, " 
 				+ LogCashDB.KEY_AMOUNT +" double NOT NULL, " 
 				+ LogCashDB.KEY_USER_ID +" int NOT NULL, " 
-				+ LogCashDB.KEY_DATE + " date NOT NULL), "
+				+ LogCashDB.KEY_DATE + " date NOT NULL, "
 				+ "foreign key ("+LogCashDB.KEY_USER_ID+") references "+ UserDB.TABLE_USER +"("+UserDB.KEY_USER_ID+"));";
+	}
+	
+	public String get_TABLE_LOG_USER_TIME_SHEET(){
+		return "CREATE TABLE "+ LogUserTimeSheetDB.TABLE_LOG_USER_TIME_SHEET +"(" 
+				+ LogUserTimeSheetDB.KEY_ID + " int NOT NULL PRIMARY KEY autoincrement, " 
+				+ LogUserTimeSheetDB.KEY_USER_ID + " int NOT NULL, " 
+				+ LogUserTimeSheetDB.KEY_TIMEIN +" date, " 
+				+ LogUserTimeSheetDB.KEY_TIMEIN_IMAGE +" blob, " 
+				+ LogUserTimeSheetDB.KEY_TIMEOUT +" date, " 
+				+ LogUserTimeSheetDB.KEY_TIMEOUT_IMAGE +" blob, " 
+				+ LogUserTimeSheetDB.KEY_SALES_SUMMARY_ID + " int, "
+				+ "foreign key ("+LogUserTimeSheetDB.KEY_USER_ID+") references "+UserDB.TABLE_USER+"("+UserDB.KEY_USER_ID+"), " 
+				+ "foreign key ("+LogUserTimeSheetDB.KEY_SALES_SUMMARY_ID+") references "+UserSalesSummaryDB.TABLE_SALES_SUMMARY_PER_USER+"("+UserSalesSummaryDB.KEY_SALES_SUMMARY_ID+"));";
 	}
 	
 	public String get_TABLE_ORDER_TYPE(){
@@ -61,7 +74,7 @@ public class DBTable {
 				+ ProductDB.KEY_UNIT +" nvarchar(10) NOT NULL, " 
 				+ ProductDB.KEY_CATEGORY_ID +" int NOT NULL, " 
 				+ ProductDB.KEY_SORTORDER +" int NOT NULL, " 
-				+ ProductDB.KEY_CAN_BE_TAKEN_OUT + " boolean NOT NULL), "
+				+ ProductDB.KEY_CAN_BE_TAKEN_OUT + " boolean NOT NULL, "
 				+ "foreign key ("+ProductDB.KEY_CATEGORY_ID+") references "+ProductCategoryDB.TABLE_PRODUCT_CATEGORY+"("+ProductCategoryDB.KEY_CATEGORY_ID+"));";
 	}
 	
@@ -77,8 +90,15 @@ public class DBTable {
 				+ RecipeDB.KEY_RECIPE_ID + " int NOT NULL PRIMARY KEY, " 
 				+ RecipeDB.KEY_PRODUCT_ID + " int NOT NULL, " 
 				+ RecipeDB.KEY_INGREDIENT_ID +" int NOT NULL, " 
-				+ RecipeDB.KEY_INGREDIENT_QUANTITY + " double NOT NULL), " 
+				+ RecipeDB.KEY_INGREDIENT_QUANTITY + " double NOT NULL, " 
 				+ "foreign key ("+RecipeDB.KEY_PRODUCT_ID+") references "+ProductDB.TABLE_PRODUCT+"("+ProductDB.KEY_PRODUCT_ID+"));";
+	}
+	
+	public String get_TABLE_SALES_SUMMARY_PER_USER(){
+		return "CREATE TABLE "+ UserSalesSummaryDB.TABLE_SALES_SUMMARY_PER_USER +"(" 
+				+ UserSalesSummaryDB.KEY_SALES_SUMMARY_ID + " nvarchar(25) NOT NULL PRIMARY KEY, " 
+				+ UserSalesSummaryDB.KEY_CASH_TOTAL + " double NOT NULL, " 
+				+ UserSalesSummaryDB.KEY_CASH_EXPECTED + " double NOT NULL);"; 
 	}
 	
 	public String get_TABLE_STOCK_TYPE(){
@@ -101,7 +121,7 @@ public class DBTable {
 				+ UserQuestionDB.KEY_ID + " int NOT NULL PRIMARY KEY, " 
 				+ UserQuestionDB.KEY_USER_ID + " int NOT NULL, " 
 				+ UserQuestionDB.KEY_QUESTION +" nvarchar(200) NOT NULL, " 
-				+ UserQuestionDB.KEY_ANSWER + " nvarchar(200) NOT NULL), " 
+				+ UserQuestionDB.KEY_ANSWER + " nvarchar(200) NOT NULL, " 
 				+ "foreign key ("+UserQuestionDB.KEY_USER_ID+") references "+UserDB.TABLE_USER+"("+UserDB.KEY_USER_ID+"));";
 	}
 }

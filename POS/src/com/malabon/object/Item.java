@@ -4,11 +4,13 @@ import java.io.Serializable;
 
 @SuppressWarnings("serial")
 public class Item implements Serializable {
-	
 	public int id;
 	public String name;
 	public double price;
-	public int quantity;	
+	//public String unit;
+	public int quantity;
 	public int category_id;
-	public int availableQty;
+	public int availableQty;				//TODO: update in stock DB
+	//public int sortorder;
+	//public Boolean can_be_taken_out;
 }
