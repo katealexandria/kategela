@@ -19,14 +19,22 @@
             android:layout_gravity="left"
             android:background="@drawable/main_background" >
 
-            <!-- 0 -->            
-            <!-- 
-            <ImageButton 
+            <!-- 0 -->     
+			<EditText
+			    android:id="@+id/txtSearchProduct"
+			    android:layout_width="300dip"
+			    android:layout_height="wrap_content"
+			    android:textSize="30sp"
+			    android:inputType="text"
+			    android:textColor="#999"
+			    android:textStyle="italic"
+			    android:visibility="gone">
+			</EditText>
+			<ImageButton 
                style="@style/image_button_small"
                android:src="@drawable/ic_menu_search" 
-               android:contentDescription="@string/imagedesc" />
-                -->
-
+               android:contentDescription="@string/imagedesc"
+               android:onClick="doSearchProduct" />
 
             <!-- 1 -->
 

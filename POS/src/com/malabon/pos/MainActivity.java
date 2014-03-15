@@ -3,8 +3,10 @@ package com.malabon.pos;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -17,14 +19,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.malabon.object.Category;
-import com.malabon.object.ClearCacheHistory;
 import com.malabon.object.Customer;
 import com.malabon.object.Item;
 import com.malabon.object.Sale;
@@ -141,8 +144,8 @@ public class MainActivity extends Activity {
 
 		return;
 	}
-
-	private void InitializeProducts(int catId) {
+	
+	private void InitializeProducts(List<Item> itemsSource){
 		TextView temp = (TextView) findViewById(R.id.cartItemName);
 
 		sale.computeTotal();
@@ -166,11 +169,7 @@ public class MainActivity extends Activity {
 				.getSystemService(LAYOUT_INFLATER_SERVICE);
 		LinearLayout rowHandle = null;
 
-		for (Item item : allItems) {
-
-			// don't paint items from different category
-			if (catId != -1 && catId != item.category_id)
-				continue;
+		for (Item item : itemsSource) {
 
 			LinearLayout layout = null;
 
@@ -220,11 +219,42 @@ public class MainActivity extends Activity {
 			count = count % 4;
 		}
 	}
+	
+	private void InitializeProducts(int catId) {		
+		if(catId == -1)
+			InitializeProducts(allItems);
+		else{
+			List<Item> itemsSource = new ArrayList<Item>();
+			for(Item item : allItems){
+				if(item.category_id == catId)
+					itemsSource.add(item);
+			}
+			InitializeProducts(itemsSource);
+		}
+			
+	}
 
 	// {{ others code
 
 	// --------- BUTTON ACTIONS --------- //
-
+	
+	public void doSearchProduct(View view) {
+		EditText txtSearchProduct = (EditText)findViewById(R.id.txtSearchProduct);
+		
+		if(txtSearchProduct.getVisibility() == View.VISIBLE){		
+			List<Item> itemsSource = new ArrayList<Item>();
+			for(Item item : allItems){
+				if(item.name.toLowerCase().contains(
+						txtSearchProduct.getText().toString().toLowerCase()))
+					itemsSource.add(item);
+			}
+			InitializeProducts(itemsSource);
+			txtSearchProduct.setVisibility(View.GONE);
+		}
+		else
+			txtSearchProduct.setVisibility(View.VISIBLE);
+	}
+	
 	public void addCategory(View view) {
 		Intent intent = new Intent(this, AddCategory.class);
 		startActivity(intent);
@@ -272,7 +302,7 @@ public class MainActivity extends Activity {
 	public void functions(View view) {
 		SharedPreferences prefs = this.getSharedPreferences(
 				"com.malabon.pos", Context.MODE_PRIVATE);
-		prefs.edit().putInt("user_id", currentUser.user_id).commit();
+		prefs.edit().putString("username", currentUser.username).commit();
 		Intent intent = new Intent(this, Functions.class);
 		startActivity(intent);
 	}
@@ -460,6 +490,7 @@ public class MainActivity extends Activity {
 				// If new sale...
 				boolean doNewSale = prefs.getBoolean("doNewSale", false);
 				if (doNewSale) {
+					Sync.LogCancelledOrders(sale.items, currentUser.username);
 					sale = new Sale();
 					bindOrderData();
 					InitializeCustomer();
@@ -472,10 +503,11 @@ public class MainActivity extends Activity {
 				Bundle data = intent.getExtras();
 				Customer selectedCustomer = (Customer) data.get("SelectedCustomer");
 				if(selectedCustomer != null){
-					sale.customer = selectedCustomer;
+					sale.customer = selectedCustomer;					
 					InitializeCustomer();
 				}
 			}
+			if(resultCode == Activity.RESULT_CANCELED){}
 			break;
 		}
 		case (LOGIN_REQUEST): {

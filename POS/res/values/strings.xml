@@ -86,7 +86,9 @@
     <string name="imagedesc">Image</string>
 
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Activity ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-
+	
+	<string name="SearchProduct">Search product...</string>
+	<string name="SearchCustomer">Search customer...</string>
 
     <!-- Add Category -->
     <string name="AddProductCategory">Add Product Category</string>

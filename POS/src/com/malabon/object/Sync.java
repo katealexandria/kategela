@@ -19,6 +19,7 @@ public class Sync {
 	public static Bitmap CurrentUserBitmap;
 	
 	public static List<Sale> Sales;
+	public static List<CancelledOrder> CancelledOrders;
 	public static List<Item> OutOfStockItems;
 	public static List<UserSalesSummary> UserSalesSummaries;
 
@@ -43,10 +44,13 @@ public class Sync {
 		if(LstSyncHistory == null)
 			GetSyncHistory();
 		
-		// If already synced for current date, return.
-		SyncHistory lastSh = LstSyncHistory.get(LstSyncHistory.size() - 1);
-		if(dateFormat.format(new Date()) == dateFormat.format(lastSh.SyncDate))
-			return;
+		// For automatic sync, if already synced for current date, return.
+		if(!LstSyncHistory.isEmpty()){
+			SyncHistory lastSh = LstSyncHistory.get(LstSyncHistory.size() - 1);
+			if(dateFormat.format(new Date()) == dateFormat.format(lastSh.SyncDate)
+					&& !isManual)
+				return;
+		}
 		
 		////////////////////
 		//TODO: perform sync
@@ -160,6 +164,22 @@ public class Sync {
 		if (Sales == null)
 			Sales = new ArrayList<Sale>();
 		Sales.add(sale);
+		
+		//Log cancelled items
+		LogCancelledOrders(sale.deletedItems, GetUserById(sale.user).username);
+	}
+	
+	public static void LogCancelledOrders(List<Item> cancelledOrders, String user){
+		if(CancelledOrders == null)
+			CancelledOrders = new ArrayList<CancelledOrder>();
+		Date date = new Date();
+		for(Item i : cancelledOrders){
+			CancelledOrder co = new CancelledOrder();
+			co.CancelledDate = date;
+			co.UserId = user;
+			co.CancelledItem = i;
+			CancelledOrders.add(co);
+		}
 	}
 
 	public static void AddUserSalesSummary(UserSalesSummary summary) {

@@ -1,20 +1,80 @@
 package com.malabon.pos;
 
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
+
+import com.malabon.object.Discount;
+import com.malabon.object.Sync;
 
 public class ReceiptDiscount extends Activity {
 
+	DecimalFormat df = new DecimalFormat("0.00");
+	EditText txtPercent, txtPhp;
+	Spinner cmb;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);		
 		setContentView(R.layout.activity_receipt_discount);
+		InitDiscounts();
+	}
+	
+	private void InitDiscounts(){
+		txtPercent = (EditText)findViewById(R.id.txtDiscountPercent);
+        txtPhp = (EditText)findViewById(R.id.txtDiscountPhp);
+		
+		if(Sync.Discounts == null)
+			Sync.GetDiscounts();
+		
+		cmb = (Spinner)findViewById(R.id.cmbDiscounts);		
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+				this, android.R.layout.simple_spinner_item);
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		adapter.add("(None)");
+		for(Discount d : Sync.Discounts)
+			adapter.add(d.name);		
+		cmb.setAdapter(adapter);
+		
+		cmb.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+		    public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) { 
+		    	String sel = cmb.getSelectedItem().toString();
+		    	
+		    	if(sel == "(None)"){
+		    		txtPercent.setEnabled(true);
+			        txtPhp.setEnabled(true);
+			        return;
+		    	}
+		    	
+		    	txtPercent.setEnabled(false);
+		        txtPhp.setEnabled(false);		        
+		        
+		        for(Discount d : Sync.Discounts){
+		        	if(d.name == sel){
+		        		txtPercent.setText(df.format(d.percentage * 100));
+		        		txtPhp.setText("");
+		        		break;
+		        	}
+		        }
+		    } 
+
+		    public void onNothingSelected(AdapterView<?> adapterView) {
+		        txtPercent.setEnabled(true);
+		        txtPhp.setEnabled(true);
+		    } 
+		}); 
 	}
 	
 	public void confirm(View view) {

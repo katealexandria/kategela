@@ -14,12 +14,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.malabon.object.Customer;
+import com.malabon.object.Item;
 import com.malabon.object.Sync;
 
 public class ViewCustomer extends Activity {
@@ -45,18 +47,32 @@ public class ViewCustomer extends Activity {
 			currentCustomerId = prefs.getInt("CurrentCustomer", -1);
 			
 			tableCustomer = (TableLayout) findViewById(R.id.listCustomer);
-			refreshData();
+			refreshData("");
 
 		} catch (Exception e) {
 			Log.e("view_customer", "" + e);
 		}
 	}
-
+	
+	public void doSearchCustomer(View view) {
+		EditText txtSearchCustomer = (EditText)findViewById(R.id.txtSearchCustomer);
+		refreshData(txtSearchCustomer.getText().toString());
+	}
+	
+	public void showAllCustomers(View view){
+		EditText txtSearchCustomer = (EditText)findViewById(R.id.txtSearchCustomer);
+		txtSearchCustomer.setText("");
+		refreshData("");
+	}
+	
 	public void cancel(View view) {
 		if(currentCustomerId != -1)
 			SelectCustomer(currentCustomerId);
-		else
+		else{
+			Intent resultIntent = new Intent();
+			setResult(Activity.RESULT_CANCELED, resultIntent);
 			finish();
+		}
 	}
 
 	public void addCustomer(View view) {
@@ -67,11 +83,19 @@ public class ViewCustomer extends Activity {
 		startActivityForResult(add_customer, ADD_CUSTOMER_REQUEST);
 	}
 
-	public void refreshData() {
+	public void refreshData(String filter) {
 		tableCustomer.removeAllViews();
 		arrayCustomer = Sync.GetCustomers();
 		
 		for(Customer c : arrayCustomer){
+			if(filter != null && !filter.isEmpty()){
+				String sFilter = filter.toLowerCase();
+				if(!c.first_name.toLowerCase().contains(sFilter) &&
+						!c.last_name.toLowerCase().contains(sFilter))
+					continue;
+			}
+				
+			
 			LayoutInflater vi = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
 			TableRow row = (TableRow) vi.inflate(R.layout.customer_row, null);
 			
@@ -144,12 +168,12 @@ public class ViewCustomer extends Activity {
 	public void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-		refreshData();
+		refreshData("");
 	}
 
 	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
 		super.onActivityResult(requestCode, resultCode, intent);
 		if (resultCode == Activity.RESULT_OK)
-			refreshData();
+			refreshData("");
 	}
 }

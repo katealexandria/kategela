@@ -17,18 +17,34 @@
             app:layout_columnSpan="2"
             app:layout_row="0"
             android:text="@string/ReceiptDiscount" />
-
+		
         <TextView
             style="@style/field_label"
             app:layout_column="0"
             app:layout_row="1"
             android:text="@string/DiscountPercent" />
+        
+        <Spinner
+            android:id="@+id/cmbDiscounts"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            app:layout_column="1"
+            app:layout_row="1"
+            app:layout_gravity="right"
+            android:layout_marginRight="20dp" />
+        
+        <TextView
+            style="@style/field_label"
+            app:layout_column="0"
+            app:layout_row="2"
+            android:text="@string/DiscountPercent" />
 
         <EditText
             android:id="@+id/txtDiscountPercent"
+            android:layout_width="300dp"
             style="@style/textbox_numeric"
             app:layout_column="1"
-            app:layout_row="1" >
+            app:layout_row="2" >
 
             <requestFocus />
         </EditText>
@@ -36,14 +52,15 @@
         <TextView
             style="@style/field_label"
             app:layout_column="0"
-            app:layout_row="2"
+            app:layout_row="3"
             android:text="@string/DiscountPHP" />
 
         <EditText
             android:id="@+id/txtDiscountPhp"
             style="@style/textbox_numeric"
+            android:layout_width="300dp"
             app:layout_column="1"
-            app:layout_row="2" >
+            app:layout_row="3" >
         </EditText>
     </android.support.v7.widget.GridLayout>
 

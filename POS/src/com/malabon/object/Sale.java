@@ -32,6 +32,7 @@ public class Sale implements Serializable {
 	
 	public void setDefaultCustomer(){
 		this.customer = new Customer();
+		customer.customer_id = -1;
 		customer.first_name = "Default";
 		customer.last_name = "Customer";
 	}
