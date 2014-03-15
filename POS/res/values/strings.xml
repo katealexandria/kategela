@@ -34,6 +34,7 @@
     <string name="Switch">Switch</string>
     <string name="Lock">Lock</string>
     <string name="SaleOptions">Sale Options</string>
+    <string name="Sync">Sync</string>
 
     <!-- Denominations -->
     <string name="php1000">1000:</string>
@@ -121,6 +122,7 @@
     <string name="ReceiptDiscount">Receipt Discount</string>
     <string name="DiscountPercent">Discount %</string>
     <string name="DiscountPHP">Discount PHP</string>
+    <string name="DiscountType">Discount Type</string>
 
     <!-- Functions -->
     <string name="Functions">Functions</string>

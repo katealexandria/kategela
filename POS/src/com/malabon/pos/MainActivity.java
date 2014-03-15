@@ -1,13 +1,16 @@
 package com.malabon.pos;
 
+import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
-
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayout.LayoutParams;
 import android.view.LayoutInflater;
@@ -20,8 +23,8 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.malabon.object.Category;
+import com.malabon.object.ClearCacheHistory;
 import com.malabon.object.Customer;
 import com.malabon.object.Item;
 import com.malabon.object.Sale;
@@ -52,8 +55,27 @@ public class MainActivity extends Activity {
 		
 		if(currentUser == null)
 			Login(false, null);
-		else
+		else{
 			Initialize();
+			CheckSync();
+		}
+	}
+	
+	@SuppressLint("SimpleDateFormat")
+	private void CheckSync(){
+		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+		String strDate = dateFormat.format(new Date());
+		
+		ContextWrapper cw = new ContextWrapper(this);
+	    String cacheFolder = cw.getFilesDir().getPath();
+	    
+	    String nextSyncDate = dateFormat.format(Sync.GetNextSyncDate());
+	    if(strDate == nextSyncDate)
+	    	Sync.DoSync(false, currentUser.username);
+	    
+	    String nextClearCacheDate = dateFormat.format(Sync.GetNextClearCacheDate());
+	    if(strDate == nextClearCacheDate)
+	    	Sync.ClearCache(cacheFolder, currentUser.username);	    
 	}
 	
 	private void Initialize(){

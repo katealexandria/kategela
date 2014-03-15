@@ -27,8 +27,8 @@
                 app:layout_row="1" />
             
             <Button
-                android:text="@string/NoSale"
-                android:onClick="noSale"
+                android:text="@string/Sync"
+                android:onClick="sync"
                 style="@style/btn_orange_small"
                 app:layout_column="1"
                 app:layout_row="1" />

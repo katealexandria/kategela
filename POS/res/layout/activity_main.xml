@@ -17,16 +17,15 @@
             style="@style/wrapper_horizontal"
             android:layout_width="match_parent"
             android:layout_gravity="left"
-            android:layout_row="0"
             android:background="@drawable/main_background" >
 
-            <!-- 0 -->
-            <!--
-                    <ImageButton 
-     		                style="@style/image_button_small"
-     		                android:src="@drawable/ic_menu_search" 
-     		                android:contentDescription="@string/imagedesc" />
-            -->
+            <!-- 0 -->            
+            <!-- 
+            <ImageButton 
+               style="@style/image_button_small"
+               android:src="@drawable/ic_menu_search" 
+               android:contentDescription="@string/imagedesc" />
+                -->
 
 
             <!-- 1 -->
@@ -112,12 +111,10 @@
                         android:visibility="gone" >
 
                         <TextView
-                            style="@style/h3_product"
-                            android:text="Cheeseburger" />
+                            style="@style/h3_product" />
 
                         <TextView
-                            style="@style/h3_price"
-                            android:text="75.50" />
+                            style="@style/h3_price" />
                     </LinearLayout>
                 </LinearLayout>
             </ScrollView>

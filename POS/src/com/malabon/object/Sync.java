@@ -1,6 +1,11 @@
 package com.malabon.object;
 
+import java.io.File;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import android.graphics.Bitmap;
@@ -8,6 +13,8 @@ import android.graphics.Bitmap;
 import com.malabon.pos.OrderType;
 
 public class Sync {
+	
+	static DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
 	
 	public static Bitmap CurrentUserBitmap;
 	
@@ -27,7 +34,108 @@ public class Sync {
 	public static PosSettings posSettings;
 	public static List<UserQuestion> UserQuestions;
 	public static List<StockType> StockTypes;
-
+	
+	public static List<ClearCacheHistory> LstClearCacheHistory;
+	public static List<SyncHistory> LstSyncHistory;
+	
+	
+	public static void DoSync(Boolean isManual, String userId){
+		if(LstSyncHistory == null)
+			GetSyncHistory();
+		
+		// If already synced for current date, return.
+		SyncHistory lastSh = LstSyncHistory.get(LstSyncHistory.size() - 1);
+		if(dateFormat.format(new Date()) == dateFormat.format(lastSh.SyncDate))
+			return;
+		
+		////////////////////
+		//TODO: perform sync
+		////////////////////
+		
+		//Add to sync history		
+		SyncHistory sh = new SyncHistory();
+		sh.IsManual = isManual;
+		sh.SyncDate = new Date();
+		sh.UserId = userId;
+		LstSyncHistory.add(sh);
+	}
+	
+	// Clear image cache for user log-in
+	public static void ClearCache(String cacheFolder, String userId){
+		if(LstClearCacheHistory == null)
+			GetClearCacheHistory();
+		
+		// If already cleared for current date, return.
+		ClearCacheHistory lastCch = LstClearCacheHistory.get(LstClearCacheHistory.size() - 1);
+		if(dateFormat.format(new Date()) == dateFormat.format(lastCch.ClearDate))
+			return;
+		
+		File cf = new File(cacheFolder);
+		if(!cf.exists())
+			return;
+		
+		for(File f : cf.listFiles()){
+			if(f.getName().contains("LoginUserMug_"))
+				f.delete();
+		}
+		
+		//Add to clear cache history
+		ClearCacheHistory cch = new ClearCacheHistory();
+		cch.ClearDate = new Date();
+		cch.UserId = userId;
+		LstClearCacheHistory.add(cch);
+	}
+	
+	public static Date GetNextSyncDate(){
+		//TODO: get actual sync frequency from DB
+		int syncFrequencyInDays = 30;
+		
+		if(LstSyncHistory == null)
+			GetSyncHistory();
+		
+		if(LstSyncHistory.isEmpty())
+			return new Date(); // sync now
+		
+		SyncHistory sh = LstSyncHistory.get(LstSyncHistory.size() - 1);
+		Calendar c = Calendar.getInstance();
+		c.setTime(sh.SyncDate);
+		c.add(Calendar.DATE, syncFrequencyInDays);
+				
+		return c.getTime();			
+	}
+	
+	public static Date GetNextClearCacheDate(){
+		//TODO: get actual frequency from DB
+		int clearFrequencyInDays = 30;
+		
+		if(LstClearCacheHistory == null)
+			GetClearCacheHistory();
+		
+		if(LstClearCacheHistory.isEmpty())
+			return new Date(); // clear now
+		
+		ClearCacheHistory cch = LstClearCacheHistory.get(LstClearCacheHistory.size() - 1);
+		Calendar c = Calendar.getInstance();
+		c.setTime(cch.ClearDate);
+		c.add(Calendar.DATE, clearFrequencyInDays);		
+		
+		return c.getTime();			
+	}
+	
+	public static List<SyncHistory> GetSyncHistory(){
+		if(LstSyncHistory == null)
+			LstSyncHistory = new ArrayList<SyncHistory>();
+		//TODO: populate with actual history, order by date ASC
+		return LstSyncHistory;
+	}
+	
+	public static List<ClearCacheHistory> GetClearCacheHistory(){
+		if(LstClearCacheHistory == null)
+			LstClearCacheHistory = new ArrayList<ClearCacheHistory>();
+		//TODO: populate with actual history, order by date ASC
+		return LstClearCacheHistory;
+	}
+	
 	// --- INVENTORY --- //
 
 	// Use this method to get latest stock quantity from DB, then subtract sold
@@ -355,13 +463,11 @@ public class Sync {
 
 			Category catSolid = new Category();
 			catSolid.name = "Solid";
-			catSolid.description = "Solid";
 			catSolid.id = 1;
 			// catSolid.sortorder = 1;
 
 			Category catLiquid = new Category();
 			catLiquid.name = "Liquid";
-			catLiquid.description = "Liquid";
 			catLiquid.id = 2;
 			// catLiquid.sortorder = 2;
 

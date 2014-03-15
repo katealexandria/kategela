@@ -413,151 +413,153 @@ containing a value of this type.
     }
     public static final class string {
         public static final int Account=0x7f060016;
-        public static final int AddCustomer=0x7f060049;
+        public static final int AddCustomer=0x7f06004a;
         /**  Add Payment 
          */
-        public static final int AddPayment=0x7f06003f;
+        public static final int AddPayment=0x7f060040;
         /**  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Activity ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
  Add Category 
          */
-        public static final int AddProductCategory=0x7f06003d;
-        public static final int Address=0x7f06004e;
-        public static final int AddressLandmark=0x7f06004f;
-        public static final int Amount=0x7f060040;
-        public static final int C=0x7f060039;
+        public static final int AddProductCategory=0x7f06003e;
+        public static final int Address=0x7f06004f;
+        public static final int AddressLandmark=0x7f060050;
+        public static final int Amount=0x7f060041;
+        public static final int C=0x7f06003a;
         public static final int Cancel=0x7f060011;
-        public static final int Cash=0x7f060065;
-        public static final int CashDifference=0x7f060046;
-        public static final int CashExpected=0x7f060045;
+        public static final int Cash=0x7f060067;
+        public static final int CashDifference=0x7f060047;
+        public static final int CashExpected=0x7f060046;
         /**  Cash in/out 
          */
-        public static final int CashIn=0x7f06006e;
+        public static final int CashIn=0x7f060070;
         public static final int CashInOut=0x7f060015;
-        public static final int CashOut=0x7f06006f;
-        public static final int CategoryName=0x7f06003e;
-        public static final int Change=0x7f060066;
+        public static final int CashOut=0x7f060071;
+        public static final int CategoryName=0x7f06003f;
+        public static final int Change=0x7f060068;
         /**  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Universal ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
  Buttons 
          */
         public static final int Close=0x7f06000d;
         public static final int CloseDay=0x7f060013;
-        public static final int Code=0x7f06005b;
+        public static final int Code=0x7f06005d;
         public static final int Confirm=0x7f060010;
-        public static final int Counted=0x7f060042;
-        public static final int CustomerName=0x7f060052;
-        public static final int Delivery=0x7f060069;
-        public static final int Deposit=0x7f060044;
-        public static final int DineIn=0x7f060067;
-        public static final int Disc=0x7f06005e;
-        public static final int Discount=0x7f06005d;
-        public static final int DiscountPHP=0x7f060055;
-        public static final int DiscountPercent=0x7f060054;
-        public static final int DiscountTotal=0x7f060063;
-        public static final int Dot=0x7f06003b;
+        public static final int Counted=0x7f060043;
+        public static final int CustomerName=0x7f060053;
+        public static final int Delivery=0x7f06006b;
+        public static final int Deposit=0x7f060045;
+        public static final int DineIn=0x7f060069;
+        public static final int Disc=0x7f060060;
+        public static final int Discount=0x7f06005f;
+        public static final int DiscountPHP=0x7f060056;
+        public static final int DiscountPercent=0x7f060055;
+        public static final int DiscountTotal=0x7f060065;
+        public static final int DiscountType=0x7f060057;
+        public static final int Dot=0x7f06003c;
         /**  Close Day 
          */
-        public static final int EndOfDay=0x7f060041;
-        public static final int EndTheDay=0x7f060047;
-        public static final int EnterCash=0x7f06006a;
-        public static final int EnterLogin=0x7f060058;
-        public static final int ExactCash=0x7f06006b;
-        public static final int FirstName=0x7f06004b;
-        public static final int ForgotPassword=0x7f060059;
-        public static final int FullName=0x7f06004d;
+        public static final int EndOfDay=0x7f060042;
+        public static final int EndTheDay=0x7f060048;
+        public static final int EnterCash=0x7f06006c;
+        public static final int EnterLogin=0x7f06005a;
+        public static final int ExactCash=0x7f06006d;
+        public static final int FirstName=0x7f06004c;
+        public static final int ForgotPassword=0x7f06005b;
+        public static final int FullName=0x7f06004e;
         /**  Functions 
          */
-        public static final int Functions=0x7f060056;
-        public static final int LastName=0x7f06004c;
+        public static final int Functions=0x7f060058;
+        public static final int LastName=0x7f06004d;
         public static final int Lock=0x7f060018;
         /**  Login 
          */
-        public static final int Login=0x7f060057;
-        public static final int MobileNo=0x7f060051;
+        public static final int Login=0x7f060059;
+        public static final int MobileNo=0x7f060052;
         /**  Orders 
          */
-        public static final int Name=0x7f06005a;
-        public static final int Neg=0x7f06003a;
-        public static final int NetTotal=0x7f060060;
-        public static final int NewCustomer=0x7f06004a;
-        public static final int NewSale=0x7f06006d;
+        public static final int Name=0x7f06005c;
+        public static final int Neg=0x7f06003b;
+        public static final int NetTotal=0x7f060062;
+        public static final int NewCustomer=0x7f06004b;
+        public static final int NewSale=0x7f06006f;
         public static final int NoSale=0x7f060014;
         public static final int Pay=0x7f060012;
         /**  Payment 
          */
-        public static final int Payment=0x7f060064;
-        public static final int Price=0x7f06005c;
+        public static final int Payment=0x7f060066;
+        public static final int Price=0x7f06005e;
         /**  Sale Options 
          */
-        public static final int PrintReceipt=0x7f06006c;
-        public static final int Quantity=0x7f06005f;
+        public static final int PrintReceipt=0x7f06006e;
+        public static final int Quantity=0x7f060061;
         /**  Discount 
          */
-        public static final int ReceiptDiscount=0x7f060053;
-        public static final int Register=0x7f060043;
+        public static final int ReceiptDiscount=0x7f060054;
+        public static final int Register=0x7f060044;
         public static final int SaleOptions=0x7f060019;
         public static final int Save=0x7f06000e;
         public static final int SaveUpdate=0x7f06000f;
         public static final int Switch=0x7f060017;
-        public static final int TakeOut=0x7f060068;
-        public static final int TaxTotal=0x7f060061;
-        public static final int TelNo=0x7f060050;
-        public static final int Total=0x7f060062;
+        public static final int Sync=0x7f06001a;
+        public static final int TakeOut=0x7f06006a;
+        public static final int TaxTotal=0x7f060063;
+        public static final int TelNo=0x7f060051;
+        public static final int Total=0x7f060064;
         /**  Customer 
          */
-        public static final int ViewAllCustomers=0x7f060048;
-        public static final int action_forgot_password=0x7f060075;
+        public static final int ViewAllCustomers=0x7f060049;
+        public static final int action_forgot_password=0x7f060077;
         public static final int action_settings=0x7f060001;
-        public static final int action_sign_in_register=0x7f060073;
-        public static final int action_sign_in_short=0x7f060074;
+        public static final int action_sign_in_register=0x7f060075;
+        public static final int action_sign_in_short=0x7f060076;
         /**  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ App Names ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
          */
         public static final int app_name=0x7f060000;
         /**  Keypad 
          */
-        public static final int defaultNum=0x7f06002e;
-        public static final int eight=0x7f060037;
-        public static final int error_field_required=0x7f06007a;
-        public static final int error_incorrect_password=0x7f060079;
-        public static final int error_invalid_email=0x7f060077;
-        public static final int error_invalid_password=0x7f060078;
-        public static final int five=0x7f060034;
-        public static final int four=0x7f060033;
+        public static final int defaultNum=0x7f06002f;
+        public static final int eight=0x7f060038;
+        public static final int error_field_required=0x7f06007c;
+        public static final int error_incorrect_password=0x7f06007b;
+        public static final int error_invalid_email=0x7f060079;
+        public static final int error_invalid_password=0x7f06007a;
+        public static final int five=0x7f060035;
+        public static final int four=0x7f060034;
         public static final int hello_world=0x7f06000c;
         /**  Image 
          */
-        public static final int imagedesc=0x7f06003c;
-        public static final int login_progress_signing_in=0x7f060076;
-        public static final int nine=0x7f060038;
-        public static final int one=0x7f060030;
-        public static final int p1=0x7f06002c;
-        public static final int p10=0x7f06002a;
-        public static final int p100=0x7f060027;
-        public static final int p1000=0x7f060024;
-        public static final int p20=0x7f060029;
-        public static final int p200=0x7f060026;
-        public static final int p25c=0x7f06002d;
-        public static final int p5=0x7f06002b;
-        public static final int p50=0x7f060028;
-        public static final int p500=0x7f060025;
-        public static final int php1=0x7f060022;
-        public static final int php10=0x7f060020;
-        public static final int php100=0x7f06001d;
+        public static final int imagedesc=0x7f06003d;
+        public static final int login_progress_signing_in=0x7f060078;
+        public static final int nine=0x7f060039;
+        public static final int one=0x7f060031;
+        public static final int p1=0x7f06002d;
+        public static final int p10=0x7f06002b;
+        public static final int p100=0x7f060028;
+        public static final int p1000=0x7f060025;
+        public static final int p20=0x7f06002a;
+        public static final int p200=0x7f060027;
+        public static final int p25c=0x7f06002e;
+        public static final int p5=0x7f06002c;
+        public static final int p50=0x7f060029;
+        public static final int p500=0x7f060026;
+        public static final int php1=0x7f060023;
+        public static final int php10=0x7f060021;
+        public static final int php100=0x7f06001e;
         /**  Denominations 
          */
-        public static final int php1000=0x7f06001a;
-        public static final int php20=0x7f06001f;
-        public static final int php200=0x7f06001c;
-        public static final int php25c=0x7f060023;
-        public static final int php5=0x7f060021;
-        public static final int php50=0x7f06001e;
-        public static final int php500=0x7f06001b;
+        public static final int php1000=0x7f06001b;
+        public static final int php20=0x7f060020;
+        public static final int php200=0x7f06001d;
+        public static final int php25c=0x7f060024;
+        public static final int php5=0x7f060022;
+        public static final int php50=0x7f06001f;
+        public static final int php500=0x7f06001c;
         /**  Strings related to login 
          */
-        public static final int prompt_email=0x7f060071;
-        public static final int prompt_password=0x7f060072;
-        public static final int seven=0x7f060036;
-        public static final int six=0x7f060035;
-        public static final int three=0x7f060032;
+        public static final int prompt_email=0x7f060073;
+        public static final int prompt_password=0x7f060074;
+        public static final int seven=0x7f060037;
+        public static final int six=0x7f060036;
+        public static final int three=0x7f060033;
         public static final int title_activity_add_category=0x7f060003;
         public static final int title_activity_add_payment=0x7f060006;
         public static final int title_activity_cash_in_out=0x7f06000b;
@@ -568,9 +570,9 @@ containing a value of this type.
         public static final int title_activity_payment=0x7f060005;
         public static final int title_activity_receipt_discount=0x7f060009;
         public static final int title_activity_sale_options=0x7f060007;
-        public static final int title_activity_sign_in=0x7f060070;
-        public static final int two=0x7f060031;
-        public static final int zero=0x7f06002f;
+        public static final int title_activity_sign_in=0x7f060072;
+        public static final int two=0x7f060032;
+        public static final int zero=0x7f060030;
     }
     public static final class style {
         /** 

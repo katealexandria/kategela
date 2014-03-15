@@ -8,6 +8,7 @@ import java.util.Date;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -119,13 +120,13 @@ public class Login extends Activity {
 	private void saveImageFile(Bitmap bmp) throws IOException {
 	    // Create an image file name
 	    String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-	    String imageFileName = "JPEG_" + timeStamp + "_.jpg";
+	    String imageFileName = "LoginUserMug_" + timeStamp + "_.jpg";
 	    
 	    FileOutputStream out = openFileOutput(imageFileName, Context.MODE_PRIVATE);
 	    bmp.compress(Bitmap.CompressFormat.JPEG, 90, out);
 	    out.flush();
-	    out.close();
-
+	    out.close();	    
+	    
 	    mCurrentPhotoPath = getFileStreamPath(imageFileName).getAbsolutePath();
 	    //TODO: Save image path to DB.
 	}

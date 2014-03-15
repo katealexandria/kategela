@@ -20,7 +20,8 @@ public class Functions extends Activity {
         startActivity(intent);
     }
 	
-	public void noSale(View view) {
+	public void sync(View view) {
+		//TODO: Manual sync
         finish();
     }
 	
