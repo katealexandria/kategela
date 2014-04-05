@@ -310,22 +310,70 @@
                     android:onClick="lockRegister"
                     android:text="@string/Lock" />
             </android.support.v7.widget.GridLayout>
+			
+            <android.support.v7.widget.GridLayout
+                style="@style/wrapper_grid"
+                android:padding="0dp"
+                android:layout_margin="0dp"
+                android:layout_width="wrap_content"
+                android:layout_alignParentRight="true"
+                app:columnCount="3"
+                app:rowCount="2" >
+                
+				<Button
+                    style="@style/btn_gray_150"
+                    android:layout_width="130dp"
+                    android:textSize="15sp"
+                    android:onClick="printReceipt"
+                    app:layout_row="0"
+                    app:layout_column="0"
+                    android:text="@string/PrintReceipt" />
+                
+                <Button
+                    style="@style/btn_gray_150"
+                    android:layout_width="130dp"
+                    android:textSize="15sp"
+                    android:onClick="newSale"
+                    app:layout_row="0"
+                    app:layout_column="1"
+                    android:text="@string/NewSale" />
+                
+                <Button
+                    style="@style/btn_gray_150"
+                    android:layout_width="130dp"
+                    android:layout_height="110dp"
+                    android:onClick="sync"
+                    app:layout_row="0"
+                    app:layout_column="2"
+                    app:layout_rowSpan="2"
+                    android:text="@string/Sync" />
 
-            <LinearLayout
+                <Button
+                    style="@style/btn_gray_150"
+                    android:layout_width="130dp"
+                    android:textSize="15sp"
+                    android:onClick="cashInOut"
+                    app:layout_row="1"
+                    app:layout_column="0"
+                    android:text="@string/CashInOut" />
+                
+                <Button
+                    style="@style/btn_gray_150"
+                    android:layout_width="130dp"
+                    android:textSize="15sp"
+                    android:onClick="closeDay"
+                    app:layout_row="1"
+                    app:layout_column="1"
+                    android:text="@string/CloseDay" />
+            </android.support.v7.widget.GridLayout>
+            
+            <!-- <LinearLayout
                 style="@style/wrapper_vertical"
                 android:layout_alignParentRight="true"
                 android:layout_margin="10dp" >
 
-                <Button
-                    style="@style/btn_gray_150"
-                    android:onClick="saleOptions"
-                    android:text="@string/SaleOptions" />
-
-                <Button
-                    style="@style/btn_gray_150"
-                    android:onClick="functions"
-                    android:text="@string/Functions" />
-            </LinearLayout>
+                
+            </LinearLayout>-->
         </RelativeLayout>
     </LinearLayout>
 

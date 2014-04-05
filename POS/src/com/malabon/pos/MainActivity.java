@@ -43,6 +43,7 @@ public class MainActivity extends Activity {
 	static final int SELECT_CUSTOMER_REQUEST = 12;
 	static final int LOGIN_REQUEST = 13;
 	static final int PAYMENT_REQUEST = 14;
+	static final int CLOSE_DAY_REQUEST = 15;
 
 	Sale sale;
 	List<Item> allItems;
@@ -187,7 +188,26 @@ public class MainActivity extends Activity {
 		for (Item item : itemsSource) {
 
 			LinearLayout layout = null;
-
+			
+			//TODO: replace category id with the correct values from db
+			switch(item.category_id){
+			case 1: // Pansit Malabon
+				layout = (LinearLayout) vi.inflate(R.layout.product_button_orange, null); 
+				break; 
+			case 2: // Value Meals
+				layout = (LinearLayout) vi.inflate(R.layout.product_button_yellow, null); 
+				break;
+			case 3: // Merienda
+				layout = (LinearLayout) vi.inflate(R.layout.product_button_green, null); 
+				break;
+			case 4: // Drinks
+				layout = (LinearLayout) vi.inflate(R.layout.product_button_red, null); 
+				break;
+			default: // Others
+				layout = (LinearLayout) vi.inflate(R.layout.product_button_even, null); 
+				break;
+			}
+			/*
 			// check if odd or even style
 			if (count % 2 == 1) {
 				layout = (LinearLayout) vi.inflate(R.layout.product_button_odd,
@@ -196,13 +216,14 @@ public class MainActivity extends Activity {
 				layout = (LinearLayout) vi.inflate(
 						R.layout.product_button_even, null);
 			}
+			*/
 
 			layout.setOnClickListener(productClicked);
 			layout.setId(item.id);
 
 			// set product attributes
 			LinearLayout.LayoutParams btnParams = new LinearLayout.LayoutParams(
-					0, LayoutParams.MATCH_PARENT);
+					200, LayoutParams.MATCH_PARENT);
 			btnParams.weight = 1;
 			btnParams.setMargins(5, 5, 5, 5);
 			layout.setLayoutParams(btnParams);
@@ -220,7 +241,7 @@ public class MainActivity extends Activity {
 				rowHandle = (LinearLayout) vi.inflate(R.layout.product_row,
 						null);
 				LinearLayout.LayoutParams newParam = new LinearLayout.LayoutParams(
-						LayoutParams.MATCH_PARENT, 0);
+						LayoutParams.WRAP_CONTENT, 0);
 				rowHandle.setOrientation(LinearLayout.HORIZONTAL);
 				newParam.weight = 1;
 				rowHandle.setLayoutParams(newParam);
@@ -304,19 +325,32 @@ public class MainActivity extends Activity {
 		Intent intent = new Intent(this, ViewCustomer.class);
 		startActivityForResult(intent, SELECT_CUSTOMER_REQUEST);
 	}
-
-	public void saleOptions(View view) {
-		Intent intent = new Intent(this, SaleOptions.class);		
-		startActivityForResult(intent, SALE_OPTIONS_REQUEST);
-	}
-
-	public void functions(View view) {
-		SharedPreferences prefs = this.getSharedPreferences(
-				"com.malabon.pos", Context.MODE_PRIVATE);
-		prefs.edit().putString("username", currentUser.username).commit();
-		Intent intent = new Intent(this, Functions.class);
-		startActivity(intent);
-	}
+	
+	public void cashInOut(View view) {
+		Intent intent = new Intent(this, CashInOut.class);
+        startActivity(intent);
+    }
+	
+	public void sync(View view) {
+		Sync.DoSync(true, currentUser.user_id);
+    }
+	
+	public void closeDay(View view) {
+		Intent intent = new Intent(this, CloseDay.class);
+		startActivityForResult(intent, CLOSE_DAY_REQUEST);
+    }
+	
+	public void printReceipt(View view) {
+		//TODO: Print receipt
+        showToast("Print Receipt");
+    }
+	
+	public void newSale(View view) {
+		Sync.LogCancelledOrders(this, sale.items, currentUser.user_id);
+		sale = new Sale();
+		bindOrderData();
+		InitializeCustomer();
+    }
 
 	public void switchUser(View view) {
 		Login(false, currentUser.username);
@@ -483,19 +517,6 @@ public class MainActivity extends Activity {
 			}
 			break;
 		}
-		case (SALE_OPTIONS_REQUEST): {
-			if (resultCode == Activity.RESULT_OK) {
-				// If new sale...
-				boolean doNewSale = prefs.getBoolean("doNewSale", false);
-				if (doNewSale) {
-					Sync.LogCancelledOrders(this, sale.items, currentUser.user_id);
-					sale = new Sale();
-					bindOrderData();
-					InitializeCustomer();
-				}
-			}
-			break;
-		}
 		case (SELECT_CUSTOMER_REQUEST): {
 			if (resultCode == Activity.RESULT_OK) {
 				Bundle data = intent.getExtras();
@@ -528,6 +549,11 @@ public class MainActivity extends Activity {
 			if (resultCode == Activity.RESULT_FIRST_USER) {
 				Initialize();
 				bindOrderData();
+			}
+		}
+		case(CLOSE_DAY_REQUEST): {
+			if (resultCode == Activity.RESULT_OK) {
+				Login(false, currentUser.username);
 			}
 		}
 		}

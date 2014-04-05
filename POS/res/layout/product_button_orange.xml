@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout 
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res/com.malabon.pos"
-    style="@style/item_wrapper_odd">
+    style="@style/item_wrapper"
+    android:background="@drawable/orange_button">
     
 	<TextView
          style="@style/h3_product"

@@ -1,9 +1,11 @@
 package com.malabon.pos;
 
+import java.io.Serializable;
 import java.text.DecimalFormat;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
@@ -94,6 +96,8 @@ public class CloseDay extends Activity {
 	}
 
 	public void cancel(View view) {
+		Intent resultIntent = new Intent();
+		setResult(Activity.RESULT_CANCELED, resultIntent);
 		finish();
 	}
 
@@ -104,6 +108,8 @@ public class CloseDay extends Activity {
 		summary.cash_total = counted;
 		Sync.AddUserSalesSummary(summary);
 		
+		Intent resultIntent = new Intent();
+		setResult(Activity.RESULT_OK, resultIntent);
 		finish();
 	}
 	

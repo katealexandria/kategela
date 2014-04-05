@@ -246,13 +246,14 @@ containing a value of this type.
         public static final int pink_border=0x7f020010;
         public static final int popup_bg=0x7f020011;
         public static final int red_button=0x7f020012;
+        public static final int yellow_border=0x7f020013;
     }
     public static final class id {
         public static final int CustomersScrollView=0x7f040070;
         public static final int ParentWrapper=0x7f040045;
         public static final int Wrapper=0x7f040012;
-        public static final int action_forgot_password=0x7f040082;
-        public static final int action_settings=0x7f040081;
+        public static final int action_forgot_password=0x7f040081;
+        public static final int action_settings=0x7f040080;
         public static final int add_view=0x7f04001a;
         public static final int alignBounds=0x7f040002;
         public static final int alignMargins=0x7f040003;
@@ -289,12 +290,12 @@ containing a value of this type.
         public static final int btnSwitch=0x7f04005b;
         public static final int btnUpdateCancel=0x7f04001f;
         public static final int btnUpdateCustomer=0x7f04001e;
-        public static final int cartBtnDelete=0x7f040080;
-        public static final int cartItemName=0x7f04007b;
-        public static final int cartItemPrice=0x7f04007c;
-        public static final int cartItemQty=0x7f04007e;
-        public static final int cartLessQty=0x7f04007d;
-        public static final int cartMoreQty=0x7f04007f;
+        public static final int cartBtnDelete=0x7f04007f;
+        public static final int cartItemName=0x7f04007a;
+        public static final int cartItemPrice=0x7f04007b;
+        public static final int cartItemQty=0x7f04007d;
+        public static final int cartLessQty=0x7f04007c;
+        public static final int cartMoreQty=0x7f04007e;
         public static final int catButtonsContainer=0x7f04004e;
         public static final int cdP1=0x7f040037;
         public static final int cdP10=0x7f040035;
@@ -338,9 +339,8 @@ containing a value of this type.
         public static final int paymentCash=0x7f040067;
         public static final int paymentChange=0x7f040068;
         public static final int paymentCustomerName=0x7f04005d;
-        public static final int prodBtn=0x7f040078;
-        public static final int prodBtnItemName=0x7f040079;
-        public static final int prodBtnItemPrice=0x7f04007a;
+        public static final int prodBtnItemName=0x7f040078;
+        public static final int prodBtnItemPrice=0x7f040079;
         public static final int productCart=0x7f040053;
         public static final int productsGrid=0x7f040052;
         public static final int productsScrollView=0x7f040051;
@@ -398,10 +398,14 @@ containing a value of this type.
         public static final int cat_button=0x7f03000e;
         public static final int customer_row=0x7f03000f;
         public static final int product_button_even=0x7f030010;
-        public static final int product_button_odd=0x7f030011;
-        public static final int product_edit_orders_row=0x7f030012;
-        public static final int product_info_row=0x7f030013;
-        public static final int product_row=0x7f030014;
+        public static final int product_button_green=0x7f030011;
+        public static final int product_button_odd=0x7f030012;
+        public static final int product_button_orange=0x7f030013;
+        public static final int product_button_red=0x7f030014;
+        public static final int product_button_yellow=0x7f030015;
+        public static final int product_edit_orders_row=0x7f030016;
+        public static final int product_info_row=0x7f030017;
+        public static final int product_row=0x7f030018;
     }
     public static final class menu {
         public static final int add_category=0x7f090000;
@@ -615,7 +619,7 @@ containing a value of this type.
         public static final int H1=0x7f08000a;
         public static final int H2=0x7f08000b;
         public static final int H3=0x7f08000c;
-        public static final int LoginFormContainer=0x7f08002d;
+        public static final int LoginFormContainer=0x7f08002e;
         public static final int POS_Theme=0x7f080002;
         /**  Custom Styles 
          */
@@ -625,46 +629,47 @@ containing a value of this type.
         /**  #888 
          */
         public static final int btn_gray_small=0x7f08001a;
-        public static final int btn_green_150=0x7f08001d;
+        public static final int btn_green_150=0x7f08001e;
         /**  #48FF00 
          */
         public static final int btn_green_small=0x7f080019;
+        public static final int btn_orange_150=0x7f08001d;
         /**  #FFAE00 
          */
         public static final int btn_orange_small=0x7f080017;
-        public static final int btn_red_150=0x7f08001e;
+        public static final int btn_red_150=0x7f08001f;
         /**  #FF4D1C 
          */
         public static final int btn_red_small=0x7f080018;
         public static final int btn_small=0x7f080016;
         public static final int button=0x7f080012;
         public static final int field_label=0x7f08000d;
-        public static final int h2_total=0x7f080029;
-        public static final int h2_total_amt=0x7f08002b;
-        public static final int h3_item=0x7f080025;
-        public static final int h3_price=0x7f080027;
-        public static final int h3_product=0x7f080028;
-        public static final int h3_subtotal=0x7f080026;
-        public static final int h3_subtotal_amt=0x7f08002a;
+        public static final int h2_total=0x7f08002a;
+        public static final int h2_total_amt=0x7f08002c;
+        public static final int h3_item=0x7f080026;
+        public static final int h3_price=0x7f080028;
+        public static final int h3_product=0x7f080029;
+        public static final int h3_subtotal=0x7f080027;
+        public static final int h3_subtotal_amt=0x7f08002b;
         public static final int header_text=0x7f080009;
-        public static final int image_button=0x7f080021;
-        public static final int image_button_small=0x7f080020;
+        public static final int image_button=0x7f080022;
+        public static final int image_button_small=0x7f080021;
         public static final int item_wrapper=0x7f080013;
         public static final int item_wrapper_even=0x7f080015;
         public static final int item_wrapper_odd=0x7f080014;
         public static final int popup=0x7f080004;
-        public static final int table_header=0x7f080022;
-        public static final int table_row=0x7f080023;
-        public static final int table_row_total=0x7f08002c;
+        public static final int table_header=0x7f080023;
+        public static final int table_row=0x7f080024;
+        public static final int table_row_total=0x7f08002d;
         public static final int textbox_common=0x7f08000e;
         public static final int textbox_email=0x7f080011;
         public static final int textbox_numeric=0x7f08000f;
         public static final int textbox_password=0x7f080010;
-        public static final int user_thumbnail=0x7f08001f;
+        public static final int user_thumbnail=0x7f080020;
         public static final int wrapper_grid=0x7f080005;
         public static final int wrapper_grid_common=0x7f080006;
         public static final int wrapper_horizontal=0x7f080007;
-        public static final int wrapper_table=0x7f080024;
+        public static final int wrapper_table=0x7f080025;
         public static final int wrapper_vertical=0x7f080008;
     }
     public static final class styleable {
