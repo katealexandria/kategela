@@ -6,6 +6,6 @@ import java.util.Date;
 @SuppressWarnings("serial")
 public class SyncHistory implements Serializable {
 	public Date SyncDate;
-	public String UserId;
+	public int UserId;
 	public Boolean IsManual;
 }

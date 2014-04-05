@@ -1,5 +1,6 @@
 package com.malabon.database;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -7,7 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.malabon.object.User;
+import com.malabon.object.Sync;
 
 public class UserDB {
 	public static final String TABLE_USER = "user";
@@ -50,8 +51,8 @@ public class UserDB {
 		this.DbHelper.close();
 	}
 
-	public User validateLogin(String username, String password) {
-		User user = null;
+	public boolean validateLogin(String username, String password) {
+		Boolean isvalid = false;
 		try {
 			SQLiteDatabase db = this.DbHelper.getReadableDatabase();
 
@@ -61,16 +62,18 @@ public class UserDB {
 
 			if (cursor != null) {
 				cursor.moveToFirst();
-				user = new User();
-				user.user_id = cursor.getInt(0);
-				user.username = cursor.getString(1);
+				Sync.SetUser(cursor.getInt(0), cursor.getString(1));
+				isvalid = true;
+
+				Log.d("pos", "userid: " + String.valueOf(cursor.getInt(0)));
+				Log.d("pos", "username: " + cursor.getString(1));
 			}
 			cursor.close();
 			db.close();
 		} catch (Exception e) {
-			Log.e("get_user", "" + e);
+			Log.e("pos_error", "validateLogin" + e);
 		}
-		return user;
+		return isvalid;
 	}
 
 	public boolean validateAdmin(String username, String password) {
@@ -79,42 +82,73 @@ public class UserDB {
 			SQLiteDatabase db = this.DbHelper.getReadableDatabase();
 
 			Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_USER
-					+ " WHERE " + KEY_USERNAME + " = '" + username + "'"
-					+ " AND " + KEY_PASSWORD + " = '" + password + "'"
-					+ " AND " + KEY_IS_ADMIN + "= 1", null);
+					+ " WHERE (" + KEY_USERNAME + " = '" + username + "')"
+					+ " AND (" + KEY_PASSWORD + " = '" + password + "')"
+					+ " AND (" + KEY_IS_ADMIN + " = 1)", null);
 
-			if (cursor != null) {
+			if (cursor.getCount() > 0) {
 				cursor.moveToFirst();
 				isadmin = true;
+
+				Log.d("pos", "isadmin: " + String.valueOf(isadmin));
 			}
 			cursor.close();
 			db.close();
 		} catch (Exception e) {
-			Log.e("get_isadmin", "" + e);
+			Log.e("pos_error", "validateAdmin" + e);
 		}
 		return isadmin;
 	}
 
-	/*
-	 * public void tempAdd() { try { DBTable table = new DBTable();
-	 * db.execSQL(table.get_TABLE_USER()); } catch (Exception e) {
-	 * Log.e("create_table", "" + e); }
-	 * 
-	 * try { SQLiteDatabase db = this.DbHelper.getWritableDatabase();
-	 * ContentValues values = null;
-	 * 
-	 * values = new ContentValues(); values.put(KEY_USER_ID, 1);
-	 * values.put(KEY_USERNAME, "admin"); values.put(KEY_PASSWORD, "pass");
-	 * values.put(KEY_IS_ADMIN, 1); db.insert(TABLE_USER, null, values);
-	 * 
-	 * values = new ContentValues(); values.put(KEY_USER_ID, 2);
-	 * values.put(KEY_USERNAME, "gela"); values.put(KEY_PASSWORD, "pass");
-	 * values.put(KEY_IS_ADMIN, 0); db.insert(TABLE_USER, null, values);
-	 * 
-	 * values = new ContentValues(); values.put(KEY_USER_ID, 3);
-	 * values.put(KEY_USERNAME, "kate"); values.put(KEY_PASSWORD, "pass");
-	 * values.put(KEY_IS_ADMIN, 0); db.insert(TABLE_USER, null, values);
-	 * 
-	 * db.close(); } catch (Exception e) { Log.e("add_user", "" + e); } }
-	 */
+	// TODO: delete after testing
+	// --------------------------------------------------------------------------
+
+	public int getUserCount() {
+		int num = 0;
+		try {
+			String countQuery = "SELECT " + KEY_USER_ID + " FROM " + TABLE_USER;
+			SQLiteDatabase db = this.DbHelper.getReadableDatabase();
+			Cursor cursor = db.rawQuery(countQuery, null);
+			num = cursor.getCount();
+
+			cursor.close();
+			Log.d("pos", "getUsersCount: " + String.valueOf(num));
+		} catch (Exception e) {
+			Log.e("pos_error", "getUsersCount" + e);
+		}
+		return num;
+	}
+
+	public void tempAddUsers() {
+		try {
+			SQLiteDatabase db = this.DbHelper.getWritableDatabase();
+			ContentValues values = null;
+
+			values = new ContentValues();
+			values.put(KEY_USER_ID, 1);
+			values.put(KEY_USERNAME, "admin");
+			values.put(KEY_PASSWORD, "pass");
+			values.put(KEY_IS_ADMIN, 1);
+			db.insert(TABLE_USER, null, values);
+
+			values = new ContentValues();
+			values.put(KEY_USER_ID, 2);
+			values.put(KEY_USERNAME, "gela");
+			values.put(KEY_PASSWORD, "pass");
+			values.put(KEY_IS_ADMIN, 0);
+			db.insert(TABLE_USER, null, values);
+
+			values = new ContentValues();
+			values.put(KEY_USER_ID, 3);
+			values.put(KEY_USERNAME, "kate");
+			values.put(KEY_PASSWORD, "pass");
+			values.put(KEY_IS_ADMIN, 0);
+			db.insert(TABLE_USER, null, values);
+
+			db.close();
+			Log.d("pos", "tempAddUsers - success");
+		} catch (Exception e) {
+			Log.e("pos_error", "tempAddUsers" + e);
+		}
+	}
 }

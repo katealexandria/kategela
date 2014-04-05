@@ -5,7 +5,8 @@ import java.sql.Date;
 public class PosSettings {
 	public int branch_id;
 	public String branch_name;
-	public Short is_automatic;
-	public String sync_frequency;
+	public boolean is_manual;
+	public int sync_frequency;
 	public Date sync_time;
+	public int clear_frequency;
 }

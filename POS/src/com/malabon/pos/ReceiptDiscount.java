@@ -37,7 +37,7 @@ public class ReceiptDiscount extends Activity {
         txtPhp = (EditText)findViewById(R.id.txtDiscountPhp);
 		
 		if(Sync.Discounts == null)
-			Sync.GetDiscounts();
+			Sync.GetDiscounts(this);
 		
 		cmb = (Spinner)findViewById(R.id.cmbDiscounts);		
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(

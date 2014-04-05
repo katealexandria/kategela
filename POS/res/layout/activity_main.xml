@@ -291,7 +291,7 @@
 
                     <TextView
                         style="@style/H3"
-                        android:text="Default POS" />
+                        android:id="@+id/branchName" />
                 </LinearLayout>
 
                 <Button

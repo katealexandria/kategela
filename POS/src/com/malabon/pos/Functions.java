@@ -31,7 +31,7 @@ public class Functions extends Activity {
     }
 	
 	public void sync(View view) {
-		Sync.DoSync(true, username);
+		Sync.DoSync(true, Integer.parseInt(username));
         finish();
     }
 	

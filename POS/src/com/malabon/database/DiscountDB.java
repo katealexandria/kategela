@@ -2,6 +2,7 @@ package com.malabon.database;
 
 import java.util.ArrayList;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -73,9 +74,60 @@ public class DiscountDB {
 			}
 			cursor.close();
 			db.close();
+			Log.d("pos", "getAllDiscounts - success");
 		} catch (Exception e) {
-			Log.e("get_alldiscount", "" + e);
+			Log.e("pos_error", "getAllDiscounts" + e);
 		}
 		return discount_list;
+	}
+
+	// TODO: delete after testing
+	// --------------------------------------------------------------------------
+
+	public int getDiscountCount() {
+		int num = 0;
+		try {
+			String countQuery = "SELECT " + KEY_DISCOUNT_ID + " FROM "
+					+ TABLE_DISCOUNT;
+			SQLiteDatabase db = this.DbHelper.getReadableDatabase();
+			Cursor cursor = db.rawQuery(countQuery, null);
+			num = cursor.getCount();
+
+			cursor.close();
+			Log.d("pos", "getDiscountCount: " + String.valueOf(num));
+		} catch (Exception e) {
+			Log.e("pos_error", "getDiscountCount" + e);
+		}
+		return num;
+	}
+
+	public void tempAddDiscounts() {
+		try {
+			SQLiteDatabase db = this.DbHelper.getWritableDatabase();
+			ContentValues values = null;
+
+			values = new ContentValues();
+			values.put(KEY_DISCOUNT_ID, 1);
+			values.put(KEY_NAME, "Senior Citizen");
+			values.put(KEY_PERCENTAGE, .05);
+			db.insert(TABLE_DISCOUNT, null, values);
+
+			values = new ContentValues();
+			values.put(KEY_DISCOUNT_ID, 2);
+			values.put(KEY_NAME, "Student");
+			values.put(KEY_PERCENTAGE, .1);
+			db.insert(TABLE_DISCOUNT, null, values);
+
+			values = new ContentValues();
+			values.put(KEY_DISCOUNT_ID, 3);
+			values.put(KEY_NAME, "PWD");
+			values.put(KEY_PERCENTAGE, .15);
+			db.insert(TABLE_DISCOUNT, null, values);
+
+			db.close();
+			Log.d("pos", "tempAddDiscounts - success");
+		} catch (Exception e) {
+			Log.e("pos_error", "tempAddDiscounts" + e);
+		}
 	}
 }

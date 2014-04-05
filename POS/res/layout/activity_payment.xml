@@ -89,7 +89,8 @@
                     android:onClick="clickNumber"/>
 
             </android.support.v7.widget.GridLayout>
-
+			
+            <LinearLayout style="@style/wrapper_vertical">
             <TableLayout
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
@@ -108,28 +109,22 @@
                         style="@style/h3_subtotal_amt" />
 
                 </TableRow>
-                
-                <ScrollView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" >
                     
-                    <TableRow
-	                    style="@style/table_row_total" >
-	
-	                    <TextView
-	                        style="@style/h3_item"
-	                        android:text="@string/Cash"
-	                        android:textSize="20sp"
-	                        android:textColor="#999" />
-	
-	                    <TextView
-	                        style="@style/h3_item"
-	                        android:id="@+id/paymentCash"
-	                        android:text="@string/defaultNum" />
-	
-	                </TableRow>
-                    
-                </ScrollView>                
+                <TableRow
+                   style="@style/table_row_total" >
+
+                   <TextView
+                       style="@style/h3_item"
+                       android:text="@string/Cash"
+                       android:textSize="20sp"
+                       android:textColor="#999" />
+
+                   <TextView
+                       style="@style/h3_item"
+                       android:id="@+id/paymentCash"
+                       android:text="@string/defaultNum" />
+
+               </TableRow>            
 
                 <TableRow
                     style="@style/table_row" >
@@ -145,6 +140,19 @@
 
                 </TableRow>
             </TableLayout>
+            
+            <LinearLayout style="@style/wrapper_horizontal">
+            <TextView
+                style="@style/h3_subtotal"
+                android:textColor="#999"
+                android:text="@string/Discount" />                  
+			<Spinner
+	            android:id="@+id/cmbDiscounts"
+	            android:layout_width="fill_parent"
+	            android:layout_height="wrap_content"
+	            android:padding="5dp" />
+			</LinearLayout>
+			</LinearLayout>
 
             <LinearLayout
                 style="@style/wrapper_vertical"

@@ -9,7 +9,7 @@
     <TextView
         style="@style/H1"
         android:id="@+id/editOrdersCustomerName"
-        android:text="Customer Name" />
+        android:text="@string/CustomerName" />
 
     <TableLayout
         style="@style/wrapper_table"
@@ -45,7 +45,7 @@
         <ScrollView
             android:id="@+id/scrollView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" >
+            android:layout_height="300dp" >
 
             <TableLayout
                 android:id="@+id/tableLayout"

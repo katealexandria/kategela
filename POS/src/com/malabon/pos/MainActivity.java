@@ -27,6 +27,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.malabon.function.LoadSampleData;
 import com.malabon.object.Category;
 import com.malabon.object.Customer;
 import com.malabon.object.Item;
@@ -55,13 +56,20 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);	
+
+		// TODO: delete after testing
+		LoadSampleData loadSampleData = new LoadSampleData();
+		loadSampleData.AddTempData(this);
 		
-		if(currentUser == null)
-			Login(false, null);
-		else{
+		currentUser = new User();
+		currentUser.user_id = 1;
+		currentUser.username = "admin";
+		//if(currentUser == null)
+		//	Login(false, null);
+		//else{
 			Initialize();
 			CheckSync();
-		}
+		//}
 	}
 	
 	@SuppressLint("SimpleDateFormat")
@@ -74,7 +82,7 @@ public class MainActivity extends Activity {
 	    
 	    String nextSyncDate = dateFormat.format(Sync.GetNextSyncDate());
 	    if(strDate == nextSyncDate)
-	    	Sync.DoSync(false, currentUser.username);
+	    	Sync.DoSync(false, Integer.parseInt(currentUser.username));
 	    
 	    String nextClearCacheDate = dateFormat.format(Sync.GetNextClearCacheDate());
 	    if(strDate == nextClearCacheDate)
@@ -89,20 +97,27 @@ public class MainActivity extends Activity {
 		sale = new Sale();
 		sale.customer = c;
 		sale.user = currentUser.user_id; 
-		allItems = Sync.GetItems();
-		allCats = Sync.GetCategories();
+		allItems = Sync.GetItems(this);
+		allCats = Sync.GetCategories(this);
 		
 		firstCatIndex = 0;		
 		lastCatIndex = 4;
 		if(allCats.size() < 5)
 			lastCatIndex = allCats.size() - 1;
 		
-		// DBAdapter db = new DBAdapter(this).open();
-		
+		InitializeSettings();
 		InitializeUser();
 		InitializeCategories();
 		InitializeProducts(-1);
 		InitializeCustomer();
+	}
+	
+	private void InitializeSettings(){
+		if (Sync.posSettings == null)
+			Sync.SetSettings(this);
+		
+		TextView txtBranchName = (TextView)findViewById(R.id.branchName);
+		txtBranchName.setText(Sync.posSettings.branch_name);
 	}
 
 	private void InitializeUser(){		
@@ -195,8 +210,8 @@ public class MainActivity extends Activity {
 			TextView itemName = (TextView) layout
 					.findViewById(R.id.prodBtnItemName);
 			TextView itemPrice = (TextView) layout
-					.findViewById(R.id.prodBtnItemPrice);
-
+					.findViewById(R.id.prodBtnItemPrice);		
+						
 			itemName.setText(item.name); // entry.getKey());
 			itemPrice.setText(df.format(item.price)); // entry.getValue());
 
@@ -255,11 +270,6 @@ public class MainActivity extends Activity {
 			txtSearchProduct.setVisibility(View.VISIBLE);
 	}
 	
-	public void addCategory(View view) {
-		Intent intent = new Intent(this, AddCategory.class);
-		startActivity(intent);
-	}
-	
 	public void prevCat(View view) {
 		if(firstCatIndex == 0 || allCats.size() < 5)
 			return;
@@ -289,7 +299,8 @@ public class MainActivity extends Activity {
 	public void addCustomer(View view) {
 		SharedPreferences prefs = this.getSharedPreferences(
 				"com.malabon.pos", Context.MODE_PRIVATE);
-		prefs.edit().putInt("CurrentCustomer", sale.customer.customer_id).commit();
+		//prefs.edit().putInt("CurrentCustomer", sale.customer.customer_id).commit();
+		prefs.edit().putString("CurrentCustomer", sale.customer.customer_id).commit();
 		Intent intent = new Intent(this, ViewCustomer.class);
 		startActivityForResult(intent, SELECT_CUSTOMER_REQUEST);
 	}
@@ -460,7 +471,7 @@ public class MainActivity extends Activity {
 				for(Item d : sale.deletedItems){
 					for(Item item : allItems){
 						if(item.id == d.id){
-							item.availableQty = Sync.GetItemAvailableQty(item.id);
+							item.availableQty = Sync.GetItemAvailableQty(this, item.id);
 							item.quantity = 1;
 						}
 					}
@@ -474,23 +485,10 @@ public class MainActivity extends Activity {
 		}
 		case (SALE_OPTIONS_REQUEST): {
 			if (resultCode == Activity.RESULT_OK) {
-				// Deduct discounts
-				sale.receiptDiscountPercent = prefs.getFloat("discountPercent",
-						0);
-				sale.receiptDiscountPhp = prefs.getFloat("discountPhp", 0);
-				sale.computeTotal();
-
-				TextView temp = (TextView) findViewById(R.id.txtTotal);
-				temp.setText(df.format(sale.total));
-				temp = (TextView) findViewById(R.id.txtTaxTotal);
-				temp.setText(df.format(sale.taxTotal));
-				temp = (TextView) findViewById(R.id.txtNetTotal);
-				temp.setText(df.format(sale.netTotal));
-
 				// If new sale...
 				boolean doNewSale = prefs.getBoolean("doNewSale", false);
 				if (doNewSale) {
-					Sync.LogCancelledOrders(sale.items, currentUser.username);
+					Sync.LogCancelledOrders(this, sale.items, currentUser.user_id);
 					sale = new Sale();
 					bindOrderData();
 					InitializeCustomer();
@@ -514,7 +512,8 @@ public class MainActivity extends Activity {
 			if (resultCode == Activity.RESULT_OK) {
 				String u = prefs.getString("CurrentUser", null);
 				if(u != null){
-					currentUser = Sync.GetUserByUsername(u);
+					//currentUser = Sync.GetUserByUsername(u);
+					currentUser = Sync.user;
 					Initialize();
 					
 					if(Sync.CurrentUserBitmap != null){

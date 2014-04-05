@@ -2,6 +2,7 @@ package com.malabon.database;
 
 import java.util.ArrayList;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -73,9 +74,83 @@ public class IngredientDB {
 			}
 			cursor.close();
 			db.close();
+			Log.d("pos", "getAllIngredients - success");
 		} catch (Exception e) {
-			Log.e("get_allingredients", "" + e);
+			Log.e("pos_error", "getAllIngredients" + e);
 		}
 		return ingredient_list;
+	}
+	
+	// TODO: delete after testing
+	// --------------------------------------------------------------------------
+	
+	public int getIngredientCount() {
+		int num = 0;
+		try {
+			String countQuery = "SELECT " + KEY_INGREDIENT_ID + " FROM " + TABLE_INGREDIENT;
+			SQLiteDatabase db = this.DbHelper.getReadableDatabase();
+			Cursor cursor = db.rawQuery(countQuery, null);
+			num = cursor.getCount();
+			
+			cursor.close();
+			Log.d("pos", "getIngredientCount: " + String.valueOf(num));
+		} catch (Exception e) {
+			Log.e("pos_error", "getIngredientCount" + e);
+		}
+		return num;
+	}
+	
+	public void tempAddIngredient(){
+		try{
+			SQLiteDatabase db = this.DbHelper.getWritableDatabase();
+			ContentValues values = null;
+			
+			values = new ContentValues();
+			values.put(KEY_INGREDIENT_ID, 1);
+			values.put(KEY_NAME, "Tomato");
+			values.put(KEY_UNIT, "kilo");
+			db.insert(TABLE_INGREDIENT, null, values);
+			
+			values = new ContentValues();
+			values.put(KEY_INGREDIENT_ID, 2);
+			values.put(KEY_NAME, "Bread");
+			values.put(KEY_UNIT, "kilo");
+			db.insert(TABLE_INGREDIENT, null, values);
+			
+			values = new ContentValues();
+			values.put(KEY_INGREDIENT_ID, 3);
+			values.put(KEY_NAME, "Noodles");
+			values.put(KEY_UNIT, "kilo");
+			db.insert(TABLE_INGREDIENT, null, values);
+			
+			values = new ContentValues();
+			values.put(KEY_INGREDIENT_ID, 4);
+			values.put(KEY_NAME, "Potato");
+			values.put(KEY_UNIT, "kilo");
+			db.insert(TABLE_INGREDIENT, null, values);
+			
+			values = new ContentValues();
+			values.put(KEY_INGREDIENT_ID, 5);
+			values.put(KEY_NAME, "Coke");
+			values.put(KEY_UNIT, "kilo");
+			db.insert(TABLE_INGREDIENT, null, values);
+			
+			values = new ContentValues();
+			values.put(KEY_INGREDIENT_ID, 6);
+			values.put(KEY_NAME, "Sprite");
+			values.put(KEY_UNIT, "kilo");
+			db.insert(TABLE_INGREDIENT, null, values);
+			
+			values = new ContentValues();
+			values.put(KEY_INGREDIENT_ID, 7);
+			values.put(KEY_NAME, "Milk");
+			values.put(KEY_UNIT, "kilo");
+			db.insert(TABLE_INGREDIENT, null, values);
+			
+			db.close();
+			Log.d("pos", "tempAddIngredient - success");
+		}catch (Exception e) {
+			Log.e("pos_error", "tempAddIngredient" + e);
+		}
 	}
 }

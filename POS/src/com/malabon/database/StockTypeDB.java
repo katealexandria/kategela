@@ -3,7 +3,9 @@ package com.malabon.database;
 import java.util.ArrayList;
 
 import com.malabon.object.StockType;
+import com.malabon.object.Sync;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -73,9 +75,79 @@ public class StockTypeDB {
 			}
 			cursor.close();
 			db.close();
+			Log.d("pos", "getAllStockTypes - success");
 		} catch (Exception e) {
-			Log.e("get_allstocktypes", "" + e);
+			Log.e("pos_error", "get_allstocktypes" + e);
 		}
 		return stocktype_list;
+	}
+	
+	public int getStockTypeID(String stocktypename){
+		int num = 0;
+		try{
+			SQLiteDatabase db = this.DbHelper.getReadableDatabase();
+			
+			Cursor cursor = db.rawQuery("SELECT "+ KEY_STOCK_TYPE_ID +" FROM " + TABLE_STOCK_TYPE
+					+ " WHERE " + KEY_NAME + " = '" + stocktypename + "' COLLATE NOCASE", null);
+			
+			if (cursor != null) {
+				cursor.moveToFirst();
+				num = cursor.getInt(0);
+			}
+			cursor.close();
+			db.close();
+			
+			Log.d("pos", "getStockTypeID - success");
+		}catch (Exception e) {
+			Log.e("pos_error", "getStockTypeID" + e);
+		}
+		return num;
+	}
+	
+	// TODO: delete after testing
+	// --------------------------------------------------------------------------
+	
+	public int getStockTypeCount() {
+		int num = 0;
+		try {
+			String countQuery = "SELECT " + KEY_STOCK_TYPE_ID + " FROM " + TABLE_STOCK_TYPE;
+			SQLiteDatabase db = this.DbHelper.getReadableDatabase();
+			Cursor cursor = db.rawQuery(countQuery, null);
+			num = cursor.getCount();
+			
+			cursor.close();
+			Log.d("pos", "getStockTypeCount - success");
+		} catch (Exception e) {
+			Log.e("pos_error", "getStockTypeCount" + e);
+		}
+		return num;
+	}
+	
+	public void tempAddStockType(){
+		try{
+			SQLiteDatabase db = this.DbHelper.getWritableDatabase();
+			ContentValues values = null;
+			
+			values = new ContentValues();
+			values.put(KEY_STOCK_TYPE_ID, 1);
+			values.put(KEY_NAME, "product");
+			db.insert(TABLE_STOCK_TYPE, null, values);
+			
+			values = new ContentValues();
+			values.put(KEY_STOCK_TYPE_ID, 2);
+			values.put(KEY_NAME, "ingredient");
+			db.insert(TABLE_STOCK_TYPE, null, values);
+			
+			values = new ContentValues();
+			values.put(KEY_STOCK_TYPE_ID, 3);
+			values.put(KEY_NAME, "paper plate");
+			values.put(KEY_DESCRIPTION, "supply");
+			db.insert(TABLE_STOCK_TYPE, null, values);
+			
+			db.close();
+			Log.d("pos", "tempAddStockType - success");
+		}catch (Exception e) {
+			Log.e("pos_error", "tempAddStockType" + e);
+		}
 	}
 }

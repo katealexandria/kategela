@@ -1,9 +1,11 @@
 package com.malabon.database;
 
+import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Locale;
+import java.util.Date;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -23,8 +25,10 @@ public class StockDB {
 	public static final String KEY_LAST_UPDATED_DATE = "last_updated_date";
 	public static final String KEY_LAST_UPDATED_USER_ID = "last_updated_user_id";
 
-	private final ArrayList<Stock> product_stock_list = new ArrayList<Stock>();
+	private ArrayList<Stock> product_stock_list = new ArrayList<Stock>();
 	private final ArrayList<Stock> ingredient_stock_list = new ArrayList<Stock>();
+
+	Format formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 	private DatabaseHelper DbHelper;
 	private SQLiteDatabase db;
@@ -59,10 +63,17 @@ public class StockDB {
 		this.DbHelper.close();
 	}
 
-	public ArrayList<Stock> getAllProductStocks() {
+	public ArrayList<Stock> getAllPerishableStocks(String stocktypename) {
 		try {
+			int stocktypeid = 0;
+			StockTypeDB stockTypeDB = new StockTypeDB(context);
+			stockTypeDB.open();
+			stocktypeid = stockTypeDB.getStockTypeID(stocktypename);
+
 			product_stock_list.clear();
-			String selectQuery = "SELECT * FROM " + TABLE_STOCK;
+
+			String selectQuery = "SELECT * FROM " + TABLE_STOCK + " WHERE "
+					+ KEY_STOCK_TYPE_ID + " = '" + stocktypeid + "'";
 
 			SQLiteDatabase db = this.DbHelper.getWritableDatabase();
 			Cursor cursor = db.rawQuery(selectQuery, null);
@@ -70,32 +81,201 @@ public class StockDB {
 			if (cursor.moveToFirst()) {
 				do {
 					Stock stock = new Stock();
-					stock.stock_id = cursor.getInt(0);
-					//stock.stock_type_id = cursor.getInt(1);
+					// stock.stock_id = cursor.getInt(0);
+					// stock.stock_type_id = cursor.getInt(1);
 					stock.id = cursor.getInt(2);
 					stock.quantity = cursor.getDouble(3);
-					stock.last_updated_date = (java.sql.Date) new SimpleDateFormat(
-							"yyyy-MM-dd HH:mm:ss", Locale.ENGLISH).parse(cursor
-							.getString(4));
-					stock.last_updated_user_id = cursor.getInt(5);
+					// stock.last_updated_date = (java.sql.Date) new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH).parse(cursor.getString(4));
+					// stock.last_updated_user_id = cursor.getInt(5);
 
 					product_stock_list.add(stock);
 				} while (cursor.moveToNext());
 			}
 			cursor.close();
 			db.close();
+			Log.d("pos", "getAllPerishableStocks - success");
 		} catch (Exception e) {
-			Log.e("get_allproductstocks", "" + e);
+			Log.e("pos_error", "getAllPerishableStocks" + e);
 		}
 		return product_stock_list;
 	}
 	
-	public ArrayList<Stock> getAllIngredientStocks() {
+	public int updateStock(String stocktypename, double quantity, int id, int userid) {
+		int num = 0;
+		int stocktypeid = 0;
+		
+		StockTypeDB stockTypeDB = new StockTypeDB(context);
+		stockTypeDB.open();
+		stocktypeid = stockTypeDB.getStockTypeID(stocktypename);
+		
 		try {
+			SQLiteDatabase db = this.DbHelper.getWritableDatabase();
+
+			ContentValues values = new ContentValues();
+			values.put(KEY_QUANTITY, quantity);
+			values.put(KEY_LAST_UPDATED_DATE, formatter.format(new Date()));
+			values.put(KEY_LAST_UPDATED_USER_ID, userid);
+
+			String[] args = new String[]{String.valueOf(id), String.valueOf(stocktypeid)};
+			num = db.update(TABLE_STOCK, values, KEY_ID + " =? AND " + KEY_STOCK_TYPE_ID + " =? ", args);
 			
+			db.close();
+			Log.d("pos", "updateStock - success");
+			Log.d("pos", "updateStock: " + stocktypename + ": " + id);
 		} catch (Exception e) {
-			Log.e("get_allingredientstocks", "" + e);
+			Log.e("pos_error", "updateStock" + e);
 		}
-		return ingredient_stock_list;
+		return num;
+	}
+
+	// TODO: delete after testing
+	// --------------------------------------------------------------------------
+
+	public int getStockCount() {
+		int num = 0;
+		try {
+			String countQuery = "SELECT " + KEY_STOCK_ID + " FROM "
+					+ TABLE_STOCK;
+			SQLiteDatabase db = this.DbHelper.getReadableDatabase();
+			Cursor cursor = db.rawQuery(countQuery, null);
+			num = cursor.getCount();
+
+			cursor.close();
+			Log.d("pos", "getStockCount: " + String.valueOf(num));
+		} catch (Exception e) {
+			Log.e("pos_error", "getStockCount" + e);
+		}
+		return num;
+	}
+
+	public void tempAddStock() {
+		try {
+			SQLiteDatabase db = this.DbHelper.getWritableDatabase();
+			ContentValues values = null;
+
+			values = new ContentValues();
+			values.put(KEY_STOCK_ID, 1);
+			values.put(KEY_STOCK_TYPE_ID, 2);
+			values.put(KEY_ID, 1);
+			values.put(KEY_QUANTITY, 20);
+			values.put(KEY_LAST_UPDATED_DATE, formatter.format(new Date()));
+			values.put(KEY_LAST_UPDATED_USER_ID, 1);
+			db.insert(TABLE_STOCK, null, values);
+
+			values = new ContentValues();
+			values.put(KEY_STOCK_ID, 2);
+			values.put(KEY_STOCK_TYPE_ID, 2);
+			values.put(KEY_ID, 2);
+			values.put(KEY_QUANTITY, 10);
+			values.put(KEY_LAST_UPDATED_DATE, formatter.format(new Date()));
+			values.put(KEY_LAST_UPDATED_USER_ID, 1);
+			db.insert(TABLE_STOCK, null, values);
+
+			values = new ContentValues();
+			values.put(KEY_STOCK_ID, 3);
+			values.put(KEY_STOCK_TYPE_ID, 2);
+			values.put(KEY_ID, 3);
+			values.put(KEY_QUANTITY, 10);
+			values.put(KEY_LAST_UPDATED_DATE, formatter.format(new Date()));
+			values.put(KEY_LAST_UPDATED_USER_ID, 1);
+			db.insert(TABLE_STOCK, null, values);
+
+			values = new ContentValues();
+			values.put(KEY_STOCK_ID, 4);
+			values.put(KEY_STOCK_TYPE_ID, 2);
+			values.put(KEY_ID, 4);
+			values.put(KEY_QUANTITY, 10);
+			values.put(KEY_LAST_UPDATED_DATE, formatter.format(new Date()));
+			values.put(KEY_LAST_UPDATED_USER_ID, 1);
+			db.insert(TABLE_STOCK, null, values);
+
+			values = new ContentValues();
+			values.put(KEY_STOCK_ID, 5);
+			values.put(KEY_STOCK_TYPE_ID, 2);
+			values.put(KEY_ID, 5);
+			values.put(KEY_QUANTITY, 10);
+			values.put(KEY_LAST_UPDATED_DATE, formatter.format(new Date()));
+			values.put(KEY_LAST_UPDATED_USER_ID, 1);
+			db.insert(TABLE_STOCK, null, values);
+
+			values = new ContentValues();
+			values.put(KEY_STOCK_ID, 6);
+			values.put(KEY_STOCK_TYPE_ID, 2);
+			values.put(KEY_ID, 6);
+			values.put(KEY_QUANTITY, 10);
+			values.put(KEY_LAST_UPDATED_DATE, formatter.format(new Date()));
+			values.put(KEY_LAST_UPDATED_USER_ID, 1);
+			db.insert(TABLE_STOCK, null, values);
+
+			values = new ContentValues();
+			values.put(KEY_STOCK_ID, 7);
+			values.put(KEY_STOCK_TYPE_ID, 2);
+			values.put(KEY_ID, 7);
+			values.put(KEY_QUANTITY, 10);
+			values.put(KEY_LAST_UPDATED_DATE, formatter.format(new Date()));
+			values.put(KEY_LAST_UPDATED_USER_ID, 1);
+			db.insert(TABLE_STOCK, null, values);
+			
+			//---
+			
+			values = new ContentValues();
+			values.put(KEY_STOCK_ID, 8);
+			values.put(KEY_STOCK_TYPE_ID, 1);
+			values.put(KEY_ID, 1);
+			values.put(KEY_QUANTITY, 1);
+			values.put(KEY_LAST_UPDATED_DATE, formatter.format(new Date()));
+			values.put(KEY_LAST_UPDATED_USER_ID, 1);
+			db.insert(TABLE_STOCK, null, values);
+			
+			values = new ContentValues();
+			values.put(KEY_STOCK_ID, 9);
+			values.put(KEY_STOCK_TYPE_ID, 1);
+			values.put(KEY_ID, 2);
+			values.put(KEY_QUANTITY, 1);
+			values.put(KEY_LAST_UPDATED_DATE, formatter.format(new Date()));
+			values.put(KEY_LAST_UPDATED_USER_ID, 1);
+			db.insert(TABLE_STOCK, null, values);
+			
+			values = new ContentValues();
+			values.put(KEY_STOCK_ID, 10);
+			values.put(KEY_STOCK_TYPE_ID, 1);
+			values.put(KEY_ID, 3);
+			values.put(KEY_QUANTITY, 1);
+			values.put(KEY_LAST_UPDATED_DATE, formatter.format(new Date()));
+			values.put(KEY_LAST_UPDATED_USER_ID, 1);
+			db.insert(TABLE_STOCK, null, values);
+			
+			values = new ContentValues();
+			values.put(KEY_STOCK_ID, 11);
+			values.put(KEY_STOCK_TYPE_ID, 1);
+			values.put(KEY_ID, 4);
+			values.put(KEY_QUANTITY, 1);
+			values.put(KEY_LAST_UPDATED_DATE, formatter.format(new Date()));
+			values.put(KEY_LAST_UPDATED_USER_ID, 1);
+			db.insert(TABLE_STOCK, null, values);
+			
+			values = new ContentValues();
+			values.put(KEY_STOCK_ID, 12);
+			values.put(KEY_STOCK_TYPE_ID, 1);
+			values.put(KEY_ID, 5);
+			values.put(KEY_QUANTITY, 1);
+			values.put(KEY_LAST_UPDATED_DATE, formatter.format(new Date()));
+			values.put(KEY_LAST_UPDATED_USER_ID, 1);
+			db.insert(TABLE_STOCK, null, values);
+			
+			values = new ContentValues();
+			values.put(KEY_STOCK_ID, 13);
+			values.put(KEY_STOCK_TYPE_ID, 1);
+			values.put(KEY_ID, 6);
+			values.put(KEY_QUANTITY, 1);
+			values.put(KEY_LAST_UPDATED_DATE, formatter.format(new Date()));
+			values.put(KEY_LAST_UPDATED_USER_ID, 1);
+			db.insert(TABLE_STOCK, null, values);
+
+			db.close();
+			Log.d("pos", "tempAddStock - success");
+		} catch (Exception e) {
+			Log.e("pos_error", "tempAddStock" + e);
+		}
 	}
 }

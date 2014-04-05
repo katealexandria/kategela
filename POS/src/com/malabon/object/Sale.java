@@ -4,6 +4,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.util.Log;
+
+import com.malabon.function.NewID;
+
 @SuppressWarnings("serial")
 public class Sale implements Serializable {
 
@@ -12,10 +16,11 @@ public class Sale implements Serializable {
 	public double total;
 	public double taxTotal;
 	public double netTotal;
-	public double receiptDiscountPercent;
-	public double receiptDiscountPhp;
 	public Customer customer;
 	public int user;
+	
+	public int orderType;
+	public Discount discount;					//TODO: implement
 	
 	public void computeTotal() {
 		total = 0;
@@ -23,7 +28,9 @@ public class Sale implements Serializable {
 			total += (item.price * item.quantity);
 		}
 		
-		double totalDiscount = (total * receiptDiscountPercent) + receiptDiscountPhp;
+		double totalDiscount = 0;
+		if(discount != null)
+			totalDiscount = (total * discount.percentage);
 		
 		total = total - totalDiscount;
 		netTotal = total * 0.93;
@@ -32,7 +39,8 @@ public class Sale implements Serializable {
 	
 	public void setDefaultCustomer(){
 		this.customer = new Customer();
-		customer.customer_id = -1;
+		//customer.customer_id = -1;
+		customer.customer_id = new NewID().GetDefaultCustomerID();
 		customer.first_name = "Default";
 		customer.last_name = "Customer";
 	}

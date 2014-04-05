@@ -12,7 +12,7 @@ import android.util.Log;
 
 public class LogUserTimeSheetDB {
 	public static final String TABLE_LOG_USER_TIME_SHEET = "log_user_time_sheet";
-	
+
 	public static final String KEY_ID = "id";
 	public static final String KEY_USER_ID = "user_id";
 	public static final String KEY_TIMEIN = "timein";
@@ -24,9 +24,9 @@ public class LogUserTimeSheetDB {
 	private DatabaseHelper DbHelper;
 	private SQLiteDatabase db;
 	private final Context context;
-	
+
 	Format formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	
+
 	private static class DatabaseHelper extends SQLiteOpenHelper {
 		DatabaseHelper(Context context) {
 			super(context, DBAdapter.DATABASE_NAME, null,
@@ -41,7 +41,7 @@ public class LogUserTimeSheetDB {
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		}
 	}
-	
+
 	public LogUserTimeSheetDB(Context ctx) {
 		this.context = ctx;
 	}
@@ -55,56 +55,74 @@ public class LogUserTimeSheetDB {
 	public void close() {
 		this.DbHelper.close();
 	}
-	
-	public int addTimein(int user_id, Blob timein_image){
+
+	public int addTimein(int user_id, byte[] timein_image) {
 		int num = 0;
 		try {
 			SQLiteDatabase db = this.DbHelper.getWritableDatabase();
-			String query = "INSERT INTO "+ TABLE_LOG_USER_TIME_SHEET +
-					"("+KEY_USER_ID+", "+KEY_TIMEIN+", "+KEY_TIMEIN_IMAGE+", "+KEY_TIMEOUT+", "+KEY_TIMEOUT_IMAGE+", "+KEY_SALES_SUMMARY_ID+")" +
-					" SELECT "+user_id+", datetime('now'), "+timein_image+", null, null, null" +
-					" WHERE NOT EXISTS (SELECT "+KEY_ID+" FROM "+TABLE_LOG_USER_TIME_SHEET +
-				    " WHERE date("+KEY_TIMEIN+") = date('now') and "+KEY_USER_ID+" = "+user_id+")";
-	        db.execSQL(query);
-			
-	        db.close();
+			String query = "INSERT INTO " + TABLE_LOG_USER_TIME_SHEET + " ("
+					+ KEY_USER_ID + ", " + KEY_TIMEIN + ", " + KEY_TIMEIN_IMAGE
+					+ ", " + KEY_TIMEOUT + ", " + KEY_TIMEOUT_IMAGE + ", "
+					+ KEY_SALES_SUMMARY_ID + ")" + " SELECT " + user_id
+					+ ", datetime('now'), " + timein_image
+					+ ", null, null, null" + " WHERE NOT EXISTS (SELECT "
+					+ KEY_ID + " FROM " + TABLE_LOG_USER_TIME_SHEET
+					+ " WHERE date(" + KEY_TIMEIN + ") = date('now') and "
+					+ KEY_USER_ID + " = " + user_id + ")";
+
+			/*
+			 * String query = "INSERT INTO log_user_time_sheet " +
+			 * "(user_id, timein, timein_image, timeout, timeout_image, sales_summary_id) "
+			 * + "SELECT 1, datetime('now'), "+ timein_image
+			 * +", null, null, null " +
+			 * "WHERE NOT EXISTS (SELECT id FROM log_user_time_sheet where date(timein) = date('now') and user_id = 1)"
+			 * ; db.execSQL(query);
+			 */
+
+			db.close();
 			num = 1;
-		}catch (Exception e) {
-			Log.e("add_timein", "" + e);
+			Log.d("pos", "addTimein - success");
+		} catch (Exception e) {
+			Log.e("pos_error", "add_timein" + e);
 		}
 		return num;
 	}
-	
-	public int addTimeout(int user_id, Blob timeout_image){
+
+	public int addTimeout(int user_id, Blob timeout_image) {
 		int num = 0;
 		try {
 			SQLiteDatabase db = this.DbHelper.getWritableDatabase();
-			String query = "UPDATE "+TABLE_LOG_USER_TIME_SHEET+
-					" SET "+KEY_TIMEOUT+" = datetime('now'), "+KEY_TIMEOUT_IMAGE+" = "+timeout_image+"" +
-					" WHERE date("+KEY_TIMEIN+") = date('now') and "+KEY_USER_ID+" = "+user_id+"";
-	        db.execSQL(query);
-			
-	        db.close();
+			String query = "UPDATE " + TABLE_LOG_USER_TIME_SHEET + " SET "
+					+ KEY_TIMEOUT + " = datetime('now'), " + KEY_TIMEOUT_IMAGE
+					+ " = " + timeout_image + "" + " WHERE date(" + KEY_TIMEIN
+					+ ") = date('now') and " + KEY_USER_ID + " = " + user_id
+					+ "";
+			db.execSQL(query);
+
+			db.close();
 			num = 1;
-		}catch (Exception e) {
-			Log.e("add_timeout", "" + e);
+			Log.d("pos", "addTimeout - success");
+		} catch (Exception e) {
+			Log.e("pos_error", "add_timeout" + e);
 		}
 		return num;
 	}
-	
-	public int addSalesSummary(int user_id, String sales_summary_id){
+
+	public int addSalesSummary(int user_id, String sales_summary_id) {
 		int num = 0;
 		try {
 			SQLiteDatabase db = this.DbHelper.getWritableDatabase();
-			String query = "UPDATE "+TABLE_LOG_USER_TIME_SHEET+
-					" SET "+KEY_SALES_SUMMARY_ID+" = '"+sales_summary_id+"'" +
-					" WHERE date("+KEY_TIMEIN+") = date('now') and "+KEY_USER_ID+" = "+user_id+"";
-	        db.execSQL(query);
-			
-	        db.close();
+			String query = "UPDATE " + TABLE_LOG_USER_TIME_SHEET + " SET "
+					+ KEY_SALES_SUMMARY_ID + " = '" + sales_summary_id + "'"
+					+ " WHERE date(" + KEY_TIMEIN + ") = date('now') and "
+					+ KEY_USER_ID + " = " + user_id + "";
+			db.execSQL(query);
+
+			db.close();
 			num = 1;
-		}catch (Exception e) {
-			Log.e("add_salesSummary", "" + e);
+			Log.d("pos", "addSalesSummary - success");
+		} catch (Exception e) {
+			Log.e("pos_error", "add_salesSummary" + e);
 		}
 		return num;
 	}

@@ -1,8 +1,8 @@
 package com.malabon.database;
 
-import java.sql.Date;
 import java.text.Format;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -10,10 +10,9 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.text.format.Time;
 import android.util.Log;
 
-import com.malabon.object.LogCash;
+import com.malabon.object.Sync;
 
 public class LogCashDB {
 	public static final String TABLE_LOG_CASH = "log_cash";
@@ -22,6 +21,7 @@ public class LogCashDB {
 	public static final String KEY_IS_CASH_IN = "is_cash_in";
 	public static final String KEY_AMOUNT = "amount";
 	public static final String KEY_USER_ID = "user_id";
+	public static final String KEY_DESCRIPTION = "description";
 	public static final String KEY_DATE = "date";
 
 	private DatabaseHelper DbHelper;
@@ -80,27 +80,31 @@ public class LogCashDB {
 			}
 			cursor.close();
 			db.close();
+			Log.d("pos", "getLogCashTotal - success");
 		} catch (Exception e) {
-			Log.e("get_logcashtotal", "" + e);
+			Log.e("pos_error", "getLogCashTotal" + e);
 		}
 		return amount;
 	}
 
-	public int addLogCash(LogCash logCash) {
+	public int addLogCash(int iscashin, double amount, String description) {
 		int num = 0;
 		try {
 			SQLiteDatabase db = this.DbHelper.getWritableDatabase();
-			ContentValues values = new ContentValues();
-			values.put(KEY_IS_CASH_IN, logCash.is_cash_in);
-			values.put(KEY_AMOUNT, logCash.amount);
-			values.put(KEY_USER_ID, logCash.user_id);
-			values.put(KEY_DATE, formatter.format(new Time()));
 
+			ContentValues values = new ContentValues();
+			values.put(KEY_IS_CASH_IN, iscashin);
+			values.put(KEY_AMOUNT, amount);
+			values.put(KEY_USER_ID, Sync.user.user_id);
+			values.put(KEY_DESCRIPTION, description);
+			values.put(KEY_DATE, formatter.format(new Date()));
 			db.insert(TABLE_LOG_CASH, null, values);
+
 			db.close();
+			Log.d("pos", "addLogCash - success");
 			num = 1;
 		} catch (Exception e) {
-			Log.e("add_logcash", "" + e);
+			Log.e("pos_error", "addLogCash" + e);
 		}
 		return num;
 	}

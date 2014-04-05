@@ -70,11 +70,7 @@
 	        android:layout_marginTop="30dp"
 	        android:layout_marginRight="20dp"
 	        android:layout_marginBottom="20dp"
-	        android:layout_gravity="right" >
-            
-	        <Button
-	            style="@style/btn_gray_small"
-	            android:text="@string/Account" />
+	        android:layout_gravity="right" >            
 	
 	        <Button
 	            style="@style/btn_green_small"

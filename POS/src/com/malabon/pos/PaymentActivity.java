@@ -7,11 +7,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.malabon.object.Discount;
+import com.malabon.object.Item;
 import com.malabon.object.Payment;
 import com.malabon.object.Sale;
 import com.malabon.object.Sync;
@@ -19,13 +25,14 @@ import com.malabon.object.Sync;
 public class PaymentActivity extends Activity {
 
 	static final int ENTER_CASH = 15;
-	
+
 	TextView tvPaymentTotal, tvPaymentCash, tvPaymentChange;
 	String orderType;
 	double cash = 0.00;
 	Payment objPayment;
 	DecimalFormat df = new DecimalFormat("0.00");
 	Sale sale;
+	Spinner cmb;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -34,10 +41,14 @@ public class PaymentActivity extends Activity {
 		setContentView(R.layout.activity_payment);
 
 		Initialize();
+		InitDiscounts();
 		setAmounts(cash);
 	}
 
 	private void Initialize() {
+		
+		View rbTakeOut = findViewById(R.id.rbTakeOut);
+		rbTakeOut.setEnabled(true);
 		
 		Bundle extras = getIntent().getExtras();
 		if (extras == null) {
@@ -48,23 +59,81 @@ public class PaymentActivity extends Activity {
 		sale = (Sale) extras.get("Sale_Payment");
 		if (sale != null) {
 			TextView txtCustomerName = (TextView) findViewById(R.id.paymentCustomerName);
-			txtCustomerName.setText(sale.customer.first_name + " " + sale.customer.last_name);
-			
+			txtCustomerName.setText(sale.customer.first_name + " "
+					+ sale.customer.last_name);
+
 			sale.computeTotal();
 			objPayment = new Payment();
 			objPayment.balance = Double.parseDouble(df.format(sale.total));
-		}	
+		}
 		
-		//objPayment.cash = objPayment.getCash(cash);
+		for(Item item : sale.items){
+			if(!item.can_be_taken_out){
+				rbTakeOut.setEnabled(false);
+				break;
+			}
+		}
+
+		// objPayment.cash = objPayment.getCash(cash);
 	}
+	
+	private void InitDiscounts(){
+		
+		if(Sync.Discounts == null)
+			Sync.GetDiscounts(this);
+		
+		cmb = (Spinner)findViewById(R.id.cmbDiscounts);		
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+				this, android.R.layout.simple_spinner_item);
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		adapter.add("(None)");
+		for(Discount d : Sync.Discounts)
+			adapter.add(d.name);		
+		cmb.setAdapter(adapter);
+		
+		cmb.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+		    public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) { 
+		    	String sel = cmb.getSelectedItem().toString();
+		    	
+		    	if(sel == "(None)"){
+		    		sale.discount = null;
+			        return;
+		    	}
+		    	
+		        for(Discount d : Sync.Discounts){
+		        	if(d.name == sel){
+		        		sale.discount = d;
+		        		sale.computeTotal();
+		        		objPayment.balance = Double.parseDouble(df.format(sale.total));
+		        		setBalance();
+		        		setChange();
+		        		break;
+		        	}
+		        }
+		    } 
+
+		    public void onNothingSelected(AdapterView<?> adapterView) {
+		    	sale.discount = null;
+		    } 
+		}); 
+	}
+	
 
 	private void setAmounts(double amount) {
-		TextView txtBalTotal = (TextView) findViewById(R.id.balTotal);
-		txtBalTotal.setText(df.format(objPayment.balance));
+		setBalance();
 
 		TextView txtCash = (TextView) findViewById(R.id.paymentCash);
 		txtCash.setText(df.format(objPayment.getCash(amount)));
 
+		setChange();
+	}
+	
+	private void setBalance(){
+		TextView txtBalTotal = (TextView) findViewById(R.id.balTotal);
+		txtBalTotal.setText(df.format(objPayment.balance));
+	}
+	
+	private void setChange(){
 		TextView txtChange = (TextView) findViewById(R.id.paymentChange);
 		txtChange.setText(df.format(objPayment.getChange()));
 	}
@@ -119,31 +188,36 @@ public class PaymentActivity extends Activity {
 		confirmPayment();
 	}
 
-	private void confirmPayment(){
+	private void confirmPayment() {
 		if (objPayment.confirmPayment() && IsOrderTypeSelected()) {
-			
+
 			commitSale();
-			
+
 			Intent resultIntent = new Intent();
 			setResult(Activity.RESULT_FIRST_USER, resultIntent);
 			finish();
-		}
-		else if (!objPayment.confirmPayment() && IsOrderTypeSelected()){
+		} else if (!objPayment.confirmPayment() && IsOrderTypeSelected()) {
 			showToast("Settle balance");
-		}
-		else if (objPayment.confirmPayment() && !IsOrderTypeSelected()){
+		} else if (objPayment.confirmPayment() && !IsOrderTypeSelected()) {
 			showToast("Select order type");
-		}
-		else{
+		} else {
 			showToast("Settle balance and select order type");
 		}
 	}
-	
-	private void commitSale(){
-		Sync.AddSale(sale);
-		Sync.RefreshInventory();
+
+	private void commitSale() {
+		RadioGroup rgOrderType = (RadioGroup) findViewById(R.id.rgOrderType);
+		int selectedId = rgOrderType.getCheckedRadioButtonId();
+		switch(selectedId){
+		case R.id.rbDineIn: sale.orderType = 1; break;
+		case R.id.rbTakeOut: sale.orderType = 2; break;
+		case R.id.rbDelivery: sale.orderType = 3; break;
+		}
+		
+		Sync.AddSale(this, sale);
+		Sync.RefreshInventory(this);
 	}
-	
+
 	private boolean IsOrderTypeSelected() {
 		boolean isSelected = false;
 		RadioGroup rgOrderType = (RadioGroup) findViewById(R.id.rgOrderType);
@@ -155,17 +229,17 @@ public class PaymentActivity extends Activity {
 		}
 		return isSelected;
 	}
-	
+
 	private void showToast(String message) {
 		Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT)
 				.show();
 	}
-	
+
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
 		super.onActivityResult(requestCode, resultCode, intent);
 		switch (requestCode) {
-		case(ENTER_CASH): {
+		case (ENTER_CASH): {
 			if (resultCode == Activity.RESULT_OK) {
 				String amt = intent.getStringExtra("cash");
 				cash = Double.parseDouble(amt);

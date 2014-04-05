@@ -5,7 +5,7 @@ import java.util.Date;
 
 @SuppressWarnings("serial")
 public class CancelledOrder implements Serializable {
-	public Date CancelledDate;
-	public String UserId;
+	//public Date CancelledDate;
+	public int UserId;
 	public Item CancelledItem;
 }

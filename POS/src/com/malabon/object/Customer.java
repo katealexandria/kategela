@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 @SuppressWarnings("serial")
 public class Customer implements Serializable {
-	public int customer_id;
+	public String customer_id;
 	public String first_name;
 	public String last_name;
 	public String address;
