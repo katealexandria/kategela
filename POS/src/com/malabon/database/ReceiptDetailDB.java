@@ -102,6 +102,7 @@ public class ReceiptDetailDB {
 			num = cursor.getCount();
 
 			cursor.close();
+			db.close();
 			Log.d("pos", "getReceiptDetailCount: " + String.valueOf(num));
 		} catch (Exception e) {
 			Log.e("pos_error", "getReceiptDetailCount" + e);

@@ -57,7 +57,7 @@ public class PosSettingsDB {
 		this.DbHelper.close();
 	}
 
-	public PosSettings getAllPosSettings() {	//here na
+	public PosSettings getAllPosSettings() {	//here na gela
 		PosSettings posSettings = null;
 		try {
 			String selectQuery = "SELECT * FROM " + TABLE_POS_SETTINGS
@@ -77,6 +77,9 @@ public class PosSettingsDB {
 					posSettings.sync_time = (java.sql.Date) new SimpleDateFormat(
 							"yyyy-MM-dd HH:mm:ss", Locale.ENGLISH).parse(cursor
 							.getString(5));
+				}
+				else{
+					posSettings.sync_frequency = -1;
 				}
 				posSettings.clear_frequency = cursor.getInt(6);
 			}
@@ -102,6 +105,7 @@ public class PosSettingsDB {
 			num = cursor.getCount();
 
 			cursor.close();
+			db.close();
 			Log.d("pos", "getPosSettingCount: " + String.valueOf(num));
 		} catch (Exception e) {
 			Log.e("pos_error", "getPosSettingCount" + e);

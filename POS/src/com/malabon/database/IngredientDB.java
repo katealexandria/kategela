@@ -93,6 +93,7 @@ public class IngredientDB {
 			num = cursor.getCount();
 			
 			cursor.close();
+			db.close();
 			Log.d("pos", "getIngredientCount: " + String.valueOf(num));
 		} catch (Exception e) {
 			Log.e("pos_error", "getIngredientCount" + e);

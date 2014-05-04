@@ -1,8 +1,6 @@
 package com.malabon.pos;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;

@@ -48,9 +48,13 @@ public class SalesDiscountDB {
 	}
 	
 	public void addSaleDiscount(int salesid, int discountid){
+		Log.d("temp_debug", "addSaleDiscount...");
 		try {
 			SQLiteDatabase db = this.DbHelper.getWritableDatabase();
 
+			Log.d("temp_debug", String.valueOf(salesid));
+			Log.d("temp_debug", String.valueOf(discountid));
+			
 			ContentValues values = new ContentValues();
 			values.put(KEY_SALES_ID, salesid);
 			values.put(KEY_DISCOUNT_ID, discountid);
@@ -61,5 +65,6 @@ public class SalesDiscountDB {
 		} catch (Exception e) {
 			Log.e("pos_error", "addSaleDiscount" + e);
 		}
+		Log.d("temp_debug", "addSaleDiscount end...");
 	}
 }

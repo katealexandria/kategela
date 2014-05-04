@@ -54,10 +54,16 @@ public class SalesProductDB {
 	}
 	
 	public void addSaleProduct(Sale sale, int id){
+		Log.d("temp_debug", "addSaleProduct...");
 		try{
 			SQLiteDatabase db = this.DbHelper.getWritableDatabase();
 			
 			for (Item item : sale.items){
+				
+				Log.d("temp_debug", String.valueOf(id));
+				Log.d("temp_debug", String.valueOf(item.id));
+				Log.d("temp_debug", String.valueOf(item.quantity));
+				
 				ContentValues values = new ContentValues();
 				values.put(KEY_SALES_ID, id);
 				values.put(KEY_PRODUCT_ID, item.id);
@@ -69,5 +75,6 @@ public class SalesProductDB {
 		}catch (Exception e) {
 			Log.e("pos_error", "addSaleProduct" + e);
 		}
+		Log.d("temp_debug", "addSaleProduct end...");
 	}
 }

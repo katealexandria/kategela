@@ -3,7 +3,6 @@ package com.malabon.pos;
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -15,9 +14,9 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -27,14 +26,20 @@ import com.malabon.object.Sync;
 public class Login extends Activity {
 
 	EditText txtUsername, txtPassword;
-	String called_from = null;
 	String currentUsername;
 	Boolean logout = false;
+	Button cancelbutton;
+
+	// requestType:
+	// 1 = fresh log-in
+	// 2 = switch
+	// 3 = lock
+	// 4 = log-out
+	// 5 = validate admin
+	int requestType;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		called_from = getIntent().getStringExtra("called");
-
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_login);
@@ -43,23 +48,35 @@ public class Login extends Activity {
 	}
 
 	private void Initialize() {
+		cancelbutton = (Button) findViewById(R.id.txtCancelAuth);
+		cancelbutton.setVisibility(View.INVISIBLE);
+
 		txtUsername = (EditText) findViewById(R.id.txtUsername);
 		txtPassword = (EditText) findViewById(R.id.txtPassword);
 
 		SharedPreferences prefs = this.getSharedPreferences("com.malabon.pos",
 				Context.MODE_PRIVATE);
 		currentUsername = prefs.getString("CurrentUser", null);
-		Boolean lockRegister = prefs.getBoolean("lockRegister", false);
+		requestType = prefs.getInt("RequestType", 1);
 
 		txtUsername.setText(currentUsername);
-		txtUsername.setEnabled(!lockRegister);
+		txtUsername.setEnabled(requestType != 3);
+		txtUsername.requestFocus();
 
-		if (lockRegister)
+		switch (requestType) {
+		case 3:
 			txtPassword.requestFocus();
-		else
-		{ // face capture on log-out
-			logout = true;
+			break;
+		case 4:
+			logout = true; // face capture on log-out
 			dispatchTakePictureIntent();
+			break;
+		case 5:
+			cancelbutton.setVisibility(View.VISIBLE);
+			txtUsername.setText(null);
+			break;
+		default:
+			break;
 		}
 	}
 
@@ -68,34 +85,66 @@ public class Login extends Activity {
 		String user_password = txtPassword.getText().toString();
 
 		if (user_name.length() > 0 && user_password.length() > 0) {
-			if (called_from != null) {
-				if (called_from.equals("cashauth")) {
-					validateAdmin(user_name, user_password);
-				}
-			} else {
-				if (new UserFunc().isValidUser(this, user_name, user_password))
+			switch (requestType) {
+			case 1:
+				if (new UserFunc().isValidUser(this, user_name, user_password)) {
+					logout = false;
 					dispatchTakePictureIntent();
-				else
+				} else
 					showToast("Incorrect username and/or password");
+				break;
+			case 3:
+				if (new UserFunc().isValidUser(this, user_name, user_password)) {
+					loginSuccess();
+				} else
+					showToast("Incorrect username and/or password");
+				break;
+			case 5:
+				validateAdmin(user_name, user_password);
+				break;
+			default:
+				break;
 			}
 		} else
 			showToast("Complete all required fields.");
 	}
 
 	private void validateAdmin(String user_name, String user_password) {
-		if (new UserFunc().isAdmin(this, user_name, user_password))
-		{
+		if (new UserFunc().isAdmin(this, user_name, user_password)) {
 			Intent resultIntent = new Intent();
 			setResult(Activity.RESULT_OK, resultIntent);
 			finish();
-		}
-		else
+		} else
 			showToast("Incorrect username and/or password");
 	}
 
 	private void showToast(String message) {
 		Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT)
 				.show();
+	}
+
+	private void loginSuccess() {
+		try {
+			switch (requestType) {
+			case 1:
+				saveTime(true, Sync.CurrentUserBitmap);
+				break;
+			case 3:
+				break;
+			default:
+				break;
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		String user_name = txtUsername.getText().toString();
+		Intent resultIntent = new Intent();
+		SharedPreferences prefs = this.getSharedPreferences("com.malabon.pos",
+				Context.MODE_PRIVATE);
+		prefs.edit().putString("CurrentUser", user_name).commit();
+		setResult(Activity.RESULT_OK, resultIntent);
+		finish();
 	}
 
 	// -----FACE CAPTURE-----//
@@ -117,20 +166,27 @@ public class Login extends Activity {
 		out.close();
 
 		mCurrentPhotoPath = getFileStreamPath(imageFileName).getAbsolutePath();
-		// TODO: Save image path to DB.
 	}
 
-	private void saveTimein(Bitmap bmp) throws IOException {
+	private void saveTime(boolean is_timein, Bitmap bmp) throws IOException {
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		bmp.compress(Bitmap.CompressFormat.PNG, 100, bos);
 		byte[] img = bos.toByteArray();
 
-		new UserFunc().addTimein(this, Sync.user.user_id, img);
+		new UserFunc().addTime(this, is_timein, Sync.user.user_id, img);
 	}
 
 	private void dispatchTakePictureIntent() {
 		Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 		startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+	}
+
+	public void close(View v) {
+		if (requestType == 5) {
+			Intent resultIntent = new Intent();
+			setResult(Activity.RESULT_CANCELED, resultIntent);
+			finish();
+		}
 	}
 
 	@Override
@@ -140,30 +196,24 @@ public class Login extends Activity {
 			Sync.CurrentUserBitmap = (Bitmap) extras.get("data");
 			try {
 				saveImageFile(Sync.CurrentUserBitmap);
-				if(logout){
-					//TODO: saveTimeOut
-					logout = false;
-				}
-				else{
-					saveTimein(Sync.CurrentUserBitmap);
-					String user_name = txtUsername.getText().toString();
-					Intent resultIntent = new Intent();
-					SharedPreferences prefs = this.getSharedPreferences(
-							"com.malabon.pos", Context.MODE_PRIVATE);
-					prefs.edit().putString("CurrentUser", user_name).commit();
-					setResult(Activity.RESULT_OK, resultIntent);
+				if (logout) {
+					saveTime(false, Sync.CurrentUserBitmap);
+					Intent intent = new Intent(this, MainActivity.class);
+					startActivity(intent);
 					finish();
+				} else {
+					loginSuccess();
 				}
-				
-			} catch (IOException e) {
+
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 	}
-	
+
 	@Override
 	public void onBackPressed() {
-	    showToast("Please log-in.");
+		showToast("Please log-in.");
 	}
 }

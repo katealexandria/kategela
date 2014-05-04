@@ -61,7 +61,8 @@ public class ProductDB {
 	public ArrayList<Item> getAllProducts() {
 		try {
 			product_list.clear();
-			String selectQuery = "SELECT * FROM " + TABLE_PRODUCT;
+			String selectQuery = "SELECT * FROM " + TABLE_PRODUCT + " ORDER BY " + KEY_CATEGORY_ID
+					+ ", " + KEY_SORTORDER + " ASC";
 
 			SQLiteDatabase db = this.DbHelper.getWritableDatabase();
 			Cursor cursor = db.rawQuery(selectQuery, null);
@@ -75,11 +76,11 @@ public class ProductDB {
 					item.unit = cursor.getString(3);
 					item.category_id = cursor.getInt(4);
 					item.sortorder = cursor.getInt(5);
-					item.can_be_taken_out = item.can_be_taken_out = cursor.getInt(6)>0;
+					//item.can_be_taken_out = item.can_be_taken_out = cursor.getInt(6)>0;
 					
 					//"***" will mark items that canNOT be taken out 
-					if(!item.can_be_taken_out)
-						item.name = item.name + "***";
+					//if(!item.can_be_taken_out)
+					//	item.name = item.name + "***";
 
 					product_list.add(item);
 				} while (cursor.moveToNext());
@@ -105,6 +106,7 @@ public class ProductDB {
 			num = cursor.getCount();
 			
 			cursor.close();
+			db.close();
 			Log.d("pos", "getProductCount: " + String.valueOf(num));
 		} catch (Exception e) {
 			Log.e("pos_error", "getProductCount" + e);

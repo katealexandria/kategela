@@ -8,16 +8,23 @@
     android:gravity="right"
     tools:context=".MainActivity" >
 
-    <LinearLayout
-        android:id="@+id/mainLinear"
-        style="@style/wrapper_vertical"
-        android:layout_width="match_parent" >
-
+    <android.support.v7.widget.GridLayout
+        style="@style/wrapper_grid"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="0dp"
+        app:columnCount="2"
+        app:rowCount="3" >
+    
         <LinearLayout
             style="@style/wrapper_horizontal"
+            android:layout_alignParentTop="true"
             android:layout_width="match_parent"
             android:layout_gravity="left"
-            android:background="@drawable/main_background" >
+            android:background="@drawable/main_background"
+            app:layout_column="0"
+            app:layout_row="0"
+            app:layout_columnSpan="2" >
 
             <!-- 0 -->     
 			<EditText
@@ -83,17 +90,14 @@
                 android:gravity="right"
                 android:textColor="#48FF00" />
 
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/middleContainer"
-            style="@style/wrapper_horizontal"
-            android:layout_height="520dp" >
+        </LinearLayout>       
 
             <ScrollView
                 android:id="@+id/productsScrollView"
                 android:layout_width="wrap_content"
-                android:layout_height="520dp" >
+                android:layout_height="520dp"
+                app:layout_column="0"
+                app:layout_row="1" >
 
                 <LinearLayout
                     android:id="@+id/productsGrid"
@@ -101,43 +105,24 @@
                     android:layout_gravity="top"
                     android:orientation="vertical" >
 
-                    <LinearLayout
-                        style="@style/item_wrapper_odd"
-                        app:layout_column="0"
-                        app:layout_row="0"
-                        android:visibility="gone" >
-
-                        <TextView style="@style/h3_product" />
-
-                        <TextView style="@style/h3_price" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        style="@style/item_wrapper_even"
-                        app:layout_column="1"
-                        app:layout_row="0"
-                        android:visibility="gone" >
-
-                        <TextView
-                            style="@style/h3_product" />
-
-                        <TextView
-                            style="@style/h3_price" />
-                    </LinearLayout>
                 </LinearLayout>
             </ScrollView>
 
             <LinearLayout
                 style="@style/wrapper_vertical"
-                android:background="@drawable/orange_button" >
+                android:background="@drawable/orange_button"
+                app:layout_column="1"
+                app:layout_row="1"
+                app:layout_rowSpan="2" >
 
                 <ScrollView
-                    android:layout_width="match_parent"
-                    android:layout_height="500dp" >
+                    android:layout_width="wrap_content"
+                    android:layout_height="690dp" >
 
                     <TableLayout
                         android:id="@+id/productCart"
                         style="@style/wrapper_table"
+                        android:layout_width="460dp"
                         android:layout_height="wrap_content"
                         android:stretchColumns="1" >
 
@@ -248,24 +233,65 @@
                     </TableLayout>
                 </ScrollView>
             </LinearLayout>
-        </LinearLayout>
 
-        <RelativeLayout
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="800dp"
+            android:layout_alignParentBottom="true"
             android:layout_height="170dp"
-            android:background="@drawable/main_background" >
+            android:background="@drawable/main_background"
+            app:layout_column="0"
+            app:layout_row="2" >            
+            
+            <android.support.v7.widget.GridLayout
+                style="@style/wrapper_grid"
+                android:padding="0dp"
+                android:layout_margin="10dp"
+                android:layout_width="wrap_content"
+                app:columnCount="3"
+                app:rowCount="2" >
+                
+				<Button
+                    style="@style/btn_gray_150"
+                    android:layout_width="110dp"
+                    android:textSize="15sp"
+                    android:onClick="printReceipt"
+                    app:layout_row="0"
+                    app:layout_column="0"
+                    android:text="@string/PrintReceipt" />
+                
+                <Button
+                    style="@style/btn_gray_150"
+                    android:layout_width="110dp"
+                    android:textSize="15sp"
+                    android:onClick="newSale"
+                    app:layout_row="0"
+                    app:layout_column="1"
+                    android:text="@string/NewSale" />               
+                
 
-            <Button
-                style="@style/btn_green_small"
-                android:layout_height="100dp"
-                android:layout_margin="20dp"
-                android:onClick="pay"
-                android:text="@string/Pay" />
+                <Button
+                    style="@style/btn_gray_150"
+                    android:layout_width="110dp"
+                    android:textSize="15sp"
+                    android:onClick="cashInOut"
+                    app:layout_row="1"
+                    app:layout_column="0"
+                    android:text="@string/CashInOut" />
+                
+                <Button
+                    style="@style/btn_gray_150"
+                    android:layout_width="110dp"
+                    android:textSize="15sp"
+                    android:onClick="closeDay"
+                    app:layout_row="1"
+                    app:layout_column="1"
+                    android:text="@string/CloseDay" />
+            </android.support.v7.widget.GridLayout>
 
             <android.support.v7.widget.GridLayout
                 style="@style/wrapper_grid"
                 android:layout_width="wrap_content"
-                android:layout_centerInParent="true"
                 android:background="@drawable/popup_bg"
                 app:columnCount="3"
                 app:rowCount="2" >
@@ -293,7 +319,7 @@
                         style="@style/H3"
                         android:id="@+id/branchName" />
                 </LinearLayout>
-
+				<!--
                 <Button
                     android:id="@+id/btnSwitch"
                     style="@style/btn_green_150"
@@ -301,80 +327,33 @@
                     app:layout_row="0"
                     android:onClick="switchUser"
                     android:text="@string/Switch" />
-
+				-->
                 <Button
                     android:id="@+id/btnLock"
                     style="@style/btn_red_150"
+                    android:layout_width="120dp"
                     app:layout_column="2"
-                    app:layout_row="1"
+                    app:layout_row="0"
                     android:onClick="lockRegister"
                     android:text="@string/Lock" />
+                
+                <Button
+                    style="@style/btn_gray_150"
+                    android:layout_width="120dp"
+                    android:onClick="sync"
+                    app:layout_row="1"
+                    app:layout_column="2"
+                    android:text="@string/Sync" />
             </android.support.v7.widget.GridLayout>
 			
-            <android.support.v7.widget.GridLayout
-                style="@style/wrapper_grid"
-                android:padding="0dp"
-                android:layout_margin="0dp"
-                android:layout_width="wrap_content"
-                android:layout_alignParentRight="true"
-                app:columnCount="3"
-                app:rowCount="2" >
-                
-				<Button
-                    style="@style/btn_gray_150"
-                    android:layout_width="130dp"
-                    android:textSize="15sp"
-                    android:onClick="printReceipt"
-                    app:layout_row="0"
-                    app:layout_column="0"
-                    android:text="@string/PrintReceipt" />
-                
-                <Button
-                    style="@style/btn_gray_150"
-                    android:layout_width="130dp"
-                    android:textSize="15sp"
-                    android:onClick="newSale"
-                    app:layout_row="0"
-                    app:layout_column="1"
-                    android:text="@string/NewSale" />
-                
-                <Button
-                    style="@style/btn_gray_150"
-                    android:layout_width="130dp"
-                    android:layout_height="110dp"
-                    android:onClick="sync"
-                    app:layout_row="0"
-                    app:layout_column="2"
-                    app:layout_rowSpan="2"
-                    android:text="@string/Sync" />
-
-                <Button
-                    style="@style/btn_gray_150"
-                    android:layout_width="130dp"
-                    android:textSize="15sp"
-                    android:onClick="cashInOut"
-                    app:layout_row="1"
-                    app:layout_column="0"
-                    android:text="@string/CashInOut" />
-                
-                <Button
-                    style="@style/btn_gray_150"
-                    android:layout_width="130dp"
-                    android:textSize="15sp"
-                    android:onClick="closeDay"
-                    app:layout_row="1"
-                    app:layout_column="1"
-                    android:text="@string/CloseDay" />
-            </android.support.v7.widget.GridLayout>
-            
-            <!-- <LinearLayout
-                style="@style/wrapper_vertical"
-                android:layout_alignParentRight="true"
-                android:layout_margin="10dp" >
-
-                
-            </LinearLayout>-->
-        </RelativeLayout>
-    </LinearLayout>
+            <Button
+                style="@style/btn_green_small"
+                android:layout_height="100dp"
+                android:layout_width="fill_parent"
+                android:layout_margin="20dp"
+                android:onClick="pay"
+                android:text="@string/Pay" />
+        </LinearLayout>
+        </android.support.v7.widget.GridLayout>
 
 </RelativeLayout>

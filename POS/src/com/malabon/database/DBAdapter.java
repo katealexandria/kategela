@@ -8,7 +8,7 @@ import android.util.Log;
 
 public class DBAdapter {
 
-	public static final int DATABASE_VERSION = 64;
+	public static final int DATABASE_VERSION = 90;
 	public static final String DATABASE_NAME = "Android_POS1";
 	private static DBTable table;
 
@@ -31,37 +31,41 @@ public class DBAdapter {
 			try {
 				table = new DBTable();
 				Log.d("pos", "creating tables");
-				
-				//db.execSQL(table.get_TABLE_HISTORY_CLEAR_CACHE());
-				//db.execSQL(table.get_TABLE_HISTORY_SYNC());
-				//db.execSQL(table.get_TABLE_USER_QUESTION());
-				
+
 				db.execSQL(table.get_TABLE_USER());
-				db.execSQL(table.get_TABLE_SALES_SUMMARY_PER_USER());
+				db.execSQL(table.get_TABLE_USER_SALES_SUMMARY());
 				db.execSQL(table.get_TABLE_LOG_USER_TIME_SHEET());
-				
+
 				db.execSQL(table.get_TABLE_PRODUCT_CATEGORY());
-				db.execSQL(table.get_TABLE_PRODUCT());	
-				
+				db.execSQL(table.get_TABLE_PRODUCT());
+
 				db.execSQL(table.get_TABLE_INGREDIENT());
 				db.execSQL(table.get_TABLE_RECIPE());
-				
+
 				db.execSQL(table.get_TABLE_STOCK_TYPE());
 				db.execSQL(table.get_TABLE_STOCK());
-				
+
 				db.execSQL(table.get_TABLE_LOG_CANCEL_PRODUCT());
-				
+
 				db.execSQL(table.get_TABLE_DISCOUNT());
-				
+
 				db.execSQL(table.get_TABLE_CUSTOMER());
-				
+
 				db.execSQL(table.get_TABLE_POS_SETTINGS());
-				
-				db.execSQL(table.get_TABLE_ORDER_TYPE());
-				
+
 				db.execSQL(table.get_TABLE_TABLE_RECEIPT_DETAIL());
-				
+
 				db.execSQL(table.get_TABLE_LOG_CASH());
+
+				db.execSQL(table.get_TABLE_HISTORY_CLEAR_CACHE());
+				db.execSQL(table.get_TABLE_HISTORY_SYNC());
+
+				db.execSQL(table.get_TABLE_SALES());
+				db.execSQL(table.get_TABLE_SALES_CUSTOMER());
+				db.execSQL(table.get_TABLE_SALES_PRODUCT());
+				db.execSQL(table.get_TABLE_SALES_DISCOUNT());
+				db.execSQL(table.get_TABLE_PAYMENT());
+
 				Log.d("pos", "tables created");
 
 			} catch (Exception e) {
@@ -72,21 +76,38 @@ public class DBAdapter {
 		@Override
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 			db.execSQL("DROP TABLE IF EXISTS " + UserDB.TABLE_USER);
-			db.execSQL("DROP TABLE IF EXISTS " + LogUserTimeSheetDB.TABLE_LOG_USER_TIME_SHEET);
-			db.execSQL("DROP TABLE IF EXISTS " + UserSalesSummaryDB.TABLE_SALES_SUMMARY_PER_USER);
+			db.execSQL("DROP TABLE IF EXISTS "
+					+ LogUserTimeSheetDB.TABLE_LOG_USER_TIME_SHEET);
+			db.execSQL("DROP TABLE IF EXISTS "
+					+ UserSalesSummaryDB.TABLE_USER_SALES_SUMMARY);
 			db.execSQL("DROP TABLE IF EXISTS " + ProductDB.TABLE_PRODUCT);
-			db.execSQL("DROP TABLE IF EXISTS " + ProductCategoryDB.TABLE_PRODUCT_CATEGORY);
+			db.execSQL("DROP TABLE IF EXISTS "
+					+ ProductCategoryDB.TABLE_PRODUCT_CATEGORY);
 			db.execSQL("DROP TABLE IF EXISTS " + IngredientDB.TABLE_INGREDIENT);
 			db.execSQL("DROP TABLE IF EXISTS " + RecipeDB.TABLE_RECIPE);
 			db.execSQL("DROP TABLE IF EXISTS " + StockTypeDB.TABLE_STOCK_TYPE);
 			db.execSQL("DROP TABLE IF EXISTS " + StockDB.TABLE_STOCK);
-			db.execSQL("DROP TABLE IF EXISTS " + LogCancelProductDB.TABLE_LOG_CANCEL_PRODUCT);
+			db.execSQL("DROP TABLE IF EXISTS "
+					+ LogCancelProductDB.TABLE_LOG_CANCEL_PRODUCT);
 			db.execSQL("DROP TABLE IF EXISTS " + DiscountDB.TABLE_DISCOUNT);
 			db.execSQL("DROP TABLE IF EXISTS " + CustomerDB.TABLE_CUSTOMER);
-			db.execSQL("DROP TABLE IF EXISTS " + PosSettingsDB.TABLE_POS_SETTINGS);
-			db.execSQL("DROP TABLE IF EXISTS " + OrderTypeDB.TABLE_ORDER_TYPE);
-			db.execSQL("DROP TABLE IF EXISTS " + ReceiptDetailDB.TABLE_RECEIPT_DETAIL);
+			db.execSQL("DROP TABLE IF EXISTS "
+					+ PosSettingsDB.TABLE_POS_SETTINGS);
+			db.execSQL("DROP TABLE IF EXISTS "
+					+ ReceiptDetailDB.TABLE_RECEIPT_DETAIL);
 			db.execSQL("DROP TABLE IF EXISTS " + LogCashDB.TABLE_LOG_CASH);
+			db.execSQL("DROP TABLE IF EXISTS "
+					+ HistoryClearCacheDB.TABLE_HISTORY_CLEAR_CACHE);
+			db.execSQL("DROP TABLE IF EXISTS "
+					+ HistorySyncDB.TABLE_HISTORY_SYNC);
+			db.execSQL("DROP TABLE IF EXISTS " + SalesDB.TABLE_SALES);
+			db.execSQL("DROP TABLE IF EXISTS "
+					+ SalesCustomerDB.TABLE_SALES_CUSTOMER);
+			db.execSQL("DROP TABLE IF EXISTS "
+					+ SalesProductDB.TABLE_SALES_PRODUCT);
+			db.execSQL("DROP TABLE IF EXISTS "
+					+ SalesDiscountDB.TABLE_SALES_DISCOUNT);
+			db.execSQL("DROP TABLE IF EXISTS " + PaymentDB.TABLE_PAYMENT);
 			onCreate(db);
 		}
 	}

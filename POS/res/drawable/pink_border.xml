@@ -6,7 +6,7 @@
     <!-- view background color -->
     <gradient
 	  android:startColor="#DE2889"
-	  android:endColor="#111"
+	  android:endColor="#BA2474"
 	  android:angle="270" />
  
     <!-- If you want to add some padding -->

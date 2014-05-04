@@ -53,15 +53,7 @@
                 style="@style/textbox_password"
                 android:textColor="#fff"
                 app:layout_column="1"
-                app:layout_row="3" />
-
-            <TextView
-                android:id="@+id/lnkForgotPassword"
-                style="@style/H3"
-                app:layout_column="0"
-                app:layout_columnSpan="2"
-                app:layout_row="4"
-                android:text="@string/ForgotPassword" />            
+                app:layout_row="3" />       
             
         </android.support.v7.widget.GridLayout>
         
@@ -72,6 +64,13 @@
 	        android:layout_marginBottom="20dp"
 	        android:layout_gravity="right" >            
 	
+            <Button
+                android:id="@+id/txtCancelAuth"
+	            style="@style/btn_red_small"
+	            android:text="@string/Cancel" 
+	            android:onClick="close" 
+	            android:visibility="gone" />
+            
 	        <Button
 	            style="@style/btn_green_small"
 	            android:onClick="validateLogin"

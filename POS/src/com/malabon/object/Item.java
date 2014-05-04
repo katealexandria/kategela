@@ -12,5 +12,5 @@ public class Item implements Serializable {
 	public int category_id;
 	public int availableQty;
 	public int sortorder;
-	public Boolean can_be_taken_out;
+	//public Boolean can_be_taken_out;
 }

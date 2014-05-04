@@ -94,6 +94,7 @@ public class DiscountDB {
 			num = cursor.getCount();
 
 			cursor.close();
+			db.close();
 			Log.d("pos", "getDiscountCount: " + String.valueOf(num));
 		} catch (Exception e) {
 			Log.e("pos_error", "getDiscountCount" + e);

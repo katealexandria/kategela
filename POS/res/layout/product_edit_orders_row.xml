@@ -31,12 +31,11 @@
         
     </LinearLayout>  
     
-    <EditText
+    <TextView
           android:id="@+id/cartItemQty"
           style="@style/textbox_numeric"
           android:layout_width="10dp"
-          android:layout_marginTop="0dp"
-          android:enabled="false" />
+          android:layout_marginTop="0dp" />
     
      <LinearLayout
         style="@style/wrapper_horizontal" >	                

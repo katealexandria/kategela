@@ -94,6 +94,7 @@ public class ProductCategoryDB {
 			num = cursor.getCount();
 
 			cursor.close();
+			db.close();
 			Log.d("pos", "getCategoryCount: " + String.valueOf(num));
 		} catch (Exception e) {
 			Log.e("pos_error", "getCategoryCount" + e);

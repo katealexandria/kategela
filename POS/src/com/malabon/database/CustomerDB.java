@@ -158,6 +158,24 @@ public class CustomerDB {
 		}
 		return num;
 	}
+	
+	public int ifExistsTelNo(String telno) {
+		int num = 0;
+		try {
+			String countQuery = "SELECT " + KEY_CUSTOMER_ID + " FROM "
+					+ TABLE_CUSTOMER + " WHERE " + KEY_TEL_NO + " = " + telno;
+			SQLiteDatabase db = this.DbHelper.getReadableDatabase();
+			Cursor cursor = db.rawQuery(countQuery, null);
+			num = cursor.getCount();
+
+			cursor.close();
+			db.close();
+			Log.d("pos", "ifExistsTelNo: " + String.valueOf(num));
+		} catch (Exception e) {
+			Log.e("pos_error", "ifExistsTelNo" + e);
+		}
+		return num;
+	}
 
 	// TODO: delete after testing
 	// --------------------------------------------------------------------------
@@ -172,6 +190,7 @@ public class CustomerDB {
 			num = cursor.getCount();
 
 			cursor.close();
+			db.close();
 			Log.d("pos", "getCustomerCount: " + String.valueOf(num));
 		} catch (Exception e) {
 			Log.e("pos_error", "getCustomerCount" + e);

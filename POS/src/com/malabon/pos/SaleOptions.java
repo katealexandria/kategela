@@ -1,7 +1,6 @@
 package com.malabon.pos;
 
 import android.app.Activity;
-import android.app.Instrumentation.ActivityResult;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;

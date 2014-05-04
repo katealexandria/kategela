@@ -4,10 +4,10 @@ public class DBTable {
 	public String get_TABLE_CUSTOMER() {
 		return "CREATE TABLE "+ CustomerDB.TABLE_CUSTOMER +"(" 
 				+ CustomerDB.KEY_CUSTOMER_ID + " nvarchar(25) NOT NULL primary key, "
-				+ CustomerDB.KEY_FIRST_NAME + " nvarchar(50), "
-				+ CustomerDB.KEY_LAST_NAME + " nvarchar(50), "
-				+ CustomerDB.KEY_ADDRESS + " nvarchar(200), "
-				+ CustomerDB.KEY_ADDRESS_LANDMARK + " nvarchar(200), "
+				+ CustomerDB.KEY_FIRST_NAME + " nvarchar(100) NOT NULL, "
+				+ CustomerDB.KEY_LAST_NAME + " nvarchar(100) NOT NULL, "
+				+ CustomerDB.KEY_ADDRESS + " nvarchar(2000) NOT NULL, "
+				+ CustomerDB.KEY_ADDRESS_LANDMARK + " nvarchar(500), "
 				+ CustomerDB.KEY_TEL_NO + " nvarchar(15), "
 				+ CustomerDB.KEY_MOBILE_NO + " nvarchar(15));";
 	}
@@ -15,7 +15,7 @@ public class DBTable {
 	public String get_TABLE_DISCOUNT(){
 		return "CREATE TABLE "+ DiscountDB.TABLE_DISCOUNT +"(" 
 				+ DiscountDB.KEY_DISCOUNT_ID + " INTEGER NOT NULL PRIMARY KEY, " 
-				+ DiscountDB.KEY_NAME + " nvarchar(20) NOT NULL, " 
+				+ DiscountDB.KEY_NAME + " nvarchar(50) NOT NULL, " 
 				+ DiscountDB.KEY_PERCENTAGE + " double NOT NULL);";
 	}
 	
@@ -75,13 +75,7 @@ public class DBTable {
 				+ LogUserTimeSheetDB.KEY_TIMEOUT_IMAGE +" blob, " 
 				+ LogUserTimeSheetDB.KEY_SALES_SUMMARY_ID + " nvarchar(25), "
 				+ "foreign key ("+LogUserTimeSheetDB.KEY_USER_ID+") references "+UserDB.TABLE_USER+"("+UserDB.KEY_USER_ID+"), " 
-				+ "foreign key ("+LogUserTimeSheetDB.KEY_SALES_SUMMARY_ID+") references "+UserSalesSummaryDB.TABLE_SALES_SUMMARY_PER_USER+"("+UserSalesSummaryDB.KEY_SALES_SUMMARY_ID+"));";
-	}
-	
-	public String get_TABLE_ORDER_TYPE(){
-		return "CREATE TABLE "+ OrderTypeDB.TABLE_ORDER_TYPE +"(" 
-				+ OrderTypeDB.KEY_ORDER_TYPE_ID + " INTEGER NOT NULL PRIMARY KEY, " 
-				+ OrderTypeDB.KEY_NAME + " nvarchar(15) NOT NULL);";
+				+ "foreign key ("+LogUserTimeSheetDB.KEY_SALES_SUMMARY_ID+") references "+UserSalesSummaryDB.TABLE_USER_SALES_SUMMARY+"("+UserSalesSummaryDB.KEY_SALES_SUMMARY_ID+"));";
 	}
 	
 	public String get_TABLE_POS_SETTINGS(){
@@ -119,7 +113,7 @@ public class DBTable {
 				+ ReceiptDetailDB.KEY_RECEIPT_ID + " INTEGER NOT NULL PRIMARY KEY, " 
 				+ ReceiptDetailDB.KEY_STORE_NAME + " nvarchar(200) NOT NULL, " 
 				+ ReceiptDetailDB.KEY_OPERATED_BY + " nvarchar(200) NOT NULL, " 
-				+ ReceiptDetailDB.KEY_ADDRESS + " nvarchar(200) NOT NULL, " 
+				+ ReceiptDetailDB.KEY_ADDRESS + " nvarchar(2000) NOT NULL, " 
 				+ ReceiptDetailDB.KEY_PERMIT_NO + " nvarchar(50), " 
 				+ ReceiptDetailDB.KEY_TIN_NO + " nvarchar(50), " 
 				+ ReceiptDetailDB.KEY_SERIAL_NO + " nvarchar(50), " 
@@ -137,8 +131,8 @@ public class DBTable {
 				+ "foreign key ("+RecipeDB.KEY_PRODUCT_ID+") references "+ProductDB.TABLE_PRODUCT+"("+ProductDB.KEY_PRODUCT_ID+"));";
 	}
 	
-	public String get_TABLE_SALES_SUMMARY_PER_USER(){
-		return "CREATE TABLE "+ UserSalesSummaryDB.TABLE_SALES_SUMMARY_PER_USER +"(" 
+	public String get_TABLE_USER_SALES_SUMMARY(){
+		return "CREATE TABLE "+ UserSalesSummaryDB.TABLE_USER_SALES_SUMMARY +"(" 
 				+ UserSalesSummaryDB.KEY_SALES_SUMMARY_ID + " nvarchar(25) NOT NULL PRIMARY KEY, " 
 				+ UserSalesSummaryDB.KEY_CASH_TOTAL + " double NOT NULL, " 
 				+ UserSalesSummaryDB.KEY_CASH_EXPECTED + " double NOT NULL);"; 
@@ -153,7 +147,7 @@ public class DBTable {
 				+ StockDB.KEY_LAST_UPDATED_DATE + " date NOT NULL, " 
 				+ StockDB.KEY_LAST_UPDATED_USER_ID + " INTEGER NOT NULL, " 
 				+ "foreign key ("+StockDB.KEY_STOCK_TYPE_ID+") references "+UserDB.TABLE_USER+"("+StockTypeDB.KEY_STOCK_TYPE_ID+"), " 
-				+ "foreign key ("+StockDB.KEY_LAST_UPDATED_USER_ID+") references "+UserSalesSummaryDB.TABLE_SALES_SUMMARY_PER_USER+"("+UserDB.KEY_USER_ID+"));";
+				+ "foreign key ("+StockDB.KEY_LAST_UPDATED_USER_ID+") references "+UserSalesSummaryDB.TABLE_USER_SALES_SUMMARY+"("+UserDB.KEY_USER_ID+"));";
 	}
 	
 	public String get_TABLE_STOCK_TYPE(){
@@ -171,12 +165,53 @@ public class DBTable {
 				+ UserDB.KEY_IS_ADMIN + " boolean NOT NULL);";
 	}
 	
-	public String get_TABLE_USER_QUESTION(){
-		return "CREATE TABLE "+ UserQuestionDB.TABLE_USER_QUESTION +"(" 
-				+ UserQuestionDB.KEY_ID + " INTEGER NOT NULL PRIMARY KEY, " 
-				+ UserQuestionDB.KEY_USER_ID + " INTEGER NOT NULL, " 
-				+ UserQuestionDB.KEY_QUESTION +" nvarchar(200) NOT NULL, " 
-				+ UserQuestionDB.KEY_ANSWER + " nvarchar(200) NOT NULL, " 
-				+ "foreign key ("+UserQuestionDB.KEY_USER_ID+") references "+UserDB.TABLE_USER+"("+UserDB.KEY_USER_ID+"));";
+	//---------------payment----------------
+	
+	public String get_TABLE_SALES(){
+		return "CREATE TABLE "+ SalesDB.TABLE_SALES +"(" 
+				+ SalesDB.KEY_SALES_ID + " INTEGER NOT NULL PRIMARY KEY autoincrement, " 
+				+ SalesDB.KEY_ORDER_TYPE_ID + " INTEGER NOT NULL, " 
+				+ SalesDB.KEY_USER_ID +" INTEGER NOT NULL, " 
+				+ SalesDB.KEY_DATE + " date NOT NULL);"; 
+	}
+	
+	public String get_TABLE_SALES_CUSTOMER(){
+		return "CREATE TABLE "+ SalesCustomerDB.TABLE_SALES_CUSTOMER +"(" 
+				+ SalesCustomerDB.KEY_ID + " INTEGER NOT NULL PRIMARY KEY autoincrement, " 
+				+ SalesCustomerDB.KEY_SALES_ID + " INTEGER NOT NULL, " 
+				+ SalesCustomerDB.KEY_CUSTOMER_ID +" nvarchar(25) NOT NULL, " 
+				+ "foreign key ("+SalesCustomerDB.KEY_SALES_ID+") references "+SalesDB.TABLE_SALES+"("+SalesDB.KEY_SALES_ID+"), " 
+				+ "foreign key ("+SalesCustomerDB.KEY_CUSTOMER_ID+") references "+CustomerDB.TABLE_CUSTOMER+"("+CustomerDB.KEY_CUSTOMER_ID+"));";
+	}
+	
+	public String get_TABLE_SALES_PRODUCT(){
+		return "CREATE TABLE "+ SalesProductDB.TABLE_SALES_PRODUCT +"(" 
+				+ SalesProductDB.KEY_ID + " INTEGER NOT NULL PRIMARY KEY autoincrement, " 
+				+ SalesProductDB.KEY_SALES_ID + " INTEGER NOT NULL, " 
+				+ SalesProductDB.KEY_PRODUCT_ID +" INTEGER NOT NULL, " 
+				+ SalesProductDB.KEY_QUANTITY + " INTEGER NOT NULL, " 
+				+ "foreign key ("+SalesProductDB.KEY_SALES_ID+") references "+SalesDB.TABLE_SALES+"("+SalesDB.KEY_SALES_ID+"), " 
+				+ "foreign key ("+SalesProductDB.KEY_PRODUCT_ID+") references "+ProductDB.TABLE_PRODUCT+"("+ProductDB.KEY_PRODUCT_ID+"));";
+	}
+	
+	public String get_TABLE_SALES_DISCOUNT(){
+		return "CREATE TABLE "+ SalesDiscountDB.TABLE_SALES_DISCOUNT +"(" 
+				+ SalesDiscountDB.KEY_ID + " INTEGER NOT NULL PRIMARY KEY autoincrement, " 
+				+ SalesDiscountDB.KEY_SALES_ID + " INTEGER NOT NULL, " 
+				+ SalesDiscountDB.KEY_DISCOUNT_ID +" INTEGER NOT NULL, " 
+				+ "foreign key ("+SalesDiscountDB.KEY_SALES_ID+") references "+SalesDB.TABLE_SALES+"("+SalesDB.KEY_SALES_ID+"), " 
+				+ "foreign key ("+SalesDiscountDB.KEY_DISCOUNT_ID+") references "+DiscountDB.TABLE_DISCOUNT+"("+DiscountDB.KEY_DISCOUNT_ID+"));";
+	}
+	
+	public String get_TABLE_PAYMENT(){
+		return "CREATE TABLE "+ PaymentDB.TABLE_PAYMENT +"(" 
+				+ PaymentDB.KEY_PAYMENT_ID + " INTEGER NOT NULL PRIMARY KEY autoincrement, " 
+				+ PaymentDB.KEY_SALES_ID + " INTEGER NOT NULL, " 
+				+ PaymentDB.KEY_TOTAL_NET +" double NOT NULL, " 
+				+ PaymentDB.KEY_TOTAL_TAX + " double NOT NULL, " 
+				+ PaymentDB.KEY_TOTAL_DISCOUNT + " double NOT NULL, " 
+				+ PaymentDB.KEY_RECEIPT_ID + " nvarchar(200) NOT NULL, " 
+				+ PaymentDB.KEY_DATE + " date NOT NULL, " 
+				+ "foreign key ("+PaymentDB.KEY_SALES_ID+") references "+SalesDB.TABLE_SALES+"("+SalesDB.KEY_SALES_ID+"));";
 	}
 }

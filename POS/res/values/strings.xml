@@ -55,7 +55,7 @@
     <string name="p20">PHP 20</string>
     <string name="p10">PHP 10</string>
     <string name="p5">PHP 5</string>
-    <string name="p1">PHP 1</string>    
+    <string name="p1">PHP 1</string>
     <string name="p25c">25c</string>
 
     <!-- Keypad -->
@@ -81,14 +81,14 @@
         <item>20%</item>
         <item>50%</item>
     </string-array>
-    
+
     <!-- Image -->
     <string name="imagedesc">Image</string>
 
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Activity ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-	
-	<string name="SearchProduct">Search product...</string>
-	<string name="SearchCustomer">Search customer...</string>
+
+    <string name="SearchProduct">Search product...</string>
+    <string name="SearchCustomer">Search customer...</string>
 
     <!-- Add Category -->
     <string name="AddProductCategory">Add Product Category</string>
@@ -132,7 +132,6 @@
     <!-- Login -->
     <string name="Login">Login</string>
     <string name="EnterLogin">Enter your username and password:</string>
-    <string name="ForgotPassword">Forgot your password?</string>
 
     <!-- Orders -->
     <string name="Name">Name</string>
@@ -159,9 +158,10 @@
     <!-- Sale Options -->
     <string name="PrintReceipt">Print Receipt</string>
     <string name="NewSale">New Sale</string>
-    
+
     <!-- Cash in/out -->
     <string name="CashIn">Cash In</string>
     <string name="CashOut">Cash Out</string>
-    
+    <string name="title_activity_print_receipt">Print Receipt</string>
+
 </resources>

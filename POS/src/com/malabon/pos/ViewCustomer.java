@@ -3,7 +3,7 @@ package com.malabon.pos;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import android.annotation.SuppressLint;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -18,6 +18,7 @@ import android.widget.ImageButton;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+
 import com.malabon.function.NewID;
 import com.malabon.object.Customer;
 import com.malabon.object.Sync;

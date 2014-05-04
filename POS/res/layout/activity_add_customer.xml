@@ -27,10 +27,7 @@
             android:id="@+id/textFirstName"
             style="@style/textbox_common"
             app:layout_column="1"
-            app:layout_row="1" >
-
-            <requestFocus />
-        </EditText>
+            app:layout_row="1" />
 
         <TextView
             style="@style/field_label"

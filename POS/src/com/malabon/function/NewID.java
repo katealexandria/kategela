@@ -10,15 +10,20 @@ public class NewID {
 
 	private int count;
 	private static int branchCustomerIDcount = 0;
-	// TODO: real branchid
-	// private String branchID = String.valueOf(Sync.posSettings.branch_id);
-	private String branchID = "1";
 
 	public String GetDefaultCustomerID() {
 		return AppendBranchID(0);
 	}
 
+	private String GetBranchID() {
+		if (Sync.posSettings != null)
+			return String.valueOf(Sync.posSettings.branch_id);
+		else
+			return "";
+	}
+
 	private int getBranchCustomerCount() {
+		String branchID = GetBranchID();
 		if (branchCustomerIDcount == 0) {
 			for (Customer c : Sync.Customers) {
 				if (c.customer_id.charAt(0) == branchID.charAt(0)) {
@@ -40,25 +45,18 @@ public class NewID {
 		return AppendBranchID(count);
 	}
 
-	public String GetSalesSummaryID(Context context) {
-		count = 1; // get++
-
-		return AppendBranchID(count);
+	public String GetSalesSummaryID(String userString, String dateString) {
+		String branchID = GetBranchID();
+		return branchID + userString + dateString;
 	}
 
-	/*public String GetPaymentID(Context context) {
-		count = 1; // get++
-
-		return AppendBranchID(count);
+	public String GetReceiptID(String userString, String salesString) {
+		String branchID = GetBranchID();
+		return branchID + userString + salesString;
 	}
-
-	public String GetSalesID(Context context) {
-		count = 1; // get++
-
-		return AppendBranchID(count);
-	}*/
 
 	public String AppendBranchID(int count) {
+		String branchID = GetBranchID();
 		return branchID + "_" + count;
 	}
 }

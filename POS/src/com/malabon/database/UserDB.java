@@ -112,6 +112,7 @@ public class UserDB {
 			num = cursor.getCount();
 
 			cursor.close();
+			db.close();
 			Log.d("pos", "getUsersCount: " + String.valueOf(num));
 		} catch (Exception e) {
 			Log.e("pos_error", "getUsersCount" + e);

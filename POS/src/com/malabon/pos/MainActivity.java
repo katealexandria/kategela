@@ -18,6 +18,7 @@ import android.support.v7.widget.GridLayout.LayoutParams;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -27,6 +28,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.malabon.database.DBAdapter;
 import com.malabon.function.LoadSampleData;
 import com.malabon.object.Category;
 import com.malabon.object.Customer;
@@ -44,6 +46,7 @@ public class MainActivity extends Activity {
 	static final int LOGIN_REQUEST = 13;
 	static final int PAYMENT_REQUEST = 14;
 	static final int CLOSE_DAY_REQUEST = 15;
+	static final int PRINT_RECEIPT_REQUEST = 16;
 
 	Sale sale;
 	List<Item> allItems;
@@ -52,42 +55,51 @@ public class MainActivity extends Activity {
 	Category currentCat;
 	User currentUser;
 	int firstCatIndex, lastCatIndex;
+	DBAdapter db;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);	
 
+		db = new DBAdapter(this).open();
+		
 		// TODO: delete after testing
 		LoadSampleData loadSampleData = new LoadSampleData();
 		loadSampleData.AddTempData(this);
 		
-		currentUser = new User();
-		currentUser.user_id = 1;
-		currentUser.username = "admin";
-		//if(currentUser == null)
-		//	Login(false, null);
-		//else{
+		//currentUser = new User();
+		//currentUser.user_id = 1;
+		//currentUser.username = "admin";
+		if(currentUser == null)
+			Login(null, 1);
+		else
 			Initialize();
-			CheckSync();
-		//}
+	}
+	
+	@Override
+	protected void onDestroy(){
+		super.onDestroy();
+		if (db != null) {
+			db.close();
+	    }
 	}
 	
 	@SuppressLint("SimpleDateFormat")
 	private void CheckSync(){
-		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd hh:mm");
 		String strDate = dateFormat.format(new Date());
 		
 		ContextWrapper cw = new ContextWrapper(this);
 	    String cacheFolder = cw.getFilesDir().getPath();
 	    
-	    String nextSyncDate = dateFormat.format(Sync.GetNextSyncDate());
+	    String nextSyncDate = dateFormat.format(Sync.GetNextSyncDate(this));
 	    if(strDate == nextSyncDate)
-	    	Sync.DoSync(false, Integer.parseInt(currentUser.username));
+	    	Sync.DoSync(this, false, Integer.parseInt(currentUser.username));
 	    
-	    String nextClearCacheDate = dateFormat.format(Sync.GetNextClearCacheDate());
+	    String nextClearCacheDate = dateFormat.format(Sync.GetNextClearCacheDate(this));
 	    if(strDate == nextClearCacheDate)
-	    	Sync.ClearCache(cacheFolder, currentUser.username);	    
+	    	Sync.ClearCache(this, cacheFolder, currentUser.username);	
 	}
 	
 	private void Initialize(){
@@ -111,6 +123,9 @@ public class MainActivity extends Activity {
 		InitializeCategories();
 		InitializeProducts(-1);
 		InitializeCustomer();
+		InitializeReceiptDetail();
+		
+		CheckSync();
 	}
 	
 	private void InitializeSettings(){
@@ -269,6 +284,11 @@ public class MainActivity extends Activity {
 		}
 			
 	}
+	
+	private void InitializeReceiptDetail(){
+		if (Sync.receiptDetail == null)
+			Sync.SetReceiptDetail(this);		
+	}
 
 	// {{ others code
 
@@ -286,6 +306,8 @@ public class MainActivity extends Activity {
 			}
 			InitializeProducts(itemsSource);
 			txtSearchProduct.setVisibility(View.GONE);
+			InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+			imm.hideSoftInputFromWindow(txtSearchProduct.getWindowToken(), 0);
 		}
 		else
 			txtSearchProduct.setVisibility(View.VISIBLE);
@@ -332,17 +354,26 @@ public class MainActivity extends Activity {
     }
 	
 	public void sync(View view) {
-		Sync.DoSync(true, currentUser.user_id);
+		Sync.DoSync(this, true, currentUser.user_id);
     }
 	
 	public void closeDay(View view) {
+		SharedPreferences prefs = this.getSharedPreferences(
+				"com.malabon.pos", Context.MODE_PRIVATE);
+		prefs.edit().putInt("user_id", Sync.user.user_id).commit();
 		Intent intent = new Intent(this, CloseDay.class);
 		startActivityForResult(intent, CLOSE_DAY_REQUEST);
     }
 	
 	public void printReceipt(View view) {
-		//TODO: Print receipt
-        showToast("Print Receipt");
+		if(Sync.lastSale == null){
+			showToast("No recent sale.");
+			return;
+		}
+		
+		Intent intent = new Intent(this, PrintReceipt.class);
+		intent.putExtra("cashier", currentUser.username);
+		startActivity(intent);
     }
 	
 	public void newSale(View view) {
@@ -352,19 +383,25 @@ public class MainActivity extends Activity {
 		InitializeCustomer();
     }
 
+	//TODO: switch not needed?
 	public void switchUser(View view) {
-		Login(false, currentUser.username);
+		Login(currentUser.username, 2);
 	}
 	
 	public void lockRegister(View view) {
-		Login(true, currentUser.username);
+		Login(currentUser.username, 3);
 	}
 	
-	private void Login(Boolean lockRegister, String username){
+	// requestType:
+	// 1 = fresh log-in
+	// 2 = switch
+	// 3 = lock
+	// 4 = log-out
+	private void Login(String username, int requestType){
 		SharedPreferences prefs = this.getSharedPreferences(
 				"com.malabon.pos", Context.MODE_PRIVATE);
 		prefs.edit().putString("CurrentUser", username).commit();
-		prefs.edit().putBoolean("lockRegister", lockRegister).commit();
+		prefs.edit().putInt("RequestType", requestType).commit();
 		Intent intent = new Intent(this, Login.class);
 		startActivityForResult(intent, LOGIN_REQUEST);
 	}
@@ -553,7 +590,8 @@ public class MainActivity extends Activity {
 		}
 		case(CLOSE_DAY_REQUEST): {
 			if (resultCode == Activity.RESULT_OK) {
-				Login(false, currentUser.username);
+				Login(currentUser.username, 4);
+				finish();
 			}
 		}
 		}

@@ -1,7 +1,5 @@
 package com.malabon.pos;
 
-import java.io.Serializable;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;

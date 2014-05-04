@@ -68,11 +68,15 @@ public class SalesDB {
 				num = 0;
 				int id = getMaxSaleID();
 				addSaleProduct(id);
-				if (!sale.customer.customer_id.equals(new NewID().GetDefaultCustomerID())) addSaleCustomer(id);
-				addSaleDiscount(id);
+				if (!sale.customer.customer_id.equals(new NewID()
+						.GetDefaultCustomerID()))
+					addSaleCustomer(id);
+				if (sale.discount != null)
+					addSaleDiscount(id);
 				addPayment(id);
 				num = 1;
 			}
+
 		} catch (Exception e) {
 			Log.e("pos_error", "newSale" + e);
 		}
@@ -80,6 +84,7 @@ public class SalesDB {
 	}
 
 	private int getMaxSaleID() {
+		Log.d("temp_debug", "getMaxSaleID...");
 		int num = 0;
 		try {
 			String countQuery = "SELECT MAX(" + KEY_SALES_ID
@@ -93,18 +98,26 @@ public class SalesDB {
 
 				cursor.close();
 			}
-			Log.d("pos", "getCustomerCount: " + String.valueOf(num));
+			db.close();
+			Log.d("pos", "getMaxSaleID: " + String.valueOf(num));
 		} catch (Exception e) {
 			Log.e("pos_error", "getMaxSaleID" + e);
 		}
+		Log.d("temp_debug", "getMaxSaleID: " + String.valueOf(num));
 		return num;
 	}
 
 	private int addSale() {
+		Log.d("temp_debug", "addSale...");
 		int num = 0;
 		try {
 			SQLiteDatabase db = this.DbHelper.getWritableDatabase();
 			ContentValues values = new ContentValues();
+
+			Log.d("temp_debug", String.valueOf(sale.orderType));
+			Log.d("temp_debug", String.valueOf(sale.user));
+			Log.d("temp_debug", String.valueOf(formatter.format(new Date())));
+			Log.d("temp_debug", "addSale..." + String.valueOf(num));
 
 			values.put(KEY_ORDER_TYPE_ID, sale.orderType);
 			values.put(KEY_USER_ID, sale.user);
@@ -117,6 +130,7 @@ public class SalesDB {
 		} catch (Exception e) {
 			Log.e("pos_error", "addSale" + e);
 		}
+		Log.d("temp_debug", "addSale end...");
 		return num;
 	}
 
@@ -141,7 +155,12 @@ public class SalesDB {
 	private void addPayment(int id) {
 		PaymentDB paymentDB = new PaymentDB(context);
 		paymentDB.open();
-		paymentDB.addPayment(id, sale.total, sale.netTotal, sale.taxTotal,
-				(sale.total * sale.discount.percentage));
+		double totaldiscount;
+		if (sale.discount != null)
+			totaldiscount = sale.total * sale.discount.percentage;
+		else
+			totaldiscount = 0;
+		paymentDB.addPayment(id, sale.user, sale.total, sale.netTotal,
+				sale.taxTotal, totaldiscount);
 	}
 }

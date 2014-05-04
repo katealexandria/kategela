@@ -3,7 +3,6 @@ package com.malabon.pos;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
@@ -18,7 +17,7 @@ public class AddCustomer extends Activity {
 			textTelNo, textMobileNo;
 	LinearLayout add_view, update_view;
 	String valid_number = null, valid_name = null;
-	//int CUSTOMER_ID;
+	// int CUSTOMER_ID;
 	String CUSTOMER_ID;
 
 	@Override
@@ -26,10 +25,10 @@ public class AddCustomer extends Activity {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_add_customer);
-		
-		if(Sync.Customers == null)
+
+		if (Sync.Customers == null)
 			Sync.GetCustomers(this);
-			
+
 		set_Add_Update_Screen();
 		String called_from = getIntent().getStringExtra("called");
 
@@ -39,12 +38,12 @@ public class AddCustomer extends Activity {
 		} else {
 			update_view.setVisibility(View.VISIBLE);
 			add_view.setVisibility(View.GONE);
-			//CUSTOMER_ID = getIntent().getIntExtra("CUSTOMER_ID", 0);
+			// CUSTOMER_ID = getIntent().getIntExtra("CUSTOMER_ID", 0);
 			CUSTOMER_ID = getIntent().getStringExtra("CUSTOMER_ID");
 
-			Customer c = new Customer(); 
-			for(Customer tmp : Sync.Customers){
-				if(tmp.customer_id.equals(CUSTOMER_ID)){
+			Customer c = new Customer();
+			for (Customer tmp : Sync.Customers) {
+				if (tmp.customer_id.equals(CUSTOMER_ID)) {
 					c = tmp;
 					break;
 				}
@@ -62,9 +61,11 @@ public class AddCustomer extends Activity {
 	public void addCustomer(View view) {
 		if ((Is_Valid_Name(textFirstName) == true)
 				&& (Is_Valid_Name(textLastName) == true)
-				&& (Is_Valid__Number(7, textTelNo) == true)
-				&& (Is_Valid__Number(11, textMobileNo) == true)) {
-			
+				&& (textAddress != null)
+				&& ((Is_Valid__Number(7, textTelNo) == true) || (Is_Valid__Number(
+						11, textMobileNo) == true))
+
+		) {
 			Customer c = new Customer();
 			c.first_name = textFirstName.getText().toString();
 			c.last_name = textLastName.getText().toString();
@@ -73,21 +74,39 @@ public class AddCustomer extends Activity {
 			c.tel_no = textTelNo.getText().toString();
 			c.mobile_no = textMobileNo.getText().toString();
 
-			//Sync.Customers.add(c);		
-			if (Sync.AddCustomer(this, c) > 0)
+			// Sync.Customers.add(c);
+			int result = Sync.AddCustomer(this, c);
+			switch (result) {
+			case 1:
 				showToast("Data inserted successfully");
-			else
+				break;
+			case 2:
+				showToast("User's contact number already exists");
+				break;
+			default:
 				showToast("Data insertion unsuccessful");
+				break;
+			}
+
+			/*
+			 * if (Sync.AddCustomer(this, c) > 0)
+			 * showToast("Data inserted successfully"); else
+			 * showToast("Data insertion unsuccessful");
+			 */
 			cancel(null);
+		} else {
+			showToast("Complete all required fields.");
 		}
 	}
 
 	public void updateCustomer(View view) {
 		if ((Is_Valid_Name(textFirstName) == true)
 				&& (Is_Valid_Name(textLastName) == true)
-				&& (Is_Valid__Number(7, textTelNo) == true)
-				&& (Is_Valid__Number(11, textMobileNo) == true)) {
-			
+				&& (textAddress != null)
+				&& ((Is_Valid__Number(7, textTelNo) == true) || (Is_Valid__Number(
+						11, textMobileNo) == true))
+
+		) {
 			Customer c = new Customer();
 			c.customer_id = CUSTOMER_ID;
 			c.first_name = textFirstName.getText().toString();
@@ -102,6 +121,8 @@ public class AddCustomer extends Activity {
 			else
 				showToast("Data update unsuccessful");
 			cancel(null);
+		} else {
+			showToast("Complete all required fields.");
 		}
 	}
 

@@ -50,9 +50,13 @@ public class SalesCustomerDB {
 	}
 
 	public void addSaleCustomer(int id, String customerid) {
+		Log.d("temp_debug", "addSaleCustomer...");
 		try {
 			SQLiteDatabase db = this.DbHelper.getWritableDatabase();
 
+			Log.d("temp_debug", String.valueOf(id));
+			Log.d("temp_debug", String.valueOf(customerid));
+			
 			ContentValues values = new ContentValues();
 			values.put(KEY_SALES_ID, id);
 			values.put(KEY_CUSTOMER_ID, customerid);
@@ -63,5 +67,6 @@ public class SalesCustomerDB {
 		} catch (Exception e) {
 			Log.e("pos_error", "addSaleCustomer" + e);
 		}
+		Log.d("temp_debug", "addSaleCustomer end...");
 	}
 }

@@ -138,7 +138,7 @@ public class EditOrders extends Activity {
 		}
 				
 		TableRow newRow = (TableRow) arg0.getParent().getParent();
-		EditText editText = (EditText) newRow.findViewById(R.id.cartItemQty);
+		TextView editText = (TextView) newRow.findViewById(R.id.cartItemQty);
 		int num = Integer.parseInt(editText.getText().toString()) + number;
 		if (num > 0)
 			editText.setText(String.valueOf(num));

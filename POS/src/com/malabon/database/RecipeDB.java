@@ -96,6 +96,7 @@ public class RecipeDB {
 			num = cursor.getCount();
 
 			cursor.close();
+			db.close();
 			Log.d("pos", "getRecipeCount: " + String.valueOf(num));
 		} catch (Exception e) {
 			Log.e("pos_error", "getRecipeCount" + e);

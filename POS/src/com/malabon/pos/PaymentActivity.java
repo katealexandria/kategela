@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -46,10 +45,10 @@ public class PaymentActivity extends Activity {
 	}
 
 	private void Initialize() {
-		
+
 		View rbTakeOut = findViewById(R.id.rbTakeOut);
 		rbTakeOut.setEnabled(true);
-		
+
 		Bundle extras = getIntent().getExtras();
 		if (extras == null) {
 			setResult(Activity.RESULT_CANCELED);
@@ -66,58 +65,62 @@ public class PaymentActivity extends Activity {
 			objPayment = new Payment();
 			objPayment.balance = Double.parseDouble(df.format(sale.total));
 		}
-		
-		for(Item item : sale.items){
-			if(!item.can_be_taken_out){
+
+		/*for (Item item : sale.items) {
+			if (!item.can_be_taken_out) {
 				rbTakeOut.setEnabled(false);
+				showToast("Products marked with (***) cannot be taken out");
 				break;
 			}
-		}
+		}*/
 
 		// objPayment.cash = objPayment.getCash(cash);
 	}
-	
-	private void InitDiscounts(){
-		
-		if(Sync.Discounts == null)
-			Sync.GetDiscounts(this);
-		
-		cmb = (Spinner)findViewById(R.id.cmbDiscounts);		
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-				this, android.R.layout.simple_spinner_item);
-		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		adapter.add("(None)");
-		for(Discount d : Sync.Discounts)
-			adapter.add(d.name);		
-		cmb.setAdapter(adapter);
-		
-		cmb.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-		    public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) { 
-		    	String sel = cmb.getSelectedItem().toString();
-		    	
-		    	if(sel == "(None)"){
-		    		sale.discount = null;
-			        return;
-		    	}
-		    	
-		        for(Discount d : Sync.Discounts){
-		        	if(d.name == sel){
-		        		sale.discount = d;
-		        		sale.computeTotal();
-		        		objPayment.balance = Double.parseDouble(df.format(sale.total));
-		        		setBalance();
-		        		setChange();
-		        		break;
-		        	}
-		        }
-		    } 
 
-		    public void onNothingSelected(AdapterView<?> adapterView) {
-		    	sale.discount = null;
-		    } 
-		}); 
+	private void InitDiscounts() {
+
+		if (Sync.Discounts == null)
+			Sync.GetDiscounts(this);
+
+		cmb = (Spinner) findViewById(R.id.cmbDiscounts);
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+				android.R.layout.simple_spinner_item);
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		adapter.add("Select Discount");
+		for (Discount d : Sync.Discounts)
+			adapter.add(d.name);
+		cmb.setAdapter(adapter);
+
+		cmb.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+			public void onItemSelected(AdapterView<?> adapterView, View view,
+					int position, long id) {
+				String sel = cmb.getSelectedItem().toString();
+
+				if (sel == "Select Discount") {
+					sale.discount = null;
+					setDiscount();
+					return;
+				}
+
+				for (Discount d : Sync.Discounts) {
+					if (d.name == sel) {
+						sale.discount = d;
+						sale.computeTotal();
+						objPayment.balance = Double.parseDouble(df
+								.format(sale.total));
+						setBalance();
+						setDiscount();
+						setChange();
+						break;
+					}
+				}
+			}
+
+			public void onNothingSelected(AdapterView<?> adapterView) {
+				sale.discount = null;
+			}
+		});
 	}
-	
 
 	private void setAmounts(double amount) {
 		setBalance();
@@ -127,13 +130,22 @@ public class PaymentActivity extends Activity {
 
 		setChange();
 	}
-	
-	private void setBalance(){
+
+	private void setBalance() {
 		TextView txtBalTotal = (TextView) findViewById(R.id.balTotal);
 		txtBalTotal.setText(df.format(objPayment.balance));
 	}
-	
-	private void setChange(){
+
+	private void setDiscount() {
+		double discTotal = 0;
+		if (sale.discount != null)
+			discTotal = sale.discount.amountPhp * -1;
+
+		TextView txtDiscountTotal = (TextView) findViewById(R.id.discTotal);
+		txtDiscountTotal.setText(df.format(discTotal));
+	}
+
+	private void setChange() {
 		TextView txtChange = (TextView) findViewById(R.id.paymentChange);
 		txtChange.setText(df.format(objPayment.getChange()));
 	}
@@ -194,6 +206,7 @@ public class PaymentActivity extends Activity {
 			commitSale();
 
 			Intent resultIntent = new Intent();
+			Sync.lastSale = sale;
 			setResult(Activity.RESULT_FIRST_USER, resultIntent);
 			finish();
 		} else if (!objPayment.confirmPayment() && IsOrderTypeSelected()) {
@@ -206,14 +219,22 @@ public class PaymentActivity extends Activity {
 	}
 
 	private void commitSale() {
+		sale.cash = objPayment.cash;
+		
 		RadioGroup rgOrderType = (RadioGroup) findViewById(R.id.rgOrderType);
 		int selectedId = rgOrderType.getCheckedRadioButtonId();
-		switch(selectedId){
-		case R.id.rbDineIn: sale.orderType = 1; break;
-		case R.id.rbTakeOut: sale.orderType = 2; break;
-		case R.id.rbDelivery: sale.orderType = 3; break;
+		switch (selectedId) {
+		case R.id.rbDineIn:
+			sale.orderType = 1;
+			break;
+		case R.id.rbTakeOut:
+			sale.orderType = 2;
+			break;
+		case R.id.rbDelivery:
+			sale.orderType = 3;
+			break;
 		}
-		
+
 		Sync.AddSale(this, sale);
 		Sync.RefreshInventory(this);
 	}
